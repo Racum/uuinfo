@@ -121,8 +121,8 @@ fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
         version: Some("Spaceflake".to_string()),
         datetime: Some(datetime),
         timestamp: Some(timestamp),
-        node1: Some(format!("{} (Node ID), {} (Worker ID)", node_id, worker_id)),
-        node2: None,
+        node1: Some(format!("{} (Node ID)", node_id)),
+        node2: Some(format!("{} (Worker ID)", worker_id)),
         sequence: Some(sequence as u128),
         color_map: Some(
             "0333333333333333333333333333333333333333334444455555666666666666".to_string(),
