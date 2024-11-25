@@ -33,9 +33,12 @@ MongoDB ObjectId      |✅|✅|❌|✅|96|24
 Xid                   |❌|✅|✅|✅|96|20
 KSUID                 |✅|✅|❌|❌|160|27
 Timeflake             |✅|✅|❌|❌|128|22
-Nano ID               |✅|❌|❌|❌|-|Variable
+Flake (Boundary)      |❌|✅|✅|✅|128|18
 CUID 1                |✅|✅|✅|✅|-|Variable
-CUID 2                |✅|✅|✅|✅|-|Variable
+CUID 2                |✅|❌|❌|❌|-|Variable
+Nano ID               |✅|❌|❌|❌|-|Variable
+Hashid                |?|?|?|?|-|Variable
+Sqid                  |?|?|?|?|-|Variable
 **Non-IDs:**          |
 IPv4                  |✅|❌|❌|❌|32|7 to 15
 IPv6                  |✅|❌|❌|❌|128|up to 39

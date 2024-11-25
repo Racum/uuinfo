@@ -18,6 +18,12 @@ mod timeflake;
 use crate::timeflake::parse_timeflake_base62;
 mod xid;
 use crate::xid::parse_xid;
+mod objectid;
+use crate::objectid::parse_objectid;
+mod flake;
+use crate::flake::parse_flake;
+mod cuid;
+use crate::cuid::{parse_cuid1, parse_cuid2};
 
 fn main() {
     let args = Args::parse();
@@ -51,10 +57,20 @@ fn main() {
             id_info = parse_ulid(&args).unwrap_or_default();
             id_info.print()
         }
+        25 => {
+            id_info = parse_cuid1(&args).unwrap_or_default();
+            id_info.print()
+        }
         24 => {
-            // println!("MongoDB");
-            id_info = parse_base64_uuid(&args).unwrap_or_default();
-            id_info.print();
+            match parse_objectid(&args) {
+                Some(value) => {
+                    id_info = value;
+                }
+                None => {
+                    id_info = parse_base64_uuid(&args).unwrap_or_default();
+                }
+            }
+            id_info.print()
         }
         21..24 => {
             id_info = parse_short_uuid(&args).unwrap_or(
@@ -66,7 +82,7 @@ fn main() {
         1..21 => {
             // println!("MAC")
 
-            id_info = parse_xid(&args).unwrap_or(parse_snowflake(&args).unwrap_or_default());
+            id_info = parse_flake(&args).unwrap_or(parse_xid(&args).unwrap_or(parse_snowflake(&args).unwrap_or_default()));
             id_info.print()
         }
         _ => {

@@ -21,7 +21,7 @@ pub fn parse_timeflake_core(hex_id: &str) -> Option<IDInfo> {
         integer: Some(timeflake.as_u128()),
         short_uuid: None,
         base64: None,
-        uuid_like: Some(timeflake.as_uuid().to_string()),
+        uuid_wrap: Some(timeflake.as_uuid().to_string()),
         size: 128,
         entropy: 80,
         datetime: Some(datetime),

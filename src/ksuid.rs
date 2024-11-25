@@ -32,7 +32,7 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         integer: None,
         short_uuid: None,
         base64: None,
-        uuid_like: None,
+        uuid_wrap: None,
         size: 160,
         entropy: 128,
         datetime,

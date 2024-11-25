@@ -21,7 +21,7 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
         integer: Some(ulid.0),
         short_uuid: None,
         base64: None,
-        uuid_like: Some(uuid.to_string()),
+        uuid_wrap: Some(uuid.to_string()),
         size: 128,
         entropy: 80,
         datetime: Some(datetime),

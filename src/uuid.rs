@@ -109,7 +109,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         integer: Some(uuid.as_u128()),
         short_uuid: Some(short.to_string()),
         base64: Some(URL_SAFE.encode(uuid.to_bytes_le())),
-        uuid_like: None,
+        uuid_wrap: None,
         size: 128,
         entropy,
         datetime,
@@ -147,7 +147,7 @@ pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
     };
     id_info.id_type = format!("Short-UUID of {}", id_info.id_type);
     id_info.standard = args.id.to_string();
-    id_info.uuid_like = Some(uuid_str);
+    id_info.uuid_wrap = Some(uuid_str);
 
     Some(id_info)
 }
@@ -155,7 +155,10 @@ pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
 pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
     let mut padded = true;
     let uuid = match URL_SAFE.decode(&args.id) {
-        Ok(value) => Uuid::from_slice_le(value.as_slice()).unwrap(),
+        Ok(value) => match Uuid::from_slice_le(value.as_slice()) {
+            Ok(value) => value,
+            Err(_) => return None,
+        },
         Err(_) => match URL_SAFE_NO_PAD.decode(&args.id) {
             Ok(value) => {
                 padded = false;
@@ -182,7 +185,7 @@ pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
     }
     id_info.standard = id_info.base64.clone().unwrap();
     id_info.base64 = None;
-    id_info.uuid_like = Some(uuid.to_string());
+    id_info.uuid_wrap = Some(uuid.to_string());
 
     Some(id_info)
 }

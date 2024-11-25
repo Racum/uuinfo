@@ -201,7 +201,7 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
         integer: Some(id_int as u128),
         short_uuid: None,
         base64: None,
-        uuid_like: None,
+        uuid_wrap: None,
         size: 64,
         entropy: 0,
         datetime: annotation.datetime,

@@ -91,6 +91,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
+name = "basen"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1dbe4bb73fd931c4d1aaf53b35d1286c8a948ad00ec92c8e3c856f15fd027f43"
+
+[[package]]
 name = "bumpalo"
 version = "3.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -534,6 +540,8 @@ dependencies = [
  "base32",
  "base62",
  "base64",
+ "basen",
+ "byteorder",
  "chrono",
  "clap",
  "colored",

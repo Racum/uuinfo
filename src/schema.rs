@@ -28,6 +28,20 @@ pub enum SnowflakeVerion {
     Spaceflake,
 }
 
+#[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
+pub enum UUIDAlternative {
+    /// ULID
+    ULID,
+    /// UPID
+    UPID,
+    /// Timeflake
+    Timeflake,
+    /// Flake
+    Flake,
+    /// TimeUUID
+    Timeuuid,
+}
+
 /// Shows debug information about complex ID.
 #[derive(Parser, Debug, Clone)]
 #[command(version, about, long_about = None)]
@@ -39,21 +53,32 @@ pub struct Args {
     #[arg(short, long)]
     pub format: Option<Format>,
 
+    /// Compare times of different Snowflake versions.
+    #[arg(short = 'c', long)]
+    pub compare_snowflake: bool,
+
     /// Parse Snowflake as version.
     #[arg(short = 's', long)]
     pub snowflake: Option<SnowflakeVerion>,
 
-    /// Compare times of different Snowflake versions.
-    #[arg(long)]
-    pub compare_snowflake: bool,
+    /// Force UUID wrapping alternative.
+    #[arg(short = 'u', long)]
+    pub uuid_alt: Option<UUIDAlternative>,
 
     /// Remove Base64 padding.
-    #[arg(short = 'n', long)]
+    #[arg(long)]
     pub b64_nopad: bool,
 
     /// Encode Base64 from UUID big-endian bytes.
-    #[arg(short = 'b', long)]
+    #[arg(long)]
     pub b64_bigendian: bool,
+
+    #[arg(long)]
+    pub alphabet: Option<String>,
+
+    #[arg(long)]
+    pub hashid_salt: Option<String>,
+
 }
 
 #[allow(dead_code)]
@@ -66,7 +91,7 @@ pub struct IDInfo {
     pub integer: Option<u128>,
     pub short_uuid: Option<String>,
     pub base64: Option<String>,
-    pub uuid_like: Option<String>,
+    pub uuid_wrap: Option<String>,
     pub size: u8,
     pub entropy: u8,
     pub datetime: Option<String>,
@@ -95,6 +120,16 @@ impl IDInfo {
         let lc = 9;
         let rc = 43;
 
+        let size = match self.size {
+            0 => "-",
+            _ => &format!("{} bits", self.size),
+        };
+
+        let entropy = match self.size {
+            0 => "-",
+            _ => &format!("{} bits", self.entropy),
+        };
+
         println!("┏━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓",);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "ID Tyoe", self.id_type);
         println!(
@@ -104,20 +139,18 @@ impl IDInfo {
         );
         println!("┠───────────┼─────────────────────────────────────────────┨",);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "String", self.standard);
-        println!(
-            "┃ {:<lc$} │ {:<rc$} ┃",
-            "Integer",
-            self.integer.unwrap_or(0)
-        );
 
+        if let Some(value) = self.integer {
+            println!("┃ {:<lc$} │ {:<rc$} ┃", "ShortUUID", value);
+        }
         if let Some(value) = self.short_uuid.as_deref() {
             println!("┃ {:<lc$} │ {:<rc$} ┃", "ShortUUID", value);
         }
         if let Some(value) = self.base64.as_deref() {
             println!("┃ {:<lc$} │ {:<rc$} ┃", "Base64", value);
         }
-        if let Some(value) = self.uuid_like.as_deref() {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "UUID-like", value);
+        if let Some(value) = self.uuid_wrap.as_deref() {
+            println!("┃ {:<lc$} │ {:<rc$} ┃", "UUID wrap", value);
         }
         let timestamp = match self.timestamp.as_deref() {
             Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
@@ -128,16 +161,8 @@ impl IDInfo {
             None => "-".to_string(),
         };
         println!("┠───────────┼─────────────────────────────────────────────┨",);
-        println!(
-            "┃ {:<lc$} │ {:<rc$} ┃",
-            "Size",
-            format!("{} bits", self.size)
-        );
-        println!(
-            "┃ {:<lc$} │ {:<rc$} ┃",
-            "Entropy".green(),
-            format!("{} bits", self.entropy)
-        );
+        println!("┃ {:<lc$} │ {:<rc$} ┃", "Size", size);
+        println!("┃ {:<lc$} │ {:<rc$} ┃", "Entropy".green(), entropy);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "Timestamp".cyan(), timestamp);
         println!(
             "┃ {:<lc$} │ {:<rc$} ┃",
@@ -202,8 +227,8 @@ impl IDInfo {
                 }
             }
             None => {
-                bin_lines.push("No bit-map available".to_string());
-                hex_lines.push("".to_string());
+                bin_lines.push("No bits".to_string());
+                hex_lines.push("No hex".to_string());
             }
         }
         (hex_lines, bin_lines)

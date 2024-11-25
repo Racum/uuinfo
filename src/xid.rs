@@ -28,7 +28,7 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
         integer: Some(xid_int),
         short_uuid: None,
         base64: None,
-        uuid_like: None,
+        uuid_wrap: None,
         size: 96,
         entropy: 0,
         datetime: Some(datetime),
