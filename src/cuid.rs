@@ -1,6 +1,5 @@
 extern crate basen;
 use basen::BASE36;
-use cuid2;
 
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;

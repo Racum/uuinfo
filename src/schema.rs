@@ -31,15 +31,17 @@ pub enum SnowflakeVerion {
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum UUIDAlternative {
     /// ULID
-    ULID,
+    Ulid,
     /// UPID
-    UPID,
+    Upid,
     /// Timeflake
     Timeflake,
     /// Flake
     Flake,
     /// TimeUUID
     Timeuuid,
+    /// SCRU128
+    SCRU128,
 }
 
 /// Shows debug information about complex ID.
@@ -142,14 +144,14 @@ impl IDInfo {
         if let Some(value) = self.integer {
             println!("┃ {:<lc$} │ {:<rc$} ┃", "Integer", value);
         }
+        if let Some(value) = self.uuid_wrap.as_deref() {
+            println!("┃ {:<lc$} │ {:<rc$} ┃", "UUID wrap", value);
+        }
         if let Some(value) = self.short_uuid.as_deref() {
             println!("┃ {:<lc$} │ {:<rc$} ┃", "ShortUUID", value);
         }
         if let Some(value) = self.base64.as_deref() {
             println!("┃ {:<lc$} │ {:<rc$} ┃", "Base64", value);
-        }
-        if let Some(value) = self.uuid_wrap.as_deref() {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "UUID wrap", value);
         }
         let timestamp = match self.timestamp.as_deref() {
             Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),

@@ -16,7 +16,7 @@ pub fn parse_upid(args: &Args) -> Option<IDInfo> {
     Some(IDInfo {
         known: true,
         id_type: "UPID".to_string(),
-        version: Some("a (default)".to_string()),
+        version: Some("A (default)".to_string()),
         standard: args.id.to_string(),
         integer: Some(upid.0),
         short_uuid: None,
