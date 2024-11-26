@@ -32,61 +32,49 @@ fn main() {
         compare_snowflake(&args)
     }
 
-    let id_info: IDInfo;
-    match &args.id.chars().count() {
-        40 => {
-            id_info = parse_ksuid(&args).unwrap_or_default();
-            id_info.print()
-        }
-        36 | 32 => {
-            id_info = parse_uuid(&args).unwrap_or_default();
-            id_info.print()
-        }
-        27 => {
-            match parse_upid(&args) {
-                Some(value) => {
-                    id_info = value;
-                }
-                None => {
-                    id_info = parse_ksuid(&args).unwrap_or_default();
-                }
-            }
-            id_info.print()
-        }
-        26 => {
-            id_info = parse_ulid(&args).unwrap_or_default();
-            id_info.print()
-        }
-        25 => {
-            id_info = parse_cuid1(&args).unwrap_or_default();
-            id_info.print()
-        }
-        24 => {
-            match parse_objectid(&args) {
-                Some(value) => {
-                    id_info = value;
-                }
-                None => {
-                    id_info = parse_base64_uuid(&args).unwrap_or_default();
+    let mut id_info: Option<IDInfo>;
+    if args.id.trim().parse::<u64>().is_ok() {
+        // Numeric:
+        id_info = parse_snowflake(&args)
+    } else { 
+        // Fixed length:
+        id_info = match &args.id.chars().count() {
+            40 => parse_ksuid(&args),
+            36 | 32 => parse_uuid(&args),
+            27 => match parse_upid(&args) {
+                Some(value) => Some(value),
+                None => parse_ksuid(&args),
+            },
+            26 => parse_ulid(&args),
+            25 => parse_cuid1(&args),
+            24 => match parse_objectid(&args) {
+                Some(value) => Some(value),
+                None => parse_base64_uuid(&args),
+            },
+            22 => match parse_short_uuid(&args) {
+                Some(value) => Some(value),
+                None => parse_timeflake_base62(&args),
+            },
+            20 => parse_xid(&args),
+            18 => parse_flake(&args),
+            _ => None,
+        };
+        // Variable length:
+        id_info = match id_info {
+            Some(value) => Some(value),
+            None => {
+                match parse_base64_uuid(&args) {
+                    Some(value) => Some(value),
+                    None => parse_cuid2(&args),
                 }
             }
-            id_info.print()
-        }
-        21..24 => {
-            id_info = parse_short_uuid(&args).unwrap_or(
-                parse_base64_uuid(&args)
-                    .unwrap_or(parse_timeflake_base62(&args).unwrap_or_default()),
-            );
-            id_info.print()
-        }
-        1..21 => {
-            // println!("MAC")
+        };
+    }
 
-            id_info = parse_flake(&args).unwrap_or(parse_xid(&args).unwrap_or(parse_snowflake(&args).unwrap_or_default()));
-            id_info.print()
-        }
-        _ => {
-            println!("Something else")
+    match id_info {
+        Some(value) => value.print(),
+        None => {
+            println!("Something else");
         }
     }
 }

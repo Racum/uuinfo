@@ -19,7 +19,8 @@ Microsoft GUID        |✅|❌|❌|❌|128|36 or 32
 ULID                  |✅|✅|❌|❌|128|26
 UPID                  |✅|✅|✅|❌|128|27
 Wrapped in Short UUID |-|-|-|-|128|22
-Wrapped in Base64     |-|-|-|-|128|24
+Wrapped in Base64     |-|-|-|-|128|24 or 22
+Wrapped in Uuid25     |-|-|-|-|128|25
 **Snowflake Variants:**|
 Twitter               |❌|✅|✅|✅|64|Variable
 Mastodon              |❌|✅|❌|✅|64|Variable
@@ -34,7 +35,7 @@ Xid                   |❌|✅|✅|✅|96|20
 KSUID                 |✅|✅|❌|❌|160|27
 Timeflake             |✅|✅|❌|❌|128|22
 Flake (Boundary)      |❌|✅|✅|✅|128|18
-CUID 1                |✅|✅|✅|✅|-|Variable
+CUID 1                |✅|✅|✅|✅|-|25
 CUID 2                |✅|❌|❌|❌|-|Variable
 Nano ID               |✅|❌|❌|❌|-|Variable
 Hashid                |?|?|?|?|-|Variable

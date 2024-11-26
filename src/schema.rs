@@ -78,7 +78,6 @@ pub struct Args {
 
     #[arg(long)]
     pub hashid_salt: Option<String>,
-
 }
 
 #[allow(dead_code)]
@@ -141,7 +140,7 @@ impl IDInfo {
         println!("┃ {:<lc$} │ {:<rc$} ┃", "String", self.standard);
 
         if let Some(value) = self.integer {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "ShortUUID", value);
+            println!("┃ {:<lc$} │ {:<rc$} ┃", "Integer", value);
         }
         if let Some(value) = self.short_uuid.as_deref() {
             println!("┃ {:<lc$} │ {:<rc$} ┃", "ShortUUID", value);

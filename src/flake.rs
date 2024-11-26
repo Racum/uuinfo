@@ -4,7 +4,6 @@ use uuid::Uuid;
 use crate::schema::{Args, IDInfo};
 use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
 
-
 pub fn parse_flake(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 18 {
         return None;

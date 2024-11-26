@@ -1,5 +1,6 @@
 extern crate basen;
 use basen::BASE36;
+use cuid2;
 
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
@@ -28,7 +29,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
         None => return None,
     };
 
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
 
     Some(IDInfo {
         known: true,
@@ -53,6 +54,9 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
+    if !cuid2::is_cuid2(&args.id) {
+        return None;
+    }
     Some(IDInfo {
         known: true,
         id_type: "CUID".to_string(),
@@ -64,14 +68,13 @@ pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
         uuid_wrap: None,
         size: 0,
         entropy: 0,
-        datetime: None, //Some(datetime),
-        timestamp: None, //Some(timestamp.to_string()),
-        sequence: None, //Some(sequence as u128),
-        node1: None, //Some(format!("{} (Fingerprint)", fingerprint)),
-        node2: None, //Some(format!("{} (Random data)", random_data)),
+        datetime: None,
+        timestamp: None,
+        sequence: None,
+        node1: None,
+        node2: None,
         hex: None,
         bits: None,
         color_map: None,
     })
 }
-
