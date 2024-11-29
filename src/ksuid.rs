@@ -25,7 +25,6 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
     let datetime = Some(formatted_time.1);
 
     Some(IDInfo {
-        known: true,
         id_type: "KSUID".to_string(),
         version,
         standard: ksuid.to_base62(),
@@ -41,13 +40,7 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(ksuid.to_hex()),
-        bits: Some(
-            ksuid
-                .as_bytes()
-                .iter()
-                .map(|&c| format!("{c:08b}"))
-                .collect(),
-        ),
+        bits: Some(ksuid.as_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
         color_map: Some("3333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
     })
 }

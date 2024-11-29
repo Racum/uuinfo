@@ -31,7 +31,6 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
 
     Some(IDInfo {
-        known: true,
         id_type: "CUID".to_string(),
         version: Some("1".to_string()),
         standard: args.id.to_string(),
@@ -57,7 +56,6 @@ pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
         return None;
     }
     Some(IDInfo {
-        known: true,
         id_type: "CUID".to_string(),
         version: Some("2".to_string()),
         standard: args.id.to_string(),

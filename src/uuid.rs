@@ -1,6 +1,4 @@
-use base64::{
-    engine::general_purpose::URL_SAFE, engine::general_purpose::URL_SAFE_NO_PAD, Engine as _,
-};
+use base64::{engine::general_purpose::URL_SAFE, engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
 use short_uuid::{CustomTranslator, ShortUuidCustom};
 use uuid::{Uuid, Variant};
 
@@ -102,7 +100,6 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
     };
 
     Some(IDInfo {
-        known: true,
         id_type,
         version,
         standard: uuid.to_string(),
@@ -118,12 +115,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         node1,
         node2: None,
         hex: Some(hex::encode(uuid.as_bytes())),
-        bits: Some(
-            uuid.as_bytes()
-                .iter()
-                .map(|&c| format!("{c:08b}"))
-                .collect(),
-        ),
+        bits: Some(uuid.as_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
         color_map,
     })
 }

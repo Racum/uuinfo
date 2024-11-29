@@ -11,37 +11,53 @@ pub enum Format {
 }
 
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum SnowflakeVerion {
-    /// Twitter
-    Twitter,
-    /// Mastodon
-    Mastodon,
-    /// Discord
-    Discord,
-    /// Instagram "Shard ID"
-    Instagram,
-    /// LinkedIn (also OnlineAppZone)
-    Linkedin,
-    /// Sony "Sonyflake"
-    Sony,
-    /// Spaceflake
-    Spaceflake,
-}
-
-#[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum UUIDAlternative {
+pub enum ForceFormat {
+    /// UUID
+    Uuid,
+    /// ShortUUID
+    Shortuuid,
+    /// UUID as Base64
+    UuidB64,
+    /// Uuid25
+    Uuid25,
     /// ULID
     Ulid,
     /// UPID
     Upid,
     /// Timeflake
     Timeflake,
-    /// Flake
+    /// Flake (Boundary)
     Flake,
-    /// TimeUUID
-    Timeuuid,
-    /// SCRU128
-    SCRU128,
+    /// SCRU128,
+    Scru128,
+    /// SCRU64,
+    Scru64,
+    /// MongoDB ObjectId
+    Mongodb,
+    /// KSUID
+    Ksuid,
+    /// Xid
+    Xid,
+    /// CUID 1
+    Cuid1,
+    /// CUID 2
+    Cuid2,
+    /// Nano ID
+    Nanoid,
+    /// Snowflake: Twitter
+    SfTwitter,
+    /// Snowflake: Mastodon
+    SfMastodon,
+    /// Snowflake: Discord
+    SfDiscord,
+    /// Snowflake: Instagram "Shard ID"
+    SfInstagram,
+    /// Snowflake: LinkedIn (also OnlineAppZone)
+    SfLinkedin,
+    /// Snowflake: Sony "Sonyflake"
+    SfSony,
+    /// Snowflake: Spaceflake
+    SfSpaceflake,
 }
 
 /// Shows debug information about complex ID.
@@ -53,19 +69,15 @@ pub struct Args {
 
     /// Output format.
     #[arg(short, long)]
-    pub format: Option<Format>,
+    pub output: Option<Format>,
+
+    /// Force format
+    #[arg(short = 'f', long)]
+    pub force: Option<ForceFormat>,
 
     /// Compare times of different Snowflake versions.
     #[arg(short = 'c', long)]
     pub compare_snowflake: bool,
-
-    /// Parse Snowflake as version.
-    #[arg(short = 's', long)]
-    pub snowflake: Option<SnowflakeVerion>,
-
-    /// Force UUID wrapping alternative.
-    #[arg(short = 'u', long)]
-    pub uuid_alt: Option<UUIDAlternative>,
 
     /// Remove Base64 padding.
     #[arg(long)]
@@ -85,7 +97,6 @@ pub struct Args {
 #[allow(dead_code)]
 #[derive(Default, Clone)]
 pub struct IDInfo {
-    pub known: bool,
     pub id_type: String,
     pub version: Option<String>,
     pub standard: String,
@@ -133,11 +144,7 @@ impl IDInfo {
 
         println!("┏━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓",);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "ID Tyoe", self.id_type);
-        println!(
-            "┃ {:<lc$} │ {:<rc$} ┃",
-            "Version".yellow(),
-            self.version.as_deref().unwrap_or("-")
-        );
+        println!("┃ {:<lc$} │ {:<rc$} ┃", "Version".yellow(), self.version.as_deref().unwrap_or("-"));
         println!("┠───────────┼─────────────────────────────────────────────┨",);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "String", self.standard);
 
@@ -165,16 +172,8 @@ impl IDInfo {
         println!("┃ {:<lc$} │ {:<rc$} ┃", "Size", size);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "Entropy".green(), entropy);
         println!("┃ {:<lc$} │ {:<rc$} ┃", "Timestamp".cyan(), timestamp);
-        println!(
-            "┃ {:<lc$} │ {:<rc$} ┃",
-            "Node 1".purple(),
-            self.node1.as_deref().unwrap_or("-")
-        );
-        println!(
-            "┃ {:<lc$} │ {:<rc$} ┃",
-            "Node 2".red(),
-            self.node2.as_deref().unwrap_or("-")
-        );
+        println!("┃ {:<lc$} │ {:<rc$} ┃", "Node 1".purple(), self.node1.as_deref().unwrap_or("-"));
+        println!("┃ {:<lc$} │ {:<rc$} ┃", "Node 2".red(), self.node2.as_deref().unwrap_or("-"));
         println!("┃ {:<lc$} │ {:<rc$} ┃", "Sequence".blue(), sequence);
         println!("┠───────────┼─────────────────────────────────────────────┨",);
 

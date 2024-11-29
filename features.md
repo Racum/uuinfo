@@ -20,6 +20,7 @@ ULID                  |✅|✅|❌|❌|128|26
 UPID                  |✅|✅|✅|❌|128|27
 Wrapped in Short UUID |-|-|-|-|128|22
 Wrapped in Base64     |-|-|-|-|128|24 or 22
+Wrapped in Uuid25.    |-|-|-|-|128|25
 **Snowflake Variants:**|
 Twitter               |❌|✅|✅|✅|64|Variable
 Mastodon              |❌|✅|❌|✅|64|Variable
@@ -41,12 +42,6 @@ CUID 2                |✅|❌|❌|❌|-|Variable
 Nano ID               |✅|❌|❌|❌|-|Variable
 Hashid                |?|?|?|?|-|Variable
 Sqid                  |?|?|?|?|-|Variable
-**Non-IDs:**          |
-IPv4                  |✅|❌|❌|❌|32|7 to 15
-IPv6                  |✅|❌|❌|❌|128|up to 39
-MAC address           |❌|❌|✅|✅|48|17
-Jira ticket           |❌|❌|✅|✅|-|Variable
-Unix timestamp        |❌|✅|❌|❌|-|Variable
 
 
 

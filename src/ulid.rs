@@ -5,19 +5,26 @@ use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
+    let mut id_type = "ULID";
     let ulid = match Ulid::from_string(&args.id) {
         Ok(value) => value,
-        Err(_) => return None,
+        Err(_) => {
+            let uuid = match Uuid::try_parse(&args.id) {
+                Ok(value) => value,
+                Err(_) => return None,
+            };
+            id_type = "ULID wrapped in UUID";
+            Ulid::from(uuid)
+        }
     };
 
     let uuid = Uuid::from_bytes(ulid.to_bytes());
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(ulid.timestamp_ms(), None);
 
     Some(IDInfo {
-        known: true,
-        id_type: "ULID".to_string(),
+        id_type: id_type.to_string(),
         version: None,
-        standard: args.id.to_string(),
+        standard: ulid.to_string(),
         integer: Some(ulid.0),
         short_uuid: None,
         base64: None,
@@ -30,12 +37,7 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(hex::encode(ulid.to_bytes())),
-        bits: Some(
-            ulid.to_bytes()
-                .iter()
-                .map(|&c| format!("{c:08b}"))
-                .collect(),
-        ),
+        bits: Some(ulid.to_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
     })
 }

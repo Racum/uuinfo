@@ -17,11 +17,9 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
     let machine_id = bits128(xid_int, 64, 24);
     let process_id = bits128(xid_int, 88, 16);
     let sequence = bits128(xid_int, 104, 24);
-    let (timestamp, datetime) =
-        milliseconds_to_seconds_and_iso8601(timestamp_raw as u64 * 1000, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64 * 1000, None);
 
     Some(IDInfo {
-        known: true,
         id_type: "Xid".to_string(),
         version: None,
         standard: args.id.to_string(),
@@ -35,14 +33,9 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
         timestamp: Some(timestamp),
         sequence: Some(sequence),
         node1: Some(format!("{} (Machine ID)", machine_id)),
-        node2:Some(format!("{} (Process ID)", process_id)),
+        node2: Some(format!("{} (Process ID)", process_id)),
         hex: Some(hex::encode(xid_bytes.clone())),
-        bits: Some(
-            xid_bytes
-                .iter()
-                .map(|&c| format!("{c:08b}"))
-                .collect(),
-        ),
+        bits: Some(xid_bytes.iter().map(|&c| format!("{c:08b}")).collect()),
         color_map: Some("333333333333333333333333333333334444444444444444444444445555555555555555666666666666666666666666".to_string()),
     })
 }
