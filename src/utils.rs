@@ -14,7 +14,7 @@ pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: Option<u64>) -> (Stri
     let nanos = (timestamp.fract() * 1_000.0).round() as u32 * 1_000_000;
     let dt: DateTime<Utc> = DateTime::from_timestamp(secs, nanos).unwrap();
     let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
-    if dt.year() < 10889 {
+    if dt.year() < 10000 {
         (format!("{:.3}", timestamp), datetime.to_string())
     } else {
         (format!("{:.3}", timestamp), "far future".to_string())

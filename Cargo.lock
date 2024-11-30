@@ -754,6 +754,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "uuid25"
+version = "0.3.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1160cae0501662ef1daee85a3d3619c78d9425b1eaccfa9a6b62dcd545715350"
+dependencies = [
+ "fstr",
+]
+
+[[package]]
 name = "uuinfo"
 version = "0.1.0"
 dependencies = [
@@ -776,6 +785,7 @@ dependencies = [
  "ulid",
  "upid",
  "uuid",
+ "uuid25",
 ]
 
 [[package]]

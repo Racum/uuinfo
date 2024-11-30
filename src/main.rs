@@ -1,22 +1,22 @@
 use clap::Parser;
 
-mod utils;
-mod uuid;
+mod cuid;
+mod flake;
+mod ksuid;
+mod nanoid;
+mod objectid;
+mod scru;
+mod timeflake;
 mod ulid;
 mod upid;
-mod ksuid;
-mod timeflake;
+mod utils;
+mod uuid;
 mod xid;
-mod objectid;
-mod flake;
-mod cuid;
-mod scru;
-mod nanoid;
 
 mod schema;
 use crate::schema::{Args, IDInfo};
 mod snowflake;
-use crate::snowflake::{compare_snowflake};
+use crate::snowflake::compare_snowflake;
 mod formats;
 use crate::formats::{auto_detect, force_format};
 

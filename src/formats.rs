@@ -1,16 +1,16 @@
-use crate::schema::{Args, ForceFormat, IDInfo};
-use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid};
-use crate::ulid::parse_ulid;
-use crate::upid::parse_upid;
+use crate::cuid::{parse_cuid1, parse_cuid2};
+use crate::flake::parse_flake;
 use crate::ksuid::parse_ksuid;
+use crate::nanoid::parse_nanoid;
+use crate::objectid::parse_objectid;
+use crate::schema::{Args, ForceFormat, IDInfo};
+use crate::scru::{parse_scru128, parse_scru64};
 use crate::snowflake::parse_snowflake;
 use crate::timeflake::{parse_timeflake_any, parse_timeflake_base62};
+use crate::ulid::parse_ulid;
+use crate::upid::parse_upid;
+use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25};
 use crate::xid::parse_xid;
-use crate::objectid::parse_objectid;
-use crate::flake::parse_flake;
-use crate::cuid::{parse_cuid1, parse_cuid2};
-use crate::scru::{parse_scru128, parse_scru64};
-use crate::nanoid::parse_nanoid;
 
 pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
@@ -64,7 +64,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         ForceFormat::Uuid => parse_uuid(args),
         ForceFormat::Shortuuid => parse_short_uuid(args),
         ForceFormat::UuidB64 => parse_base64_uuid(args),
-        ForceFormat::Uuid25 => None,
+        ForceFormat::Uuid25 => parse_uuid25(args),
         ForceFormat::Ulid => parse_ulid(args),
         ForceFormat::Upid => parse_upid(args),
         ForceFormat::Timeflake => parse_timeflake_any(args),
@@ -184,6 +184,7 @@ mod tests {
         _assert("32CQvwbvpbnkmkhhguznVH", ForceFormat::Shortuuid, "Short-UUID of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g==", ForceFormat::UuidB64, "Padded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g", ForceFormat::UuidB64, "Unpadded Base64 of UUID (RFC-4122)", "4 (random)");
+        _assert("dpoadk8izg9y4tte7vy1xt94o", ForceFormat::Uuid25, "Uuid25 of UUID (RFC-4122)", "4 (random)");
         // Snowflakes:
         _assert("1777150623882019211", ForceFormat::SfTwitter, "Snowflake", "Twitter");
         _assert("1304369705066434662", ForceFormat::SfDiscord, "Snowflake", "Discord");

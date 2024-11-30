@@ -1,6 +1,7 @@
 use base64::{engine::general_purpose::URL_SAFE, engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
 use short_uuid::{CustomTranslator, ShortUuidCustom};
 use uuid::{Uuid, Variant};
+use uuid25::Uuid25;
 
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
@@ -179,5 +180,23 @@ pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
     id_info.base64 = None;
     id_info.uuid_wrap = Some(uuid.to_string());
 
+    Some(id_info)
+}
+
+pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
+    let uuid_str = match Uuid25::parse(&args.id) {
+        Ok(value) => value.to_hyphenated().to_string(),
+        Err(_) => return None,
+    };
+    let mut new_args: Args = args.clone();
+    new_args.id = uuid_str.clone();
+    println!("{:?}", new_args.id);
+    let mut id_info = match parse_uuid(&new_args) {
+        Some(value) => value,
+        None => return None,
+    };
+    id_info.id_type = format!("Uuid25 of {}", id_info.id_type);
+    id_info.standard = args.id.to_string();
+    id_info.uuid_wrap = Some(uuid_str);
     Some(id_info)
 }
