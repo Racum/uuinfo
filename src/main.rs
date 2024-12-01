@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::io;
 
 mod cuid;
 mod flake;
@@ -21,10 +22,20 @@ mod formats;
 use crate::formats::{auto_detect, force_format};
 
 fn main() {
-    let args = Args::parse();
+    let mut args = Args::parse();
 
     if args.compare_snowflake {
         compare_snowflake(&args)
+    }
+
+    if &args.id == "-" {
+        let mut buffer = String::new();
+        if io::stdin().read_line(&mut buffer).is_ok() {
+            if let Some(value) = buffer.split('\n').next() {
+                args.id = value.to_string();
+                println!("{}", value);
+            }
+        }
     }
 
     match &args.force {
