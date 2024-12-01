@@ -1,13 +1,25 @@
 use clap::Parser;
 use clap::ValueEnum;
 use colored::*;
+use std::io::stdout;
+use std::io::Write;
 
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Format {
-    Basic,
-    Ascii,
+pub enum Output {
+    /// Pretty-printed information card
+    Card,
+    /// One line with only ID type and version
+    Short,
+    /// Parsed information as JSON
     Json,
+    /// Raw binary representation of the ID
     Binary,
+}
+
+impl std::fmt::Display for Output {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.to_possible_value().expect("-").get_name().fmt(f)
+    }
 }
 
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
@@ -64,13 +76,13 @@ pub enum ForceFormat {
 #[derive(Parser, Debug, Clone)]
 #[command(version, about, long_about = None)]
 pub struct Args {
-    /// UUID, ULID, Snowflake or other IDs.
+    /// UUID, ULID, Snowflake or other IDs; use "-" for STDIN
     #[arg(allow_hyphen_values = true)]
     pub id: String,
 
     /// Output format.
-    #[arg(short, long)]
-    pub output: Option<Format>,
+    #[arg(short, long, default_value_t = Output::Card)]
+    pub output: Output,
 
     /// Force format
     #[arg(short = 'f', long)]
@@ -129,7 +141,7 @@ IDInfo.color_map codes:
 */
 
 impl IDInfo {
-    pub fn print(&self) {
+    pub fn print_card(&self) {
         let lc = 9;
         let rc = 43;
 
@@ -228,10 +240,37 @@ impl IDInfo {
                 }
             }
             None => {
-                bin_lines.push("No bits".to_string());
+                bin_lines.push("No bits (non-numeric ID)".to_string());
                 hex_lines.push("No hex".to_string());
             }
         }
         (hex_lines, bin_lines)
+    }
+
+    pub fn print_short(&self) {
+        match &self.version {
+            Some(version) => println!("ID Type: {}, version: {}.", self.id_type, version),
+            None => println!("ID Type: {}.", self.id_type),
+        }
+    }
+
+    pub fn print_json(&self) {
+        println!("...");
+    }
+
+    pub fn print_binary(&self) {
+        match &self.integer {
+            Some(number) => stdout().write_all(&number.to_be_bytes()).unwrap(),
+            None => println!("{}", self.standard),
+        }
+    }
+
+    pub fn print(&self, args: &Args) {
+        match args.output {
+            Output::Short => self.print_short(),
+            Output::Json => self.print_json(),
+            Output::Binary => self.print_binary(),
+            _ => self.print_card(),
+        }
     }
 }

@@ -14,7 +14,7 @@ mod uuid;
 mod xid;
 
 mod schema;
-use crate::schema::{Args, IDInfo};
+use crate::schema::Args;
 mod snowflake;
 use crate::snowflake::compare_snowflake;
 mod formats;
@@ -27,15 +27,20 @@ fn main() {
         compare_snowflake(&args)
     }
 
-    let id_info: Option<IDInfo> = match &args.force {
-        Some(_) => force_format(&args),
-        None => auto_detect(&args),
+    match &args.force {
+        Some(_) => match force_format(&args) {
+            Some(value) => value.print(&args),
+            None => {
+                println!("Invalid ID for this format");
+                std::process::exit(1);
+            }
+        },
+        None => match auto_detect(&args) {
+            Some(value) => value.print(&args),
+            None => {
+                println!("Unknown ID type");
+                std::process::exit(1);
+            }
+        },
     };
-
-    match id_info {
-        Some(value) => value.print(),
-        None => {
-            println!("Something else");
-        }
-    }
 }

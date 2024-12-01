@@ -92,13 +92,14 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::schema::Output;
 
     #[test]
     fn test_auto_detect() {
         fn _assert(id: &str, id_type: &str, version: &str) {
             let args = Args {
                 id: id.to_string(),
-                output: None,
+                output: Output::Card,
                 force: None,
                 compare_snowflake: false,
                 b64_nopad: false,
@@ -151,7 +152,7 @@ mod tests {
         fn _assert(id: &str, force: ForceFormat, id_type: &str, version: &str) {
             let args = Args {
                 id: id.to_string(),
-                output: None,
+                output: Output::Card,
                 force: Some(force),
                 compare_snowflake: false,
                 b64_nopad: false,
