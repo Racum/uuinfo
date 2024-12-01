@@ -106,8 +106,8 @@ mod tests {
                 alphabet: None,
                 hashid_salt: None,
             };
-            assert_eq!(auto_detect(&args).unwrap().id_type, id_type.to_string(), "{id}");
-            assert_eq!(auto_detect(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id}");
+            assert_eq!(auto_detect(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
+            assert_eq!(auto_detect(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
         }
 
         // UUID:
@@ -159,8 +159,8 @@ mod tests {
                 alphabet: None,
                 hashid_salt: None,
             };
-            assert_eq!(force_format(&args).unwrap().id_type, id_type.to_string(), "{id}");
-            assert_eq!(force_format(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id}");
+            assert_eq!(force_format(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
+            assert_eq!(force_format(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
         }
 
         // UUID:
