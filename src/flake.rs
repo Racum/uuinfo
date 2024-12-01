@@ -1,3 +1,4 @@
+use std::fmt::Write;
 extern crate base62;
 use uuid::Uuid;
 
@@ -46,7 +47,10 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
         node1: Some(worker_id.to_string()),
         node2: None,
         hex: Some(hex::encode(id_int.to_be_bytes())),
-        bits: Some(id_int.to_be_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(id_int.to_be_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("33333333333333333333333333333333333333333333333333333333333333334444444444444444444444444444444444444444444444446666666666666666".to_string()),
     })
 }

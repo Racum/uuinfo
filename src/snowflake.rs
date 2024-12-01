@@ -1,5 +1,6 @@
 use crate::schema::{Args, ForceFormat, IDInfo};
 use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
+use std::fmt::Write;
 
 #[derive(Debug)]
 struct SnowflakeAnnotation {
@@ -189,7 +190,10 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
         node1: annotation.node1,
         node2: annotation.node2,
         hex: Some(hex::encode(id_int.to_be_bytes())),
-        bits: Some(id_int.to_be_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(id_int.to_be_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: annotation.color_map,
     })
 }

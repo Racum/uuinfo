@@ -28,7 +28,7 @@ mod bits64 {
     #[test]
     fn test_bits64_first_bit() {
         assert_eq!(bits64(0u64, 0, 1), 0);
-        assert_eq!(bits64(u64::pow(2, 63) as u64, 0, 1), 1);
+        assert_eq!(bits64(u64::pow(2, 63), 0, 1), 1);
     }
 
     #[test]

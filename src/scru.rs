@@ -2,6 +2,7 @@ use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
 use scru128::Scru128Id;
 use scru64::Scru64Id;
+use std::fmt::Write;
 use uuid::Uuid;
 
 pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
@@ -37,7 +38,10 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(hex::encode(scru.as_bytes())),
-        bits: Some(scru.as_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(scru.as_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
     })
 }
@@ -66,7 +70,10 @@ pub fn parse_scru64(args: &Args) -> Option<IDInfo> {
         node1: Some(format!("{} (Node ID)", scru.node_ctr())),
         node2: None,
         hex: Some(hex::encode(scru.to_u64().to_be_bytes())),
-        bits: Some(scru.to_u64().to_be_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(scru.to_u64().to_be_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("0033333333333333333333333333333333333333444444444444444444444444".to_string()),
     })
 }

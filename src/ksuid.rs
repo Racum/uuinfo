@@ -1,4 +1,5 @@
 use ksuid::Ksuid;
+use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
@@ -40,7 +41,10 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(ksuid.to_hex()),
-        bits: Some(ksuid.as_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(ksuid.as_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("3333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
     })
 }

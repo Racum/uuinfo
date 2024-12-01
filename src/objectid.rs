@@ -1,5 +1,6 @@
 use crate::schema::{Args, IDInfo};
 use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
+use std::fmt::Write;
 
 pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {
@@ -34,7 +35,10 @@ pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(hex::encode(oid_bytes.clone())),
-        bits: Some(oid_bytes.iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(oid_bytes.iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("333333333333333333333333333333332222222222222222222222222222222222222222666666666666666666666666".to_string()),
     })
 }

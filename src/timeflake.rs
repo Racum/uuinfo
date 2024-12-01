@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use timeflake_rs::Timeflake;
 extern crate base62;
 use uuid::Uuid;
@@ -29,7 +30,10 @@ pub fn parse_timeflake_core(hex_id: &str) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(hex_id.to_string()),
-        bits: Some(timeflake.as_u128().to_be_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(timeflake.as_u128().to_be_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
     })
 }

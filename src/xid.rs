@@ -1,6 +1,7 @@
 use crate::schema::{Args, IDInfo};
 use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
 use base32::Alphabet;
+use std::fmt::Write;
 
 pub fn parse_xid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 20 {
@@ -35,7 +36,10 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
         node1: Some(format!("{} (Machine ID)", machine_id)),
         node2: Some(format!("{} (Process ID)", process_id)),
         hex: Some(hex::encode(xid_bytes.clone())),
-        bits: Some(xid_bytes.iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(xid_bytes.iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("333333333333333333333333333333334444444444444444444444445555555555555555666666666666666666666666".to_string()),
     })
 }

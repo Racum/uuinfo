@@ -1,5 +1,6 @@
 use base64::{engine::general_purpose::URL_SAFE, engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
 use short_uuid::{CustomTranslator, ShortUuidCustom};
+use std::fmt::Write;
 use uuid::{Uuid, Variant};
 use uuid25::Uuid25;
 
@@ -116,7 +117,10 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         node1,
         node2: None,
         hex: Some(hex::encode(uuid.as_bytes())),
-        bits: Some(uuid.as_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(uuid.as_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map,
     })
 }

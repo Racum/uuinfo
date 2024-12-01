@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use ulid::Ulid;
 use uuid::Uuid;
 
@@ -37,7 +38,10 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
         node1: None,
         node2: None,
         hex: Some(hex::encode(ulid.to_bytes())),
-        bits: Some(ulid.to_bytes().iter().map(|&c| format!("{c:08b}")).collect()),
+        bits: Some(ulid.to_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
     })
 }
