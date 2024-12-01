@@ -24,7 +24,7 @@ impl std::fmt::Display for Output {
 }
 
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
-pub enum ForceFormat {
+pub enum IdFormat {
     /// UUID
     Uuid,
     /// ShortUUID
@@ -87,7 +87,7 @@ pub struct Args {
 
     /// Force format
     #[arg(short = 'f', long)]
-    pub force: Option<ForceFormat>,
+    pub force: Option<IdFormat>,
 
     /// Compare times of different Snowflake versions.
     #[arg(short = 'c', long)]

@@ -1,4 +1,4 @@
-use crate::schema::{Args, ForceFormat, IDInfo};
+use crate::schema::{Args, IDInfo, IdFormat};
 use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
 use std::fmt::Write;
 
@@ -151,13 +151,13 @@ fn annotate_snowflake_variant(args: &Args) -> SnowflakeAnnotation {
     match args.force {
         Some(value) => {
             let annotation: SnowflakeAnnotation = match value {
-                ForceFormat::SfTwitter => annotate_twitter(args),
-                ForceFormat::SfMastodon => annotate_mastodon(args),
-                ForceFormat::SfDiscord => annotate_discord(args),
-                ForceFormat::SfInstagram => annotate_instagram(args),
-                ForceFormat::SfSony => annotate_sony(args),
-                ForceFormat::SfSpaceflake => annotate_spaceflake(args),
-                ForceFormat::SfLinkedin => annotate_linkedin(args),
+                IdFormat::SfTwitter => annotate_twitter(args),
+                IdFormat::SfMastodon => annotate_mastodon(args),
+                IdFormat::SfDiscord => annotate_discord(args),
+                IdFormat::SfInstagram => annotate_instagram(args),
+                IdFormat::SfSony => annotate_sony(args),
+                IdFormat::SfSpaceflake => annotate_spaceflake(args),
+                IdFormat::SfLinkedin => annotate_linkedin(args),
                 _ => SnowflakeAnnotation::default(),
             };
             annotation
