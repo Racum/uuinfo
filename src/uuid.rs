@@ -194,7 +194,6 @@ pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
     };
     let mut new_args: Args = args.clone();
     new_args.id = uuid_str.clone();
-    println!("{:?}", new_args.id);
     let mut id_info = match parse_uuid(&new_args) {
         Some(value) => value,
         None => return None,

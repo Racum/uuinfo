@@ -33,7 +33,6 @@ fn main() {
         if io::stdin().read_line(&mut buffer).is_ok() {
             if let Some(value) = buffer.split('\n').next() {
                 args.id = value.to_string();
-                println!("{}", value);
             }
         }
     }
