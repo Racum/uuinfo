@@ -65,6 +65,7 @@ pub enum ForceFormat {
 #[command(version, about, long_about = None)]
 pub struct Args {
     /// UUID, ULID, Snowflake or other IDs.
+    #[arg(allow_hyphen_values = true)]
     pub id: String,
 
     /// Output format.

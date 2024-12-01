@@ -1,27 +1,21 @@
 extern crate basen;
 use crate::schema::{Args, IDInfo};
-use nid::{Nanoid, ParseError};
+
+pub const NANOID_ALPHABET: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
 pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
-    if args.id.chars().count() > 36 {
+    if args.id.chars().count() < 2 || args.id.chars().count() > 36 {
         return None;
     }
-    let version: Option<String>;
-    let _: Option<Nanoid> = match Nanoid::try_from_str(&args.id) {
-        Ok(value) => {
-            version = Some("Default alphabet and length".to_string());
-            Some(value)
-        }
-        Err(error) => match error {
-            ParseError::InvalidLength { expected: _, actual } => {
-                version = Some(format!("Default alphabet, custom length ({})", actual));
-                None
-            }
-            _ => {
-                return None;
-            }
-        },
+    if !args.id.chars().all(|c| NANOID_ALPHABET.contains(c)) {
+        return None;
+    }
+    let version = if args.id.chars().count() == 21 {
+        Some("Default alphabet and length".to_string())
+    } else {
+        Some(format!("Default alphabet, custom length ({})", args.id.chars().count()))
     };
+
     Some(IDInfo {
         id_type: "Nano ID".to_string(),
         version,

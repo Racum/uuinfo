@@ -37,7 +37,10 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             },
             22 => match parse_short_uuid(args) {
                 Some(value) => Some(value),
-                None => parse_timeflake_base62(args),
+                None => match parse_timeflake_base62(args) {
+                    Some(value) => Some(value),
+                    None => parse_base64_uuid(args),
+                },
             },
             20 => parse_xid(args),
             18 => parse_flake(args),
@@ -45,15 +48,14 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             _ => None,
         };
         // Variable length:
-        id_info = match id_info {
-            Some(value) => Some(value),
-            None => match parse_base64_uuid(args) {
+        if args.id.chars().count() >= 10 && args.id.chars().count() <= 24 {
+            id_info = match id_info {
                 Some(value) => Some(value),
                 None => match parse_cuid2(args) {
                     Some(value) => Some(value),
                     None => parse_nanoid(args),
                 },
-            },
+            };
         }
     }
     id_info
@@ -141,7 +143,7 @@ mod tests {
         _assert("02i2XhN7hAuaFh3MwztcMd", "Timeflake", "-");
         _assert("8HFaR8qWtRlGDHnO57", "Flake (Boundary)", "-");
         _assert("XBCdxzsCR2FEFeSwhnjCo", "Nano ID", "Default alphabet and length");
-        _assert("XBCdxzsCR2FEFeSwhnjCo000", "Nano ID", "Default alphabet, custom length (24)");
+        _assert("h9jYw2bcOe", "Nano ID", "Default alphabet, custom length (10)");
     }
 
     #[test]
@@ -194,7 +196,7 @@ mod tests {
         _assert("112277929257317646", ForceFormat::SfMastodon, "Snowflake", "Mastodon");
         _assert("7256902784527069184", ForceFormat::SfLinkedin, "Snowflake", "LinkedIn");
         _assert("XBCdxzsCR2FEFeSwhnjCo", ForceFormat::Nanoid, "Nano ID", "Default alphabet and length");
-        _assert("XBCdxzsCR2FEFeSwhnjCo000", ForceFormat::Nanoid, "Nano ID", "Default alphabet, custom length (24)");
+        _assert("h9jYw2bcOe", ForceFormat::Nanoid, "Nano ID", "Default alphabet, custom length (10)");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", ForceFormat::Ulid, "ULID", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", ForceFormat::Upid, "UPID", "A (default)");

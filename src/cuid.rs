@@ -52,6 +52,9 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
+    if args.id.chars().count() < 2 || args.id.chars().count() > 32 {
+        return None;
+    }
     if !cuid2::is_cuid2(&args.id) {
         return None;
     }
