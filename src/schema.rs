@@ -269,7 +269,10 @@ impl IDInfo {
 
     pub fn print_binary(&self) {
         match &self.integer {
-            Some(number) => stdout().write_all(&number.to_be_bytes()).unwrap(),
+            Some(number) => {
+                let slice_offset: usize = ((128 - &self.size) / 8).into();
+                stdout().write_all(&number.to_be_bytes()[slice_offset..16]).unwrap();
+            }
             None => println!("{}", self.standard),
         }
     }
