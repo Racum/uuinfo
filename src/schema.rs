@@ -1,9 +1,9 @@
 use clap::Parser;
 use clap::ValueEnum;
 use colored::*;
+use serde::Serialize;
 use std::io::stdout;
 use std::io::Write;
-use serde::Serialize;
 
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Output {
@@ -263,7 +263,7 @@ impl IDInfo {
             Err(_) => {
                 println!("Error rendering JSON");
                 std::process::exit(3);
-            },
+            }
         };
     }
 
