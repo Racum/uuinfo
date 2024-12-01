@@ -3,6 +3,7 @@ use clap::ValueEnum;
 use colored::*;
 use std::io::stdout;
 use std::io::Write;
+use serde::Serialize;
 
 #[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Output {
@@ -108,7 +109,7 @@ pub struct Args {
 }
 
 #[allow(dead_code)]
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Serialize, Debug)]
 pub struct IDInfo {
     pub id_type: String,
     pub version: Option<String>,
@@ -125,7 +126,9 @@ pub struct IDInfo {
     pub node1: Option<String>,
     pub node2: Option<String>,
     pub hex: Option<String>,
+    #[serde(skip_serializing)]
     pub bits: Option<String>,
+    #[serde(skip_serializing)]
     pub color_map: Option<String>,
 }
 
@@ -255,7 +258,13 @@ impl IDInfo {
     }
 
     pub fn print_json(&self) {
-        println!("...");
+        match serde_json::to_string(self) {
+            Ok(json) => println!("{}", json),
+            Err(_) => {
+                println!("Error rendering JSON");
+                std::process::exit(3);
+            },
+        };
     }
 
     pub fn print_binary(&self) {
