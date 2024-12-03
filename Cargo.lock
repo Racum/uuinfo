@@ -790,7 +790,6 @@ dependencies = [
  "base62",
  "base64",
  "basen",
- "byteorder",
  "chrono",
  "clap",
  "colored",

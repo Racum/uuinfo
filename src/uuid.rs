@@ -39,7 +39,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
                 color_map = Some(COLOR_MAP_UUID_NO_RFC.to_string());
             }
             Variant::Microsoft => {
-                id_type = "Microsoft UUID".to_string();
+                id_type = "Microsoft GUID".to_string();
                 color_map = Some(COLOR_MAP_UUID_NO_RFC.to_string());
             }
             Variant::RFC4122 => {
@@ -142,7 +142,7 @@ pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
         Some(value) => value,
         None => return None,
     };
-    id_info.id_type = format!("Short-UUID of {}", id_info.id_type);
+    id_info.id_type = format!("ShortUUID of {}", id_info.id_type);
     id_info.standard = args.id.to_string();
     id_info.uuid_wrap = Some(uuid_str);
 

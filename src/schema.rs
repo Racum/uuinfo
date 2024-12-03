@@ -145,8 +145,8 @@ IDInfo.color_map codes:
 
 impl IDInfo {
     pub fn print_card(&self) {
-        let lc = 9;
-        let rc = 43;
+        let l_space = 9;
+        let r_space = 43;
 
         let size = match self.size {
             0 => "-",
@@ -158,23 +158,23 @@ impl IDInfo {
             _ => &format!("{} bits", self.entropy),
         };
 
-        println!("┏━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓",);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "ID Tyoe", self.id_type);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Version".yellow(), self.version.as_deref().unwrap_or("-"));
-        println!("┠───────────┼─────────────────────────────────────────────┨",);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "String", self.standard);
+        println!("┏━{:━<l_space$}━┯{:━<r_space$}━━┓", "", "");
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ID Tyoe", self.id_type);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Version".yellow(), self.version.as_deref().unwrap_or("-"));
+        println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "String", self.standard);
 
         if let Some(value) = self.integer {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "Integer", value);
+            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Integer", value);
         }
         if let Some(value) = self.uuid_wrap.as_deref() {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "UUID wrap", value);
+            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "UUID wrap", value);
         }
         if let Some(value) = self.short_uuid.as_deref() {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "ShortUUID", value);
+            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ShortUUID", value);
         }
         if let Some(value) = self.base64.as_deref() {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", "Base64", value);
+            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Base64", value);
         }
         let timestamp = match self.timestamp.as_deref() {
             Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
@@ -184,21 +184,21 @@ impl IDInfo {
             Some(value) => value.to_string(),
             None => "-".to_string(),
         };
-        println!("┠───────────┼─────────────────────────────────────────────┨",);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Size", size);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Entropy".green(), entropy);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Timestamp".cyan(), timestamp);
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Node 1".purple(), self.node1.as_deref().unwrap_or("-"));
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Node 2".red(), self.node2.as_deref().unwrap_or("-"));
-        println!("┃ {:<lc$} │ {:<rc$} ┃", "Sequence".blue(), sequence);
-        println!("┠───────────┼─────────────────────────────────────────────┨",);
+        println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Size", size);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Entropy".green(), entropy);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Timestamp".cyan(), timestamp);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 1".purple(), self.node1.as_deref().unwrap_or("-"));
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 2".red(), self.node2.as_deref().unwrap_or("-"));
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Sequence".blue(), sequence);
+        println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
 
         let (hex_lines, bin_lines) = self.get_hex_bin_lines();
+        let fix_space = r_space - 43; // The colored rendering messes with the count.
         for (i, hex_line) in hex_lines.into_iter().enumerate() {
-            println!("┃ {:<lc$} │ {:<rc$} ┃", hex_line, bin_lines[i]);
+            println!("┃ {:<l_space$} │ {}{:<fix_space$} ┃", hex_line, bin_lines[i], "");
         }
-
-        println!("┗━━━━━━━━━━━┷━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛",);
+        println!("┗━{:━<l_space$}━┷{:━<r_space$}━━┛", "", "");
     }
 
     fn get_hex_bin_lines(&self) -> (Vec<String>, Vec<String>) {

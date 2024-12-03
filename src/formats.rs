@@ -123,9 +123,9 @@ mod tests {
         _assert("00000000-0000-0000-0000-000000000000", "Nil UUID (all zeros)", "-");
         _assert("ffffffff-ffff-ffff-ffff-ffffffffffff", "Max UUID (all ones)", "-");
         _assert("906b4e7f-84a3-a0ed-1191-2dea8b497113", "NCS UUID", "-");
-        _assert("4e3b9f31-c9ae-a2ff-D191-1e180a66f92f", "Microsoft UUID", "-");
+        _assert("4e3b9f31-c9ae-a2ff-D191-1e180a66f92f", "Microsoft GUID", "-");
         // UUID wrappers:
-        _assert("32CQvwbvpbnkmkhhguznVH", "Short-UUID of UUID (RFC-4122)", "4 (random)");
+        _assert("32CQvwbvpbnkmkhhguznVH", "ShortUUID of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g==", "Padded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g", "Unpadded Base64 of UUID (RFC-4122)", "4 (random)");
         // Snowflakes:
@@ -176,7 +176,7 @@ mod tests {
         _assert("00000000-0000-0000-0000-000000000000", IdFormat::Uuid, "Nil UUID (all zeros)", "-");
         _assert("ffffffff-ffff-ffff-ffff-ffffffffffff", IdFormat::Uuid, "Max UUID (all ones)", "-");
         _assert("906b4e7f-84a3-a0ed-1191-2dea8b497113", IdFormat::Uuid, "NCS UUID", "-");
-        _assert("4e3b9f31-c9ae-a2ff-D191-1e180a66f92f", IdFormat::Uuid, "Microsoft UUID", "-");
+        _assert("4e3b9f31-c9ae-a2ff-D191-1e180a66f92f", IdFormat::Uuid, "Microsoft GUID", "-");
         // Other formats wrapped in UUID:
         _assert("01933b98-7e9f-bde4-2a24-7c603489e802", IdFormat::Ulid, "ULID wrapped in UUID", "-");
         _assert("01933b9c-a723-e1ea-609d-d6372631d096", IdFormat::Upid, "UPID wrapped in UUID", "A (default)");
@@ -184,7 +184,7 @@ mod tests {
         _assert("016fb420-9023-b444-fd07-590f81b7b0eb", IdFormat::Timeflake, "Timeflake wrapped in UUID", "-");
         _assert("01936600-0a18-12a4-811f-c295c399b412", IdFormat::Scru128, "SCRU128 wrapped in UUID", "-");
         // UUID wrappers:
-        _assert("32CQvwbvpbnkmkhhguznVH", IdFormat::Shortuuid, "Short-UUID of UUID (RFC-4122)", "4 (random)");
+        _assert("32CQvwbvpbnkmkhhguznVH", IdFormat::Shortuuid, "ShortUUID of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g==", IdFormat::UuidB64, "Padded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g", IdFormat::UuidB64, "Unpadded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("dpoadk8izg9y4tte7vy1xt94o", IdFormat::Uuid25, "Uuid25 of UUID (RFC-4122)", "4 (random)");
