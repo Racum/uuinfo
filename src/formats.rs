@@ -102,10 +102,6 @@ mod tests {
                 output: Output::Card,
                 force: None,
                 compare_snowflake: false,
-                b64_nopad: false,
-                b64_bigendian: false,
-                alphabet: None,
-                hashid_salt: None,
             };
             assert_eq!(auto_detect(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(auto_detect(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
@@ -155,10 +151,6 @@ mod tests {
                 output: Output::Card,
                 force: Some(force),
                 compare_snowflake: false,
-                b64_nopad: false,
-                b64_bigendian: false,
-                alphabet: None,
-                hashid_salt: None,
             };
             assert_eq!(force_format(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(force_format(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");

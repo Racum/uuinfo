@@ -92,20 +92,6 @@ pub struct Args {
     /// Compare times of different Snowflake versions.
     #[arg(short = 'c', long)]
     pub compare_snowflake: bool,
-
-    /// Remove Base64 padding.
-    #[arg(long)]
-    pub b64_nopad: bool,
-
-    /// Encode Base64 from UUID big-endian bytes.
-    #[arg(long)]
-    pub b64_bigendian: bool,
-
-    #[arg(long)]
-    pub alphabet: Option<String>,
-
-    #[arg(long)]
-    pub hashid_salt: Option<String>,
 }
 
 #[allow(dead_code)]
