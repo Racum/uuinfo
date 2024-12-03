@@ -175,7 +175,7 @@ $ uuinfo -o json 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | jq
 
 #### Binary
 
-In case you need to integrate uuinfo with some other commands, there is a JSON output available:
+You can also return just the raw binary representation of the ID, but, be careful, this can mess up your terminal:
 
 ```
 $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
