@@ -225,4 +225,4 @@ Just create a PR, but try to follow some basic guidelines:
 
 ## License
 
-**Uuinfo** is under the MIT license.
+**Uuinfo** is under the 3-Clause BSD License.
