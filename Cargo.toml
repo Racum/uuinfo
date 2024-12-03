@@ -4,13 +4,12 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "MIT"
-description = "Tool to debug unique identifiers (UUID, ULID, Snowflake, etc)."
+description = "A tool to debug unique identifiers (UUID, ULID, Snowflake, etc)."
 readme = "README.md"
 keywords = ["uuid", "unique", "identifier", "debug", "database"]
 categories = ["command-line-utilities", "development-tools::debugging", "encoding", "data-structures"]
 homepage = "https://github.com/racum/uuinfo"
 repository = "https://github.com/racum/uuinfo"
-documentation = "https://docs.rs/uuinfo"
 
 [profile.release]
 strip = true

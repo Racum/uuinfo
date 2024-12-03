@@ -1,6 +1,6 @@
 # uuinfo: UUID (+others) Information
 
-Tool to debug unique identifiers (UUID, ULID, Snowflake, etc).
+A tool to debug unique identifiers (UUID, ULID, Snowflake, etc).
 
 This is a simple CLI program to parse and debug compound unique identifiers, that means, ID’s with built-in structure to achieve uniqueness, like randomness, hashed data, timestamp, node or sequence. It understands most 128 and 64-bit IDs, and some other obscure lengths, including text-only representations.
 
@@ -8,7 +8,7 @@ Just input some ID and **uuinfo** will try to infer as much information as possi
 
 ![Screenshot of a terminal window showing an uuinfo output](assets/uuinfo.png)
 
-If the ID formats allows for it, uuinfo also shows its bits, color-coded by type; the key of the color doubles as the values from the left column in the rendered card. The colors on your system may differ, since those are ANSI colors instead of hardcoded ones.
+If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by type; the key of the color doubles as the values from the left column in the rendered card. The colors on your system may differ, since those are ANSI colors instead of hardcoded ones.
 
 ## Supported ID Formats
 
@@ -36,7 +36,7 @@ If the ID formats allows for it, uuinfo also shows its bits, color-coded by type
 
 ## Installation
 
-Uuinfo was developed in [Rust](https://www.rust-lang.org), thus it requires [its toolchain](https://www.rust-lang.org/tools/install); if you already have it available, you can install it with `cargo`:
+**Uuinfo** was developed in [Rust](https://www.rust-lang.org), thus it requires [its toolchain](https://www.rust-lang.org/tools/install); if you already have it available, you can install it with `cargo`:
 
 ```
 $ cargo install uuinfo
@@ -50,7 +50,7 @@ For a complete list of options, just run the help: `uuinfo --help`.
 
 ### Auto Detect
 
-If you just input an ID without any options, uuinfo will try to detect its format using very basic heuristics on its length and popularity; and this may work for most cases.
+If you just input an ID without any options, **uuinfo** will try to detect its format using very basic heuristics on its length and popularity; and this may work for most cases.
 
 ```
 $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
@@ -61,7 +61,7 @@ $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 
 Sometimes an ID could be valid for more than one format, if this happens and the auto-detection above picks the wrong one, you can disambiguate using the `-f` (of `--force`) parameter.
 
-For example, the ID `12345678901234567890` is automatically detected as a **Snowflake**, but, it could also be a valid **Xid**. If you want to force uuinfo to parse it as Xid, call it like this:
+For example, the ID `12345678901234567890` is automatically detected as a **Snowflake**, but, it could also be a valid **Xid**. If you want to force **uuinfo** to parse it as Xid, call it like this:
 
 ```
 $ uuinfo -f xid 12345678901234567890
@@ -72,7 +72,7 @@ Check the `--help` for a complete list of values of `-f`/`--force`.
 
 #### Snowflake Variants
 
-Snowflake is **not** an “ID format”, but rather a **category** of formats; since it is just a number, uuinfo can’t detect what variation was used to generate it, thus, specifying the variant with `-f`/`—force` is required to be able to get anything useful from it.
+Snowflake is **not** an “ID format”, but rather a **category** of formats; since it is just a number, **uuinfo** can’t detect what variation was used to generate it, thus, specifying the variant with `-f`/`—force` is required to be able to get anything useful from it.
 
 Fortunately, **uuinfo** can compare Snowflakes and sort them by date; for example:
 
@@ -90,7 +90,7 @@ Date/times of the Snowflake ID if parsed as:
 - 2048-03-26T00:05:16.480Z Sony
 ```
 
-In this case, the ID `1777150623882019211` is probably from Twitter, since the it is the most recent value from the list that is not in the future.
+In this case, the ID `1777150623882019211` is probably from Twitter, since it is the most recent value from the list that is not in the future.
 
 Once identified the variant, just run it again enforcing its type:
 
@@ -150,7 +150,7 @@ ID Type: UUID (RFC-9562), version: 7 (sortable timestamp and random).
 
 #### JSON
 
-In case you need to integrate uuinfo with some other commands, there is a JSON output available:
+In case you need to integrate **uuinfo** with some other commands, there is a JSON output available:
 
 ```
 $ uuinfo -o json 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | jq
@@ -206,10 +206,10 @@ $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | xxd -b
 Hunting for ID formats is a rabbit-hole! I published the first version of **uuinfo** with the formats I found on my research. If you want to add more formats, please create a [GitHub issue](https://github.com/racum/uuinfo/issues) containing the following:
 
 - Reference link
-- Size in bytes and the map of bits
-- ID examples (at least 2) with its encoded data (timestamp, node, sequence, etc)
+- Size in bits and the map of bits
+- ID examples (more than one if possible) with its encoded data (timestamp, node, sequence, etc)
 - Alphabet (if applicable)
-- Epoch (if suctom)
+- Epoch (if custom)
 - Source-code (if available)
 
 The more information I get, the easier will be for me to implement it!
@@ -225,4 +225,4 @@ Just create a PR, but try to follow some basic guidelines:
 
 ## License
 
-Uuinfo is under the MIT license.
+**Uuinfo** is under the MIT license.
