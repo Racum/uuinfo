@@ -196,7 +196,11 @@ impl IDInfo {
         let (hex_lines, bin_lines) = self.get_hex_bin_lines();
         let fix_space = r_space - 43; // The colored rendering messes with the count.
         for (i, hex_line) in hex_lines.into_iter().enumerate() {
-            println!("┃ {:<l_space$} │ {}{:<fix_space$} ┃", hex_line, bin_lines[i], "");
+            if self.bits.is_some() {
+                println!("┃ {:<l_space$} │ {}{:<fix_space$} ┃", hex_line, bin_lines[i], "");
+            } else {
+                println!("┃ {:<l_space$} │ {:<r_space$} ┃", hex_line, bin_lines[i]);
+            }
         }
         println!("┗━{:━<l_space$}━┷{:━<r_space$}━━┛", "", "");
     }
