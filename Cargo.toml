@@ -10,6 +10,9 @@ keywords = ["uuid", "unique", "identifier", "debug", "database"]
 categories = ["command-line-utilities", "development-tools::debugging", "encoding", "data-structures"]
 homepage = "https://github.com/racum/uuinfo"
 repository = "https://github.com/racum/uuinfo"
+exclude = [
+    "assets/*",
+]
 
 [profile.release]
 strip = true
