@@ -2,6 +2,7 @@ use clap::Parser;
 use clap::ValueEnum;
 use colored::*;
 use serde::Serialize;
+use std::cmp;
 use std::io::stdout;
 use std::io::Write;
 
@@ -131,8 +132,13 @@ IDInfo.color_map codes:
 
 impl IDInfo {
     pub fn print_card(&self) {
+        let timestamp = match self.timestamp.as_deref() {
+            Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
+            None => "-".to_string(),
+        };
+
         let l_space = 9;
-        let r_space = 43;
+        let r_space = cmp::max(43, timestamp.chars().count());
 
         let size = match self.size {
             0 => "-",
@@ -162,10 +168,6 @@ impl IDInfo {
         if let Some(value) = self.base64.as_deref() {
             println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Base64", value);
         }
-        let timestamp = match self.timestamp.as_deref() {
-            Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
-            None => "-".to_string(),
-        };
         let sequence = match self.sequence {
             Some(value) => value.to_string(),
             None => "-".to_string(),

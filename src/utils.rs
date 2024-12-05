@@ -1,4 +1,4 @@
-use chrono::{DateTime, Datelike, SecondsFormat, Utc};
+use chrono::{DateTime, SecondsFormat, Utc};
 
 pub fn bits64(value: u64, offset: u8, length: u8) -> u64 {
     value << offset >> (64 - length)
@@ -14,11 +14,7 @@ pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: Option<u64>) -> (Stri
     let nanos = (timestamp.fract() * 1_000.0).round() as u32 * 1_000_000;
     let dt: DateTime<Utc> = DateTime::from_timestamp(secs, nanos).unwrap();
     let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
-    if dt.year() < 10000 {
-        (format!("{:.3}", timestamp), datetime.to_string())
-    } else {
-        (format!("{:.3}", timestamp), "far future".to_string())
-    }
+    (format!("{:.3}", timestamp), datetime.to_string())
 }
 
 #[cfg(test)]
@@ -77,6 +73,6 @@ mod bits64 {
         assert_eq!(dt, "5138-11-16T09:46:39.000Z");
         let (ts, dt) = milliseconds_to_seconds_and_iso8601(281474976710655, None);
         assert_eq!(ts, "281474976710.655");
-        assert_eq!(dt, "far future");
+        assert_eq!(dt, "+10889-08-02T05:31:50.655Z");
     }
 }
