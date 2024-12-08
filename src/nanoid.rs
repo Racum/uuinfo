@@ -7,13 +7,21 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() < 2 || args.id.chars().count() > 36 {
         return None;
     }
-    if !args.id.chars().all(|c| NANOID_ALPHABET.contains(c)) {
+    let mut alphabet_info = "Default alphabet";
+    let alphabet = match &args.alphabet {
+        Some(alpha) => {
+            alphabet_info = "Custom alphabet";
+            alpha
+        }
+        None => NANOID_ALPHABET,
+    };
+    if !args.id.chars().all(|c| alphabet.contains(c)) {
         return None;
     }
     let version = if args.id.chars().count() == 21 {
-        Some("Default alphabet and length".to_string())
+        Some(format!("{}, default length", alphabet_info))
     } else {
-        Some(format!("Default alphabet, custom length ({})", args.id.chars().count()))
+        Some(format!("{}, custom length ({})", alphabet_info, args.id.chars().count()))
     };
 
     Some(IDInfo {

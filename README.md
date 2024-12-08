@@ -24,6 +24,8 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Timeflake](https://github.com/anthonynsimon/timeflake)
 - [Flake](https://github.com/boundary/flake) (Boundary)
 - [Nano ID](https://zelark.github.io/nano-id-cc/)
+- [TSID](https://github.com/f4b6a3/tsid-creator)
+- [Sqids](https://sqids.org/)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)
@@ -87,8 +89,12 @@ Date/times of the Snowflake ID if parsed as:
 - 2024-04-08T01:45:01.252Z Twitter
 - 2028-06-05T00:02:06.595Z Discord
 - 2028-06-05T00:02:06.595Z Spaceflake
+- 2033-06-05T00:02:06.595Z TSID
 - 2048-03-26T00:05:16.480Z Sony
+- 2829-04-23T02:15:02.106Z Mastodon
 ```
+
+Notice that **TSID**, although not a Snowflake variant, it is similar enough (64-bit with timestamp) to be compared together.
 
 In this case, the ID `1777150623882019211` is probably from Twitter, since it is the most recent value from the list that is not in the future.
 

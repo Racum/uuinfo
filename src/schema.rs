@@ -58,6 +58,10 @@ pub enum IdFormat {
     Cuid2,
     /// Nano ID
     Nanoid,
+    /// TSID
+    Tsid,
+    /// Sqid
+    Sqid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -93,6 +97,10 @@ pub struct Args {
     /// Compare times of different Snowflake versions.
     #[arg(short = 'c', long)]
     pub compare_snowflake: bool,
+
+    /// Use custom alphabet for Sqids and Nono ID.
+    #[arg(short = 'a', long)]
+    pub alphabet: Option<String>,
 }
 
 #[allow(dead_code)]

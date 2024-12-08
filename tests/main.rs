@@ -59,5 +59,5 @@ fn test_stdin() {
 fn test_unknown_id_type() {
     let command = Command::new(CLI).arg("WHAT%").output().unwrap();
     let output = String::from_utf8_lossy(&command.stdout);
-    assert_eq!(output, "Unknown ID type\n");
+    assert_eq!(output, "Unknown ID type.\n");
 }

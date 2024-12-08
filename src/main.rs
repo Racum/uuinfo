@@ -7,7 +7,9 @@ mod ksuid;
 mod nanoid;
 mod objectid;
 mod scru;
+mod sqid;
 mod timeflake;
+mod tsid;
 mod ulid;
 mod upid;
 mod utils;
@@ -41,14 +43,14 @@ fn main() {
         Some(_) => match force_format(&args) {
             Some(value) => value.print(&args),
             None => {
-                println!("Invalid ID for this format");
+                println!("Invalid ID for this format.");
                 std::process::exit(1);
             }
         },
         None => match auto_detect(&args) {
             Some(value) => value.print(&args),
             None => {
-                println!("Unknown ID type");
+                println!("Unknown ID type.");
                 std::process::exit(1);
             }
         },

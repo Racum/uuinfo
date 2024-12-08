@@ -1,4 +1,5 @@
 use crate::schema::{Args, IDInfo, IdFormat};
+use crate::tsid::parse_tsid;
 use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
 use std::fmt::Write;
 
@@ -201,6 +202,10 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
 pub fn compare_snowflake(args: &Args) {
     if args.id.trim().parse::<u64>().is_ok() {
         println!("Date/times of the Snowflake ID if parsed as:");
+        let tsid_time: String = match parse_tsid(args) {
+            Some(value) => value.datetime.unwrap(),
+            None => "-".to_string(),
+        };
         let mut snowflake_times = vec![
             format!("- {} Twitter", annotate_twitter(args).datetime.unwrap_or("".to_string())),
             format!("- {} Discord", annotate_discord(args).datetime.unwrap_or("".to_string())),
@@ -209,6 +214,7 @@ pub fn compare_snowflake(args: &Args) {
             format!("- {} Spaceflake", annotate_spaceflake(args).datetime.unwrap_or("".to_string())),
             format!("- {} LinkedIn", annotate_linkedin(args).datetime.unwrap_or("".to_string())),
             format!("- {} Mastodon", annotate_mastodon(args).datetime.unwrap_or("".to_string())),
+            format!("- {} TSID", tsid_time), // Not Snowflake, but 64-bit compatible:
         ];
         snowflake_times.sort();
         for time in &snowflake_times {

@@ -6,7 +6,9 @@ use crate::objectid::parse_objectid;
 use crate::schema::{Args, IDInfo, IdFormat};
 use crate::scru::{parse_scru128, parse_scru64};
 use crate::snowflake::parse_snowflake;
+use crate::sqid::parse_sqid;
 use crate::timeflake::{parse_timeflake_any, parse_timeflake_base62};
+use crate::tsid::parse_tsid;
 use crate::ulid::parse_ulid;
 use crate::upid::parse_upid;
 use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25};
@@ -42,21 +44,26 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                     None => parse_base64_uuid(args),
                 },
             },
+            21 => parse_nanoid(args),
             20 => parse_xid(args),
             18 => parse_flake(args),
+            13 => parse_tsid(args),
             12 => parse_scru64(args),
             _ => None,
         };
         // Variable length:
-        if args.id.chars().count() >= 10 && args.id.chars().count() <= 24 {
-            id_info = match id_info {
+        id_info = match id_info {
+            Some(value) => Some(value),
+            None => match parse_cuid2(args) {
                 Some(value) => Some(value),
-                None => match parse_cuid2(args) {
+                None => match parse_sqid(args) {
                     Some(value) => Some(value),
                     None => parse_nanoid(args),
                 },
-            };
+            },
         }
+
+        // }
     }
     id_info
 }
@@ -86,6 +93,8 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::SfLinkedin => parse_snowflake(args),
         IdFormat::SfSony => parse_snowflake(args),
         IdFormat::SfSpaceflake => parse_snowflake(args),
+        IdFormat::Tsid => parse_tsid(args),
+        IdFormat::Sqid => parse_sqid(args),
     }
 }
 
@@ -102,6 +111,7 @@ mod tests {
                 output: Output::Card,
                 force: None,
                 compare_snowflake: false,
+                alphabet: None,
             };
             assert_eq!(auto_detect(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(auto_detect(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
@@ -139,8 +149,9 @@ mod tests {
         _assert("0v20wcjrb21p", "SCRU64", "-");
         _assert("02i2XhN7hAuaFh3MwztcMd", "Timeflake", "-");
         _assert("8HFaR8qWtRlGDHnO57", "Flake (Boundary)", "-");
-        _assert("XBCdxzsCR2FEFeSwhnjCo", "Nano ID", "Default alphabet and length");
-        _assert("h9jYw2bcOe", "Nano ID", "Default alphabet, custom length (10)");
+        _assert("XBCdxzsCR2FEFeSwhnjCo", "Nano ID", "Default alphabet, default length");
+        _assert("0J4AEXRN106Z0", "TSID", "-");
+        _assert("86Rf07xd4z", "Sqid", "Default alphabet");
     }
 
     #[test]
@@ -151,6 +162,7 @@ mod tests {
                 output: Output::Card,
                 force: Some(force),
                 compare_snowflake: false,
+                alphabet: None,
             };
             assert_eq!(force_format(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(force_format(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
@@ -188,7 +200,7 @@ mod tests {
         _assert("1015189130756840860", IdFormat::SfSpaceflake, "Snowflake", "Spaceflake");
         _assert("112277929257317646", IdFormat::SfMastodon, "Snowflake", "Mastodon");
         _assert("7256902784527069184", IdFormat::SfLinkedin, "Snowflake", "LinkedIn");
-        _assert("XBCdxzsCR2FEFeSwhnjCo", IdFormat::Nanoid, "Nano ID", "Default alphabet and length");
+        _assert("XBCdxzsCR2FEFeSwhnjCo", IdFormat::Nanoid, "Nano ID", "Default alphabet, default length");
         _assert("h9jYw2bcOe", IdFormat::Nanoid, "Nano ID", "Default alphabet, custom length (10)");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Ulid, "ULID", "-");
@@ -203,5 +215,8 @@ mod tests {
         _assert("0v20wcjrb21p", IdFormat::Scru64, "SCRU64", "-");
         _assert("02i2XhN7hAuaFh3MwztcMd", IdFormat::Timeflake, "Timeflake", "-");
         _assert("8HFaR8qWtRlGDHnO57", IdFormat::Flake, "Flake (Boundary)", "-");
+        _assert("0J4AEXRN106Z0", IdFormat::Tsid, "TSID", "-");
+        _assert("653390205760314336", IdFormat::Tsid, "TSID", "-");
+        _assert("HamVxsto6jDM", IdFormat::Sqid, "Sqid", "Default alphabet");
     }
 }

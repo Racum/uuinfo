@@ -88,7 +88,19 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         }
     }
 
-    let node1: Option<String> = uuid.get_node_id().map(hex::encode);
+    let node1: Option<String> = match uuid.get_node_id() {
+        Some(value) => {
+            let mut node1_buff: String = "".to_string();
+            for (i, c) in value.into_iter().enumerate() {
+                node1_buff.push_str(&hex::encode(vec![c]));
+                if i < 5 {
+                    node1_buff.push(':');
+                }
+            }
+            Some(node1_buff)
+        }
+        None => None,
+    };
 
     let sequence: Option<u128> = match uuid.get_version_num() {
         1 | 6 => {
