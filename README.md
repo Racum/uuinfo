@@ -124,7 +124,7 @@ This is the pretty-printed output, with all the extracted data, plus a hexadecim
 ```
 $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 ┏━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID Tyoe   │ UUID (RFC-9562)                             ┃
+┃ ID Type   │ UUID (RFC-9562)                             ┃
 ┃ Version   │ 7 (sortable timestamp and random)           ┃
 ┠───────────┼─────────────────────────────────────────────┨
 ┃ String    │ 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa        ┃
