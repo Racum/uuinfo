@@ -76,6 +76,8 @@ pub enum IdFormat {
     SfSony,
     /// Snowflake: Spaceflake
     SfSpaceflake,
+    /// Snowflake: Frostflake
+    SfFrostflake,
 }
 
 /// Shows debug information about complex ID.

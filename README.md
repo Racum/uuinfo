@@ -35,6 +35,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
   - [Spaceflake](https://github.com/kkrypt0nn/spaceflake)
   - [Mastodon](https://github.com/mastodon/mastodon/blob/main/lib/mastodon/snowflake.rb)
   - LinkedIn
+  - [Frostflake](https://github.com/ordo-one/package-frostflake)
 
 ## Installation
 

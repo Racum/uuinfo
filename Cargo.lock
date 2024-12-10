@@ -79,6 +79,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "022dfe9eb35f19ebbcb51e0b40a5ab759f46ad60cadf7297e0bd085afb50e076"
 
 [[package]]
+name = "base58"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6107fe1be6682a68940da878d9e9f5e90ca5745b3dec9fd1bb393c8777d4f581"
+
+[[package]]
 name = "base62"
 version = "2.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -956,9 +962,10 @@ dependencies = [
 
 [[package]]
 name = "uuinfo"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "base32",
+ "base58",
  "base62",
  "base64",
  "basen",

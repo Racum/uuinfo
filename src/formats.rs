@@ -93,6 +93,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::SfLinkedin => parse_snowflake(args),
         IdFormat::SfSony => parse_snowflake(args),
         IdFormat::SfSpaceflake => parse_snowflake(args),
+        IdFormat::SfFrostflake => parse_snowflake(args),
         IdFormat::Tsid => parse_tsid(args),
         IdFormat::Sqid => parse_sqid(args),
     }
@@ -200,8 +201,8 @@ mod tests {
         _assert("1015189130756840860", IdFormat::SfSpaceflake, "Snowflake", "Spaceflake");
         _assert("112277929257317646", IdFormat::SfMastodon, "Snowflake", "Mastodon");
         _assert("7256902784527069184", IdFormat::SfLinkedin, "Snowflake", "LinkedIn");
-        _assert("XBCdxzsCR2FEFeSwhnjCo", IdFormat::Nanoid, "Nano ID", "Default alphabet, default length");
-        _assert("h9jYw2bcOe", IdFormat::Nanoid, "Nano ID", "Default alphabet, custom length (10)");
+        _assert("7423342004626526207", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
+        _assert("JERHwh5PXjL", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Ulid, "ULID", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", IdFormat::Upid, "UPID", "A (default)");
@@ -215,6 +216,8 @@ mod tests {
         _assert("0v20wcjrb21p", IdFormat::Scru64, "SCRU64", "-");
         _assert("02i2XhN7hAuaFh3MwztcMd", IdFormat::Timeflake, "Timeflake", "-");
         _assert("8HFaR8qWtRlGDHnO57", IdFormat::Flake, "Flake (Boundary)", "-");
+        _assert("XBCdxzsCR2FEFeSwhnjCo", IdFormat::Nanoid, "Nano ID", "Default alphabet, default length");
+        _assert("h9jYw2bcOe", IdFormat::Nanoid, "Nano ID", "Default alphabet, custom length (10)");
         _assert("0J4AEXRN106Z0", IdFormat::Tsid, "TSID", "-");
         _assert("653390205760314336", IdFormat::Tsid, "TSID", "-");
         _assert("HamVxsto6jDM", IdFormat::Sqid, "Sqid", "Default alphabet");

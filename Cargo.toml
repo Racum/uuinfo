@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -44,3 +44,4 @@ serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.133"
 tsid = "0.3.1"
 sqids = "0.4.1"
+base58 = "0.2.0"
