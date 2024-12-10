@@ -161,7 +161,7 @@ impl IDInfo {
         };
 
         println!("┏━{:━<l_space$}━┯{:━<r_space$}━━┓", "", "");
-        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ID Tyoe", self.id_type);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ID Type", self.id_type);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Version".yellow(), self.version.as_deref().unwrap_or("-"));
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "String", self.standard);
