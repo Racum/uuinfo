@@ -12,6 +12,7 @@ homepage = "https://github.com/racum/uuinfo"
 repository = "https://github.com/racum/uuinfo"
 exclude = [
     "assets/*",
+    "docker/*",
 ]
 
 [profile.release]

@@ -45,7 +45,12 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 $ cargo install uuinfo
 ```
 
-More installation options may be available in the future.
+### Via Docker
+
+```
+$ docker run racum/uuinfo {ID}
+...
+```
 
 ## Usage
 
