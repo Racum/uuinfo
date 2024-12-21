@@ -120,20 +120,19 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         integer: Some(uuid.as_u128()),
         short_uuid: Some(short.to_string()),
         base64: Some(URL_SAFE.encode(uuid.to_bytes_le())),
-        uuid_wrap: None,
         size: 128,
         entropy,
         datetime,
         timestamp,
         sequence,
         node1,
-        node2: None,
         hex: Some(hex::encode(uuid.as_bytes())),
         bits: Some(uuid.as_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
         color_map,
+        ..Default::default()
     })
 }
 

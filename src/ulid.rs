@@ -24,24 +24,19 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
 
     Some(IDInfo {
         id_type: id_type.to_string(),
-        version: None,
         standard: ulid.to_string(),
         integer: Some(ulid.0),
-        short_uuid: None,
-        base64: None,
         uuid_wrap: Some(uuid.to_string()),
         size: 128,
         entropy: 80,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),
-        sequence: None,
-        node1: None,
-        node2: None,
         hex: Some(hex::encode(ulid.to_bytes())),
         bits: Some(ulid.to_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        ..Default::default()
     })
 }

@@ -33,24 +33,20 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
 
     Some(IDInfo {
         id_type: id_type.to_string(),
-        version: None,
         standard: base62::encode(id_int).to_string(),
         integer: Some(id_int),
-        short_uuid: None,
-        base64: None,
         uuid_wrap: Some(uuid.to_string()),
         size: 128,
-        entropy: 0,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),
         sequence: Some(sequence),
         node1: Some(worker_id.to_string()),
-        node2: None,
         hex: Some(hex::encode(id_int.to_be_bytes())),
         bits: Some(id_int.to_be_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
         color_map: Some("33333333333333333333333333333333333333333333333333333333333333334444444444444444444444444444444444444444444444446666666666666666".to_string()),
+        ..Default::default()
     })
 }

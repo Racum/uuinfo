@@ -62,6 +62,12 @@ pub enum IdFormat {
     Tsid,
     /// Sqid
     Sqid,
+    /// Hashid
+    Hashid,
+    /// YouTube Video ID
+    Youtube,
+    /// Stripe ID
+    Stripe,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -103,6 +109,23 @@ pub struct Args {
     /// Use custom alphabet for Sqids and Nono ID.
     #[arg(short = 'a', long)]
     pub alphabet: Option<String>,
+
+    /// Custom salt for Hashids.
+    #[arg(long)]
+    pub salt: Option<String>,
+}
+
+impl Default for Args {
+    fn default() -> Args {
+        Self {
+            id: "".to_string(),
+            output: Output::Card,
+            force: None,
+            compare_snowflake: false,
+            alphabet: None,
+            salt: None,
+        }
+    }
 }
 
 #[allow(dead_code)]

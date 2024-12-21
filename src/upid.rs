@@ -27,21 +27,18 @@ pub fn parse_upid(args: &Args) -> Option<IDInfo> {
         version: Some("A (default)".to_string()),
         standard: upid.to_string(),
         integer: Some(upid.0),
-        short_uuid: None,
-        base64: None,
         uuid_wrap: Some(uuid.to_string()),
         size: 128,
         entropy: 64,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),
-        sequence: None,
         node1: Some(upid.prefix()),
-        node2: None,
         hex: Some(hex::encode(upid.to_bytes())),
         bits: Some(upid.to_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
         color_map: Some("33333333333333333333333333333333333333332222222222222222222222222222222222222222222222222222222222222222444444444444444444441111".to_string()),
+        ..Default::default()
     })
 }

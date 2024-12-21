@@ -22,24 +22,18 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
 
     Some(IDInfo {
         id_type: "TSID".to_string(),
-        version: None,
         standard: format!("{}", tsid_id),
         integer: Some(id_int.into()),
-        short_uuid: None,
-        base64: None,
-        uuid_wrap: None,
         size: 64,
         entropy: 22,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),
-        sequence: None,
-        node1: None,
-        node2: None,
         hex: Some(hex::encode(id_int.to_be_bytes())),
         bits: Some(id_int.to_be_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
         color_map: Some("3333333333333333333333333333333333333333332222222222222222222222".to_string()),
+        ..Default::default()
     })
 }

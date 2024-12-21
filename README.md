@@ -26,6 +26,9 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Nano ID](https://zelark.github.io/nano-id-cc/)
 - [TSID](https://github.com/f4b6a3/tsid-creator)
 - [Sqids](https://sqids.org/)
+- [Hashids](https://github.com/hashids)
+- [YouTube Video ID](https://www.youtube.com/watch?v=gocwRvLhDf8)
+- [Stripe ID](https://dev.to/stripe/designing-apis-for-humans-object-ids-3o5a)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)

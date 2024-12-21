@@ -228,11 +228,7 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
         version: annotation.version,
         standard: annotation.custom_string.unwrap_or(id_int.to_string()),
         integer: Some(id_int as u128),
-        short_uuid: None,
-        base64: None,
-        uuid_wrap: None,
         size: 64,
-        entropy: 0,
         datetime: annotation.datetime,
         timestamp: annotation.timestamp,
         sequence: annotation.sequence,
@@ -244,6 +240,7 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: annotation.color_map,
+        ..Default::default()
     })
 }
 

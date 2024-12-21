@@ -22,14 +22,9 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
 
     Some(IDInfo {
         id_type: "Xid".to_string(),
-        version: None,
         standard: args.id.to_string(),
         integer: Some(xid_int),
-        short_uuid: None,
-        base64: None,
-        uuid_wrap: None,
         size: 96,
-        entropy: 0,
         datetime: Some(datetime),
         timestamp: Some(timestamp),
         sequence: Some(sequence),
@@ -41,5 +36,6 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("333333333333333333333333333333334444444444444444444444445555555555555555666666666666666666666666".to_string()),
+        ..Default::default()
     })
 }

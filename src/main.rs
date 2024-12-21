@@ -3,11 +3,13 @@ use std::io;
 
 mod cuid;
 mod flake;
+mod hashid;
 mod ksuid;
 mod nanoid;
 mod objectid;
 mod scru;
 mod sqid;
+mod stripe;
 mod timeflake;
 mod tsid;
 mod ulid;
@@ -15,6 +17,7 @@ mod upid;
 mod utils;
 mod uuid;
 mod xid;
+mod youtube;
 
 mod schema;
 use crate::schema::Args;

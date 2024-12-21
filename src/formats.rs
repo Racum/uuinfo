@@ -1,5 +1,6 @@
 use crate::cuid::{parse_cuid1, parse_cuid2};
 use crate::flake::parse_flake;
+use crate::hashid::parse_hashid;
 use crate::ksuid::parse_ksuid;
 use crate::nanoid::parse_nanoid;
 use crate::objectid::parse_objectid;
@@ -7,12 +8,14 @@ use crate::schema::{Args, IDInfo, IdFormat};
 use crate::scru::{parse_scru128, parse_scru64};
 use crate::snowflake::parse_snowflake;
 use crate::sqid::parse_sqid;
+use crate::stripe::parse_stripe;
 use crate::timeflake::{parse_timeflake_any, parse_timeflake_base62};
 use crate::tsid::parse_tsid;
 use crate::ulid::parse_ulid;
 use crate::upid::parse_upid;
 use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25};
 use crate::xid::parse_xid;
+use crate::youtube::parse_youtube;
 
 pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
@@ -49,16 +52,23 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             18 => parse_flake(args),
             13 => parse_tsid(args),
             12 => parse_scru64(args),
+            11 => parse_youtube(args),
             _ => None,
         };
         // Variable length:
         id_info = match id_info {
             Some(value) => Some(value),
-            None => match parse_cuid2(args) {
+            None => match parse_stripe(args) {
                 Some(value) => Some(value),
-                None => match parse_sqid(args) {
+                None => match parse_cuid2(args) {
                     Some(value) => Some(value),
-                    None => parse_nanoid(args),
+                    None => match parse_sqid(args) {
+                        Some(value) => Some(value),
+                        None => match parse_nanoid(args) {
+                            Some(value) => Some(value),
+                            None => parse_hashid(args),
+                        },
+                    },
                 },
             },
         }
@@ -96,6 +106,9 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::SfFrostflake => parse_snowflake(args),
         IdFormat::Tsid => parse_tsid(args),
         IdFormat::Sqid => parse_sqid(args),
+        IdFormat::Hashid => parse_hashid(args),
+        IdFormat::Youtube => parse_youtube(args),
+        IdFormat::Stripe => parse_stripe(args),
     }
 }
 
@@ -110,9 +123,8 @@ mod tests {
             let args = Args {
                 id: id.to_string(),
                 output: Output::Card,
-                force: None,
                 compare_snowflake: false,
-                alphabet: None,
+                ..Default::default()
             };
             assert_eq!(auto_detect(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(auto_detect(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
@@ -153,6 +165,8 @@ mod tests {
         _assert("XBCdxzsCR2FEFeSwhnjCo", "Nano ID", "Default alphabet, default length");
         _assert("0J4AEXRN106Z0", "TSID", "-");
         _assert("86Rf07xd4z", "Sqid", "Default alphabet");
+        _assert("gocwRvLhDf8", "YouTube Video ID", "-");
+        _assert("cus_lO1DEQWBbQAACfHO", "Stripe ID", "Customer ID");
     }
 
     #[test]
@@ -162,8 +176,7 @@ mod tests {
                 id: id.to_string(),
                 output: Output::Card,
                 force: Some(force),
-                compare_snowflake: false,
-                alphabet: None,
+                ..Default::default()
             };
             assert_eq!(force_format(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(force_format(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
@@ -221,5 +234,8 @@ mod tests {
         _assert("0J4AEXRN106Z0", IdFormat::Tsid, "TSID", "-");
         _assert("653390205760314336", IdFormat::Tsid, "TSID", "-");
         _assert("HamVxsto6jDM", IdFormat::Sqid, "Sqid", "Default alphabet");
+        _assert("80JTEquWr", IdFormat::Hashid, "Hashid", "No salt");
+        _assert("gocwRvLhDf8", IdFormat::Youtube, "YouTube Video ID", "-");
+        _assert("cus_lO1DEQWBbQAACfHO", IdFormat::Stripe, "Stripe ID", "Customer ID");
     }
 }

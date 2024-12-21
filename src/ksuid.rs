@@ -20,7 +20,7 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         },
     };
 
-    let ms = (ksuid.time().sec * 1000) as u64 + (ksuid.time().nsec / 1_000_000) as u64;
+    let ms = (ksuid.time().unix_timestamp_nanos() / 1_000_000) as u64;
     let formatted_time = milliseconds_to_seconds_and_iso8601(ms, None);
     let timestamp = Some(formatted_time.0);
     let datetime = Some(formatted_time.1);
@@ -29,22 +29,16 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         id_type: "KSUID".to_string(),
         version,
         standard: ksuid.to_base62(),
-        integer: None,
-        short_uuid: None,
-        base64: None,
-        uuid_wrap: None,
         size: 160,
         entropy: 128,
         datetime,
         timestamp,
-        sequence: None,
-        node1: None,
-        node2: None,
         hex: Some(ksuid.to_hex()),
         bits: Some(ksuid.as_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
         color_map: Some("3333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        ..Default::default()
     })
 }

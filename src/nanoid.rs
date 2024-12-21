@@ -28,19 +28,6 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
         id_type: "Nano ID".to_string(),
         version,
         standard: args.id.to_string(),
-        integer: None,
-        short_uuid: None,
-        base64: None,
-        uuid_wrap: None,
-        size: 0,
-        entropy: 0,
-        datetime: None,
-        timestamp: None,
-        sequence: None,
-        node1: None,
-        node2: None,
-        hex: None,
-        bits: None,
-        color_map: None,
+        ..Default::default()
     })
 }
