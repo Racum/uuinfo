@@ -11,10 +11,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - YouTube Video ID support.
 - Stripe ID support.
 
-### Changed
-
-- Fix security issue from crate time.
-
 ## [0.2.2] - 2024-12-10
 
 ### Changed
