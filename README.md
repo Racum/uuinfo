@@ -39,6 +39,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
   - [Mastodon](https://github.com/mastodon/mastodon/blob/main/lib/mastodon/snowflake.rb)
   - LinkedIn
   - [Frostflake](https://github.com/ordo-one/package-frostflake)
+- [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time) (seconds, ms, μs and ns)
 
 ## Installation
 
@@ -89,13 +90,16 @@ Fortunately, **uuinfo** can compare Snowflakes and sort them by date; for exampl
 
 ```
 $ date
-Tue Dec  3 13:58:10 -03 2024
+Sat Dec 28 12:47:07 -03 2024
 
 $ uuinfo --compare-snowflake 1777150623882019211
 Date/times of the Snowflake ID if parsed as:
+- 1983-02-11T01:32:03.000Z Frostflake
 - 1983-06-06T00:02:06.595Z LinkedIn
 - 2018-05-11T21:08:05.018Z Instagram
 - 2024-04-08T01:45:01.252Z Twitter
+- 2024-12-28T15:47:08.000Z --- Now ---
+- 2026-04-25T20:57:03.000Z Unix timestamp (nanoseconds)
 - 2028-06-05T00:02:06.595Z Discord
 - 2028-06-05T00:02:06.595Z Spaceflake
 - 2033-06-05T00:02:06.595Z TSID

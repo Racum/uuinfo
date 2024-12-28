@@ -12,6 +12,7 @@ use crate::stripe::parse_stripe;
 use crate::timeflake::{parse_timeflake_any, parse_timeflake_base62};
 use crate::tsid::parse_tsid;
 use crate::ulid::parse_ulid;
+use crate::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
 use crate::upid::parse_upid;
 use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25};
 use crate::xid::parse_xid;
@@ -21,7 +22,10 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
     if args.id.trim().parse::<u64>().is_ok() {
         // Numeric:
-        id_info = parse_snowflake(args)
+        id_info = match parse_unix_recent(args) {
+            Some(value) => Some(value),
+            None => parse_snowflake(args),
+        }
     } else {
         // Fixed length:
         id_info = match args.id.chars().count() {
@@ -72,8 +76,6 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 },
             },
         }
-
-        // }
     }
     id_info
 }
@@ -109,6 +111,11 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Hashid => parse_hashid(args),
         IdFormat::Youtube => parse_youtube(args),
         IdFormat::Stripe => parse_stripe(args),
+        IdFormat::Unix => parse_unix(args),
+        IdFormat::UnixS => parse_unix_s(args),
+        IdFormat::UnixMs => parse_unix_ms(args),
+        IdFormat::UnixUs => parse_unix_us(args),
+        IdFormat::UnixNs => parse_unix_ns(args),
     }
 }
 
@@ -149,6 +156,11 @@ mod tests {
         _assert("UHKjBazX_UG8dEAJaikK1g", "Unpadded Base64 of UUID (RFC-4122)", "4 (random)");
         // Snowflakes:
         _assert("1400000000000000000", "Snowflake", "Unknown (use -f to specify version)");
+        // Unix timestamp
+        _assert("1734971723", "Unix timestamp", "Assuming seconds");
+        _assert("1734971723000", "Unix timestamp", "Assuming milliseconds");
+        _assert("1734971723000000", "Unix timestamp", "Assuming microseconds");
+        _assert("1734971723000000000", "Unix timestamp", "Assuming nanoseconds");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", "ULID", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", "UPID", "A (default)");
@@ -216,6 +228,15 @@ mod tests {
         _assert("7256902784527069184", IdFormat::SfLinkedin, "Snowflake", "LinkedIn");
         _assert("7423342004626526207", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
         _assert("JERHwh5PXjL", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
+        // Unix timestamp
+        _assert("1734971723", IdFormat::Unix, "Unix timestamp", "Assuming seconds");
+        _assert("1734971723000", IdFormat::Unix, "Unix timestamp", "Assuming milliseconds");
+        _assert("1734971723000000", IdFormat::Unix, "Unix timestamp", "Assuming microseconds");
+        _assert("1734971723000000000", IdFormat::Unix, "Unix timestamp", "Assuming nanoseconds");
+        _assert("1734971723", IdFormat::UnixS, "Unix timestamp", "As seconds");
+        _assert("1734971723000", IdFormat::UnixMs, "Unix timestamp", "As milliseconds");
+        _assert("1734971723000000", IdFormat::UnixUs, "Unix timestamp", "As microseconds");
+        _assert("1734971723000000000", IdFormat::UnixNs, "Unix timestamp", "As nanoseconds");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Ulid, "ULID", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", IdFormat::Upid, "UPID", "A (default)");

@@ -13,6 +13,7 @@ mod stripe;
 mod timeflake;
 mod tsid;
 mod ulid;
+mod unix;
 mod upid;
 mod utils;
 mod uuid;

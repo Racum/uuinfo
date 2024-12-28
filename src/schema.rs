@@ -84,6 +84,16 @@ pub enum IdFormat {
     SfSpaceflake,
     /// Snowflake: Frostflake
     SfFrostflake,
+    /// Unix timestamp: Auto-detect
+    Unix,
+    /// Unix timestamp: Seconds
+    UnixS,
+    /// Unix timestamp: Milliseconds
+    UnixMs,
+    /// Unix timestamp: Microseconds
+    UnixUs,
+    /// Unix timestamp: Nanoseconds
+    UnixNs,
 }
 
 /// Shows debug information about complex ID.

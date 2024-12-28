@@ -1,8 +1,10 @@
 use crate::schema::{Args, IDInfo, IdFormat};
 use crate::tsid::parse_tsid;
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, nanoseconds_to_iso8601};
 use base58::{FromBase58, ToBase58};
+use colored::*;
 use std::fmt::Write;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Debug)]
 struct SnowflakeAnnotation {
@@ -251,7 +253,9 @@ pub fn compare_snowflake(args: &Args) {
             Some(value) => value.datetime.unwrap(),
             None => "-".to_string(),
         };
+        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64;
         let mut snowflake_times = vec![
+            format!("- {} {}", nanoseconds_to_iso8601(now).1, "--- Now ---".yellow()),
             format!("- {} Twitter", annotate_twitter(args).datetime.unwrap_or("".to_string())),
             format!("- {} Discord", annotate_discord(args).datetime.unwrap_or("".to_string())),
             format!("- {} Instagram", annotate_instagram(args).datetime.unwrap_or("".to_string())),
@@ -262,6 +266,17 @@ pub fn compare_snowflake(args: &Args) {
             format!("- {} Frostflake", annotate_frostflake(args).datetime.unwrap_or("".to_string())),
             format!("- {} TSID", tsid_time), // Not Snowflake, but 64-bit compatible:
         ];
+        let id_int: u64 = args.id.trim().parse::<u64>().unwrap();
+        snowflake_times.push(format!("- {} Unix timestamp (nanoseconds)", nanoseconds_to_iso8601(id_int).1));
+        if let Some(value) = id_int.checked_mul(1000) {
+            snowflake_times.push(format!("- {} Unix timestamp (microseconds)", nanoseconds_to_iso8601(value).1));
+        }
+        if let Some(value) = id_int.checked_mul(1_000_000) {
+            snowflake_times.push(format!("- {} Unix timestamp (milliseconds)", nanoseconds_to_iso8601(value).1));
+        }
+        if let Some(value) = id_int.checked_mul(1_000_000_000) {
+            snowflake_times.push(format!("- {} Unix timestamp (seconds)", nanoseconds_to_iso8601(value).1));
+        }
         snowflake_times.sort();
         for time in &snowflake_times {
             println!("{time}");

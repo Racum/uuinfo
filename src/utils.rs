@@ -17,6 +17,15 @@ pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: Option<u64>) -> (Stri
     (format!("{:.3}", timestamp), datetime.to_string())
 }
 
+pub fn nanoseconds_to_iso8601(ns: u64) -> (String, String) {
+    let timestamp: f64 = ns as f64 / 1_000_000_000.0;
+    let secs = timestamp.trunc() as i64;
+    let nanos: u32 = timestamp.fract().round() as u32;
+    let dt: DateTime<Utc> = DateTime::from_timestamp(secs, nanos).unwrap();
+    let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
+    (format!("{:.3}", timestamp), datetime.to_string())
+}
+
 #[cfg(test)]
 mod bits64 {
     use super::*;
@@ -74,5 +83,12 @@ mod bits64 {
         let (ts, dt) = milliseconds_to_seconds_and_iso8601(281474976710655, None);
         assert_eq!(ts, "281474976710.655");
         assert_eq!(dt, "+10889-08-02T05:31:50.655Z");
+    }
+
+    #[test]
+    fn test_nanoseconds_to_iso8601() {
+        let (ts, dt) = nanoseconds_to_iso8601(1734971723000000000);
+        assert_eq!(ts, "1734971723.000");
+        assert_eq!(dt, "2024-12-23T16:35:23.000Z");
     }
 }

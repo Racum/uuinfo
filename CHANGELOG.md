@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.4] - 2024-12-28
+
+### Added
+
+- Raw Unix timestamp support.
+
 ## [0.2.3] - 2024-12-21
 
 ### Added
