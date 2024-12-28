@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Raw Unix timestamp support.
 
+### Changed
+
+- Vendored ksuid crate to fix security issue.
+
 ## [0.2.3] - 2024-12-21
 
 ### Added
