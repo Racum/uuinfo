@@ -312,7 +312,7 @@ impl IDInfo {
                 let slice_offset: usize = ((128 - &self.size) / 8).into();
                 stdout().write_all(&number.to_be_bytes()[slice_offset..16]).unwrap();
             }
-            None => println!("{}", self.standard),
+            None => print!(""),
         }
     }
 
