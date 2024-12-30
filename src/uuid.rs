@@ -21,7 +21,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
 
     let id_type: String;
     let mut version: Option<String> = None;
-    let mut entropy: u8 = 0;
+    let mut entropy: u16 = 0;
     let mut color_map: Option<String> = Some(COLOR_MAP_UUID_GENERIC.to_string());
     let mut datetime: Option<String> = None;
     let mut timestamp: Option<String> = None;

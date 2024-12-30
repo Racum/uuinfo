@@ -4,7 +4,7 @@ use std::fmt::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const RECENT_DAYS_AGO: u64 = 365 * 10;
-const RECENT_DAYS_AHEAD: u64 = 2;
+const RECENT_DAYS_AHEAD: u64 = 365;
 
 #[derive(PartialEq)]
 enum TimestampUnitAssumption {

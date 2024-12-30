@@ -29,6 +29,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Hashids](https://github.com/hashids)
 - [YouTube Video ID](https://www.youtube.com/watch?v=gocwRvLhDf8)
 - [Stripe ID](https://dev.to/stripe/designing-apis-for-humans-object-ids-3o5a)
+- [Datadog Trace ID](https://docs.datadoghq.com/tracing/guide/span_and_trace_id_format/)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)

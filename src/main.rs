@@ -2,7 +2,9 @@ use clap::Parser;
 use std::io;
 
 mod cuid;
+mod datadog;
 mod flake;
+mod hash;
 mod hashid;
 mod ksuid;
 mod nanoid;

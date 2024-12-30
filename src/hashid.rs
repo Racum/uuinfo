@@ -3,6 +3,9 @@ use hash_ids::HashIds;
 use std::panic;
 
 pub fn parse_hashid(args: &Args) -> Option<IDInfo> {
+    if args.id.chars().count() > 43 {
+        return None;
+    }
     let mut version: Option<String> = Some("No salt".to_string());
 
     let mut builder = HashIds::builder();

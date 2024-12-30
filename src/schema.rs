@@ -68,6 +68,8 @@ pub enum IdFormat {
     Youtube,
     /// Stripe ID
     Stripe,
+    /// Datadog Trace ID
+    Datadog,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -94,6 +96,8 @@ pub enum IdFormat {
     UnixUs,
     /// Unix timestamp: Nanoseconds
     UnixNs,
+    /// Hex-encoded Hash
+    Hash,
 }
 
 /// Shows debug information about complex ID.
@@ -148,8 +152,8 @@ pub struct IDInfo {
     pub short_uuid: Option<String>,
     pub base64: Option<String>,
     pub uuid_wrap: Option<String>,
-    pub size: u8,
-    pub entropy: u8,
+    pub size: u16,
+    pub entropy: u16,
     pub datetime: Option<String>,
     pub timestamp: Option<String>,
     pub sequence: Option<u128>,
