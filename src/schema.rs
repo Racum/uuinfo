@@ -98,6 +98,8 @@ pub enum IdFormat {
     UnixNs,
     /// Hex-encoded Hash
     Hash,
+    /// IPFS Address (CID, IPNS)
+    Ipfs,
 }
 
 /// Shows debug information about complex ID.
@@ -184,8 +186,9 @@ impl IDInfo {
             None => "-".to_string(),
         };
 
+        const MIN_R_SPACE: usize = 43;
         let l_space = 9;
-        let r_space = cmp::max(43, timestamp.chars().count());
+        let r_space = cmp::max(MIN_R_SPACE, timestamp.chars().count());
 
         let size = match self.size {
             0 => "-",
@@ -201,7 +204,12 @@ impl IDInfo {
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ID Type", self.id_type);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Version".yellow(), self.version.as_deref().unwrap_or("-"));
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
-        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "String", self.standard);
+
+        let standard = match self.standard.char_indices().nth(MIN_R_SPACE) {
+            None => self.standard.clone(),
+            Some((idx, _)) => format!("{}...", &self.standard[..idx - 3]),
+        };
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "String", standard);
 
         if let Some(value) = self.integer {
             println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Integer", value);
@@ -229,7 +237,7 @@ impl IDInfo {
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
 
         let (hex_lines, bin_lines) = self.get_hex_bin_lines();
-        let fix_space = r_space - 43; // The colored rendering messes with the count.
+        let fix_space = r_space - MIN_R_SPACE; // The colored rendering messes with the count.
         for (i, hex_line) in hex_lines.into_iter().enumerate() {
             if self.bits.is_some() {
                 println!("┃ {:<l_space$} │ {}{:<fix_space$} ┃", hex_line, bin_lines[i], "");
@@ -246,10 +254,15 @@ impl IDInfo {
 
         match self.bits.clone() {
             Some(bits) => {
+                let remaining_bits = bits.chars().count() % 32;
+                let bits = format!("{}{}", bits, (0..remaining_bits).map(|_| ".").collect::<String>());
+                let color_map = Some(format!("{}{}", self.color_map.clone().unwrap(), (0..remaining_bits).map(|_| "0").collect::<String>()));
+                let hex = format!("{}{}", self.hex.clone().unwrap(), (0..remaining_bits / 4).map(|_| ".").collect::<String>());
+
                 let mut bin_line: String = "".to_string();
                 let mut hex_line: String = "".to_string();
                 for (i, c) in bits.chars().enumerate() {
-                    let colored_bit = match self.color_map.clone() {
+                    let colored_bit = match color_map.clone() {
                         Some(color_map) => match color_map.chars().nth(i).unwrap() {
                             '1' => format!("{}", c.to_string().yellow()),
                             '2' => format!("{}", c.to_string().green()),
@@ -264,7 +277,7 @@ impl IDInfo {
                     bin_line.push_str(&colored_bit);
                     if ((i + 1) % 4) == 0 {
                         bin_line.push(' ');
-                        hex_line.push(self.hex.clone().unwrap().chars().nth(i / 4).unwrap());
+                        hex_line.push(hex.clone().chars().nth(i / 4).unwrap());
                     }
                     if ((i + 1) % 8) == 0 {
                         bin_line.push(' ');

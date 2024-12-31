@@ -3,6 +3,7 @@ use crate::datadog::parse_datadog;
 use crate::flake::parse_flake;
 use crate::hash::parse_hash;
 use crate::hashid::parse_hashid;
+use crate::ipfs::parse_ipfs;
 use crate::ksuid::parse_ksuid;
 use crate::nanoid::parse_nanoid;
 use crate::objectid::parse_objectid;
@@ -69,15 +70,18 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
         // Variable length:
         id_info = match id_info {
             Some(value) => Some(value),
-            None => match parse_stripe(args) {
+            None => match parse_ipfs(args) {
                 Some(value) => Some(value),
-                None => match parse_cuid2(args) {
+                None => match parse_stripe(args) {
                     Some(value) => Some(value),
-                    None => match parse_sqid(args) {
+                    None => match parse_cuid2(args) {
                         Some(value) => Some(value),
-                        None => match parse_nanoid(args) {
+                        None => match parse_sqid(args) {
                             Some(value) => Some(value),
-                            None => parse_hashid(args),
+                            None => match parse_nanoid(args) {
+                                Some(value) => Some(value),
+                                None => parse_hashid(args),
+                            },
                         },
                     },
                 },
@@ -125,6 +129,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::UnixNs => parse_unix_ns(args),
         IdFormat::Datadog => parse_datadog(args),
         IdFormat::Hash => parse_hash(args),
+        IdFormat::Ipfs => parse_ipfs(args),
     }
 }
 
@@ -189,6 +194,7 @@ mod tests {
         _assert("gocwRvLhDf8", "YouTube Video ID", "-");
         _assert("cus_lO1DEQWBbQAACfHO", "Stripe ID", "Customer ID");
         _assert("6772800700000000d97a8af26532e259", "Datadog Trace ID", "-");
+        // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
         _assert(
@@ -201,6 +207,9 @@ mod tests {
             "Hex-encoded Hash",
             "Probably SHA-512",
         );
+        _assert("QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR", "IPFS", "CID v0");
+        _assert("bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi", "IPFS", "CID v1");
+        _assert("k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8", "IPFS", "CID v1 (IPNS)");
     }
 
     #[test]
@@ -281,6 +290,7 @@ mod tests {
         _assert("gocwRvLhDf8", IdFormat::Youtube, "YouTube Video ID", "-");
         _assert("cus_lO1DEQWBbQAACfHO", IdFormat::Stripe, "Stripe ID", "Customer ID");
         _assert("6772800700000000d97a8af26532e259", IdFormat::Datadog, "Datadog Trace ID", "-");
+        // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-224");
@@ -302,5 +312,8 @@ mod tests {
             "Hex-encoded Hash",
             "Probably SHA-512",
         );
+        _assert("QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR", IdFormat::Ipfs, "IPFS", "CID v0");
+        _assert("bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi", IdFormat::Ipfs, "IPFS", "CID v1");
+        _assert("k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8", IdFormat::Ipfs, "IPFS", "CID v1 (IPNS)");
     }
 }

@@ -42,6 +42,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
   - [Frostflake](https://github.com/ordo-one/package-frostflake)
 - [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time) (seconds, ms, μs and ns)
 - [Hex-encoded Hash](https://en.wikipedia.org/wiki/Secure_Hash_Algorithms)
+- [IPFS CID](https://docs.ipfs.tech/concepts/content-addressing/) (v0 and v1)
 
 ## Installation
 

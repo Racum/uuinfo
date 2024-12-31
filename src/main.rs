@@ -6,6 +6,7 @@ mod datadog;
 mod flake;
 mod hash;
 mod hashid;
+mod ipfs;
 mod ksuid;
 mod nanoid;
 mod objectid;
