@@ -3,6 +3,10 @@ use std::fmt::Write;
 use crate::schema::{Args, IDInfo};
 
 pub fn parse_hash(args: &Args) -> Option<IDInfo> {
+    match args.id.chars().count() {
+        32 | 40 | 56 | 64 | 96 | 128 => (),
+        _ => return None,
+    }
     let id_bytes = match hex::decode(args.id.clone()) {
         Ok(value) => value,
         Err(_) => return None,

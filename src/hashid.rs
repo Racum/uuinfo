@@ -16,13 +16,13 @@ pub fn parse_hashid(args: &Args) -> Option<IDInfo> {
     let hashid_core = builder.finish();
 
     // Panic trap:
-    let _ = panic::catch_unwind(|| {
-        panic::set_hook(Box::new(|_info| {
-            println!("Invalid ID for this format.");
-            std::process::exit(1);
-        }));
+    match panic::catch_unwind(|| {
+        panic::set_hook(Box::new(|_info| {}));
         hashid_core.decode(&args.id).ok() // Bug on hash-ids crate: this should not panic.
-    });
+    }) {
+        Ok(_) => (),
+        Err(_) => return None,
+    }
 
     let numbers = match hashid_core.decode(&args.id) {
         Ok(value) => value,

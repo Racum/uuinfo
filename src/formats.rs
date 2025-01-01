@@ -21,6 +21,66 @@ use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25}
 use crate::xid::parse_xid;
 use crate::youtube::parse_youtube;
 
+#[rustfmt::skip]
+#[allow(dead_code)]
+const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 26] = [
+    parse_uuid,
+    parse_base64_uuid,
+    parse_uuid25,
+    parse_short_uuid,
+    parse_ulid,
+    parse_upid,
+    parse_objectid,
+    parse_ksuid,
+    parse_xid,
+    parse_cuid1,
+    parse_cuid2,
+    parse_scru128,
+    parse_scru64,
+    parse_timeflake_any,
+    parse_flake,
+    parse_tsid,
+    parse_sqid,
+    parse_hashid,
+    parse_youtube,
+    parse_stripe,
+    parse_datadog,
+    parse_snowflake,
+    parse_unix,
+    parse_hash,
+    parse_ipfs,
+    parse_nanoid,
+];
+
+#[rustfmt::skip]
+const VARIABLE_PARSERS: [fn(&Args) -> Option<IDInfo>; 6] = [
+    parse_ipfs,
+    parse_stripe,
+    parse_cuid2,
+    parse_sqid,
+    parse_nanoid,
+    parse_hashid,
+];
+
+pub fn parse_variable(args: &Args) -> Option<IDInfo> {
+    for parser in VARIABLE_PARSERS {
+        if let Some(value) = parser(args) {
+            return Some(value);
+        }
+    }
+    None
+}
+
+pub fn parse_all(args: &Args) -> Vec<IDInfo> {
+    let mut valid_ids: Vec<IDInfo> = vec![];
+    for parser in ALL_PARSERS {
+        if let Some(value) = parser(args) {
+            valid_ids.push(value);
+        }
+    }
+    valid_ids
+}
+
 pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
     if args.id.trim().parse::<u64>().is_ok() {
@@ -70,23 +130,8 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
         // Variable length:
         id_info = match id_info {
             Some(value) => Some(value),
-            None => match parse_ipfs(args) {
-                Some(value) => Some(value),
-                None => match parse_stripe(args) {
-                    Some(value) => Some(value),
-                    None => match parse_cuid2(args) {
-                        Some(value) => Some(value),
-                        None => match parse_sqid(args) {
-                            Some(value) => Some(value),
-                            None => match parse_nanoid(args) {
-                                Some(value) => Some(value),
-                                None => parse_hashid(args),
-                            },
-                        },
-                    },
-                },
-            },
-        }
+            None => parse_variable(args),
+        };
     }
     id_info
 }

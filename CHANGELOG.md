@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0] - 2025-01-91
+
+### Added
+
+- Option to "Parse everything" (returns all valid formats).
+
 ## [0.2.7] - 2024-12-31
 
 ### Added

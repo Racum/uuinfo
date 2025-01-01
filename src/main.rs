@@ -28,7 +28,7 @@ use crate::schema::Args;
 mod snowflake;
 use crate::snowflake::compare_snowflake;
 mod formats;
-use crate::formats::{auto_detect, force_format};
+use crate::formats::{auto_detect, force_format, parse_all};
 
 fn main() {
     let mut args = Args::parse();
@@ -46,20 +46,31 @@ fn main() {
         }
     }
 
-    match &args.force {
-        Some(_) => match force_format(&args) {
-            Some(value) => value.print(&args),
-            None => {
-                println!("Invalid ID for this format.");
-                std::process::exit(1);
+    if args.everything {
+        let valid_ids = parse_all(&args);
+        if !valid_ids.is_empty() {
+            for value in parse_all(&args) {
+                value.print(&args);
             }
-        },
-        None => match auto_detect(&args) {
-            Some(value) => value.print(&args),
-            None => {
-                println!("Unknown ID type.");
-                std::process::exit(1);
-            }
-        },
-    };
+        } else {
+            println!("Unknown ID type.");
+        }
+    } else {
+        match &args.force {
+            Some(_) => match force_format(&args) {
+                Some(value) => value.print(&args),
+                None => {
+                    println!("Invalid ID for this format.");
+                    std::process::exit(1);
+                }
+            },
+            None => match auto_detect(&args) {
+                Some(value) => value.print(&args),
+                None => {
+                    println!("Unknown ID type.");
+                    std::process::exit(1);
+                }
+            },
+        };
+    }
 }

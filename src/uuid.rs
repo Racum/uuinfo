@@ -199,6 +199,9 @@ pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
+    if args.id.chars().count() != 25 {
+        return None;
+    }
     let uuid_str = match Uuid25::parse(&args.id) {
         Ok(value) => value.to_hyphenated().to_string(),
         Err(_) => return None,

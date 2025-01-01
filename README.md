@@ -72,6 +72,12 @@ $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 ...
 ```
 
+### Parse Everything
+
+If you are not sure about the ID format, you can see the cards for all formats that it got parsed successfully with `-e`/`—everything`; and with that, you can see what result makes more sense.
+
+**Note**: this argument disables the output options.
+
 ### Force Format
 
 Sometimes an ID could be valid for more than one format, if this happens and the auto-detection above picks the wrong one, you can disambiguate using the `-f` (of `--force`) parameter.

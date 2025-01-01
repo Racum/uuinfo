@@ -110,7 +110,7 @@ pub struct Args {
     #[arg(allow_hyphen_values = true)]
     pub id: String,
 
-    /// Output format.
+    /// Output format
     #[arg(short, long, default_value_t = Output::Card)]
     pub output: Output,
 
@@ -118,15 +118,19 @@ pub struct Args {
     #[arg(short = 'f', long)]
     pub force: Option<IdFormat>,
 
-    /// Compare times of different Snowflake versions.
+    /// Try to parse all known formats
+    #[arg(short = 'e', long)]
+    pub everything: bool,
+
+    /// Compare times of different Snowflake versions
     #[arg(short = 'c', long)]
     pub compare_snowflake: bool,
 
-    /// Use custom alphabet for Sqids and Nono ID.
+    /// Use custom alphabet for Sqids and Nono ID
     #[arg(short = 'a', long)]
     pub alphabet: Option<String>,
 
-    /// Custom salt for Hashids.
+    /// Custom salt for Hashids
     #[arg(long)]
     pub salt: Option<String>,
 }
@@ -137,6 +141,7 @@ impl Default for Args {
             id: "".to_string(),
             output: Output::Card,
             force: None,
+            everything: false,
             compare_snowflake: false,
             alphabet: None,
             salt: None,
@@ -336,11 +341,15 @@ impl IDInfo {
     }
 
     pub fn print(&self, args: &Args) {
-        match args.output {
-            Output::Short => self.print_short(),
-            Output::Json => self.print_json(),
-            Output::Binary => self.print_binary(),
-            _ => self.print_card(),
+        if args.everything {
+            self.print_card();
+        } else {
+            match args.output {
+                Output::Short => self.print_short(),
+                Output::Json => self.print_json(),
+                Output::Binary => self.print_binary(),
+                _ => self.print_card(),
+            }
         }
     }
 }

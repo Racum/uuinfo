@@ -12,9 +12,13 @@ pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: Option<u64>) -> (Stri
     let timestamp: f64 = (ms + epoch.unwrap_or(0)) as f64 / 1_000.0;
     let secs = timestamp.trunc() as i64;
     let nanos = (timestamp.fract() * 1_000.0).round() as u32 * 1_000_000;
-    let dt: DateTime<Utc> = DateTime::from_timestamp(secs, nanos).unwrap();
-    let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
-    (format!("{:.3}", timestamp), datetime.to_string())
+    match DateTime::from_timestamp(secs, nanos) {
+        Some(dt) => {
+            let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
+            (format!("{:.3}", timestamp), datetime.to_string())
+        }
+        None => (format!("{:.3}", timestamp), "Invalid".to_string()),
+    }
 }
 
 pub fn nanoseconds_to_iso8601(ns: u64) -> (String, String) {
@@ -83,6 +87,13 @@ mod bits64 {
         let (ts, dt) = milliseconds_to_seconds_and_iso8601(281474976710655, None);
         assert_eq!(ts, "281474976710.655");
         assert_eq!(dt, "+10889-08-02T05:31:50.655Z");
+    }
+
+    #[test]
+    fn test_invalid_timestamp() {
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(16477688742971526000, None);
+        assert_eq!(ts, "16477688742971526.000");
+        assert_eq!(dt, "Invalid");
     }
 
     #[test]
