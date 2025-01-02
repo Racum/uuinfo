@@ -1,9 +1,10 @@
-use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
 use scru128::Scru128Id;
 use scru64::Scru64Id;
 use std::fmt::Write;
 use uuid::Uuid;
+
+use crate::schema::{Args, IDInfo};
+use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     let mut id_type = "SCRU128";

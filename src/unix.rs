@@ -1,7 +1,8 @@
-use crate::schema::{Args, IDInfo};
-use crate::utils::nanoseconds_to_iso8601;
 use std::fmt::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
+
+use crate::schema::{Args, IDInfo};
+use crate::utils::nanoseconds_to_iso8601;
 
 const RECENT_DAYS_AGO: u64 = 365 * 10;
 const RECENT_DAYS_AHEAD: u64 = 365;

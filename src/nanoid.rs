@@ -1,4 +1,3 @@
-extern crate basen;
 use crate::schema::{Args, IDInfo};
 
 pub const NANOID_ALPHABET: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";

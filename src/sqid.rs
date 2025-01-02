@@ -1,5 +1,6 @@
-use crate::schema::{Args, IDInfo};
 use sqids::Sqids;
+
+use crate::schema::{Args, IDInfo};
 
 pub fn parse_sqid(args: &Args) -> Option<IDInfo> {
     let mut version: Option<String> = Some("Default alphabet".to_string());

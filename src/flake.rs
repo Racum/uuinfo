@@ -1,5 +1,4 @@
 use std::fmt::Write;
-extern crate base62;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};

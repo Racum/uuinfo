@@ -1,6 +1,7 @@
-use crate::schema::{Args, IDInfo};
 use hash_ids::HashIds;
 use std::panic;
+
+use crate::schema::{Args, IDInfo};
 
 pub fn parse_hashid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() > 43 {

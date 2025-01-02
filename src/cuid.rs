@@ -1,4 +1,3 @@
-extern crate basen;
 use basen::BASE36;
 
 use crate::schema::{Args, IDInfo};

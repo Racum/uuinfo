@@ -1,6 +1,7 @@
-use crate::schema::{Args, IDInfo};
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
 use std::fmt::Write;
+
+use crate::schema::{Args, IDInfo};
 
 /*
     The elements of YouTube’s alphabet match the URL_SAFE regex,

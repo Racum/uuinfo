@@ -6,6 +6,7 @@ use crate::hashid::parse_hashid;
 use crate::ipfs::parse_ipfs;
 use crate::ksuid::parse_ksuid;
 use crate::nanoid::parse_nanoid;
+use crate::nuid::parse_nuid;
 use crate::objectid::parse_objectid;
 use crate::schema::{Args, IDInfo, IdFormat};
 use crate::scru::{parse_scru128, parse_scru64};
@@ -14,6 +15,7 @@ use crate::sqid::parse_sqid;
 use crate::stripe::parse_stripe;
 use crate::timeflake::{parse_timeflake_any, parse_timeflake_base62};
 use crate::tsid::parse_tsid;
+use crate::typeid::parse_typeid;
 use crate::ulid::parse_ulid;
 use crate::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
 use crate::upid::parse_upid;
@@ -23,7 +25,7 @@ use crate::youtube::parse_youtube;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 26] = [
+const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 28] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -40,6 +42,8 @@ const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 26] = [
     parse_timeflake_any,
     parse_flake,
     parse_tsid,
+    parse_nuid,
+    parse_typeid,
     parse_sqid,
     parse_hashid,
     parse_youtube,
@@ -53,7 +57,8 @@ const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 26] = [
 ];
 
 #[rustfmt::skip]
-const VARIABLE_PARSERS: [fn(&Args) -> Option<IDInfo>; 6] = [
+const VARIABLE_PARSERS: [fn(&Args) -> Option<IDInfo>; 7] = [
+    parse_typeid,
     parse_ipfs,
     parse_stripe,
     parse_cuid2,
@@ -116,7 +121,10 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 Some(value) => Some(value),
                 None => match parse_timeflake_base62(args) {
                     Some(value) => Some(value),
-                    None => parse_base64_uuid(args),
+                    None => match parse_base64_uuid(args) {
+                        Some(value) => Some(value),
+                        None => parse_nuid(args),
+                    },
                 },
             },
             21 => parse_nanoid(args),
@@ -175,6 +183,8 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Datadog => parse_datadog(args),
         IdFormat::Hash => parse_hash(args),
         IdFormat::Ipfs => parse_ipfs(args),
+        IdFormat::Nuid => parse_nuid(args),
+        IdFormat::Typeid => parse_typeid(args),
     }
 }
 
@@ -239,6 +249,8 @@ mod tests {
         _assert("gocwRvLhDf8", "YouTube Video ID", "-");
         _assert("cus_lO1DEQWBbQAACfHO", "Stripe ID", "Customer ID");
         _assert("6772800700000000d97a8af26532e259", "Datadog Trace ID", "-");
+        _assert("EQyuCsA4ysv7ezXReOrk4i", "NUID", "-");
+        _assert("prefix_01h2xcejqtf2nbrexx3vqjhp41", "TypeID", "-");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -335,6 +347,8 @@ mod tests {
         _assert("gocwRvLhDf8", IdFormat::Youtube, "YouTube Video ID", "-");
         _assert("cus_lO1DEQWBbQAACfHO", IdFormat::Stripe, "Stripe ID", "Customer ID");
         _assert("6772800700000000d97a8af26532e259", IdFormat::Datadog, "Datadog Trace ID", "-");
+        _assert("EQyuCsA4ysv7ezXReOrk4i", IdFormat::Nuid, "NUID", "-");
+        _assert("prefix_01h2xcejqtf2nbrexx3vqjhp41", IdFormat::Typeid, "TypeID", "-");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");

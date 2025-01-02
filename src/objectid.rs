@@ -1,6 +1,7 @@
+use std::fmt::Write;
+
 use crate::schema::{Args, IDInfo};
 use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
-use std::fmt::Write;
 
 pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {

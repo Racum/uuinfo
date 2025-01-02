@@ -70,6 +70,10 @@ pub enum IdFormat {
     Stripe,
     /// Datadog Trace ID
     Datadog,
+    /// NUID
+    Nuid,
+    // TypeID
+    Typeid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -195,6 +199,13 @@ impl IDInfo {
         let l_space = 9;
         let r_space = cmp::max(MIN_R_SPACE, timestamp.chars().count());
 
+        fn limit_r(text: String) -> String {
+            match text.char_indices().nth(MIN_R_SPACE) {
+                None => text,
+                Some((idx, _)) => format!("{}...", &text[..idx - 3]),
+            }
+        }
+
         let size = match self.size {
             0 => "-",
             _ => &format!("{} bits", self.size),
@@ -209,12 +220,7 @@ impl IDInfo {
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ID Type", self.id_type);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Version".yellow(), self.version.as_deref().unwrap_or("-"));
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
-
-        let standard = match self.standard.char_indices().nth(MIN_R_SPACE) {
-            None => self.standard.clone(),
-            Some((idx, _)) => format!("{}...", &self.standard[..idx - 3]),
-        };
-        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "String", standard);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "String", limit_r(self.standard.clone()));
 
         if let Some(value) = self.integer {
             println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Integer", value);
@@ -236,8 +242,8 @@ impl IDInfo {
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Size", size);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Entropy".green(), entropy);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Timestamp".cyan(), timestamp);
-        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 1".purple(), self.node1.as_deref().unwrap_or("-"));
-        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 2".red(), self.node2.as_deref().unwrap_or("-"));
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 1".purple(), limit_r(self.node1.clone().unwrap_or("-".to_string())));
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 2".red(), limit_r(self.node2.clone().unwrap_or("-".to_string())));
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Sequence".blue(), sequence);
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
 
