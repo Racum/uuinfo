@@ -1,6 +1,7 @@
 use clap::Parser;
 use std::io;
 
+mod breezeid;
 mod cuid;
 mod datadog;
 mod flake;

@@ -32,6 +32,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Datadog Trace ID](https://docs.datadoghq.com/tracing/guide/span_and_trace_id_format/)
 - [NUID](https://github.com/nats-io/nuid) (NATS)
 - [TypeID](https://github.com/jetify-com/typeid) (Jetify)
+- [Breeze ID](https://github.com/tzwel/breezeid)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)

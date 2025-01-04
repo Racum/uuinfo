@@ -76,6 +76,8 @@ pub enum IdFormat {
     Nuid,
     /// TypeID (Jetify)
     Typeid,
+    /// Breeze ID
+    Breezeid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

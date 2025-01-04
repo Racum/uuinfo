@@ -1,3 +1,4 @@
+use crate::breezeid::parse_breezeid;
 use crate::cuid::{parse_cuid1, parse_cuid2};
 use crate::datadog::parse_datadog;
 use crate::flake::parse_flake;
@@ -27,7 +28,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [ParseFunction; 29] = [
+const ALL_PARSERS: [ParseFunction; 30] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -56,6 +57,7 @@ const ALL_PARSERS: [ParseFunction; 29] = [
     parse_unix,
     parse_hash,
     parse_ipfs,
+    parse_breezeid,
     parse_nanoid,
 ];
 
@@ -111,6 +113,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_typeid,
                 parse_ipfs,
                 parse_stripe,
+                parse_breezeid,
                 parse_cuid2,
                 parse_sqid,
                 parse_nanoid,
@@ -164,6 +167,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ipfs => parse_ipfs(args),
         IdFormat::Nuid => parse_nuid(args),
         IdFormat::Typeid => parse_typeid(args),
+        IdFormat::Breezeid => parse_breezeid(args),
     }
 }
 
@@ -231,6 +235,8 @@ mod tests {
         _assert("6772800700000000d97a8af26532e259", "Datadog Trace ID", "-");
         _assert("EQyuCsA4ysv7ezXReOrk4i", "NUID", "-");
         _assert("prefix_01h2xcejqtf2nbrexx3vqjhp41", "TypeID", "-");
+        _assert("9NU6-XQLZ-BDIH-6HKE", "Breeze ID", "Default alphabet");
+        _assert("9nu6-xqlz-bdih-6hke", "Breeze ID", "Lowercase alphabet");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -336,6 +342,8 @@ mod tests {
         _assert("6772800700000000d97a8af26532e259", IdFormat::Datadog, "Datadog Trace ID", "-");
         _assert("EQyuCsA4ysv7ezXReOrk4i", IdFormat::Nuid, "NUID", "-");
         _assert("prefix_01h2xcejqtf2nbrexx3vqjhp41", IdFormat::Typeid, "TypeID", "-");
+        _assert("9NU6-XQLZ-BDIH-6HKE", IdFormat::Breezeid, "Breeze ID", "Default alphabet");
+        _assert("9nu6-xqlz-bdih-6hke", IdFormat::Breezeid, "Breeze ID", "Lowercase alphabet");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");
