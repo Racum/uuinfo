@@ -1,7 +1,7 @@
 use basen::BASE36;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601};
 
 pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 25 {
@@ -22,22 +22,29 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
         Some(value) => value,
         None => return None,
     };
-    let random_data: u64 = match BASE36.decode_var_len(&args.id[17..25]) {
-        Some(value) => value,
-        None => return None,
-    };
-
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
 
     Some(IDInfo {
         id_type: "CUID".to_string(),
         version: Some("1".to_string()),
         standard: args.id.to_string(),
+        size,
+        entropy: 64,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),
         sequence: Some(sequence as u128),
         node1: Some(format!("{} (Fingerprint)", fingerprint)),
-        node2: Some(format!("{} (Random data)", random_data)),
+        hex,
+        bits,
+        color_map: Some(format!(
+            "{}{}{}{}{}",
+            (0..8).map(|_| "1").collect::<String>(),
+            (0..64).map(|_| "3").collect::<String>(),
+            (0..32).map(|_| "6").collect::<String>(),
+            (0..32).map(|_| "4").collect::<String>(),
+            (0..64).map(|_| "2").collect::<String>(),
+        )),
         ..Default::default()
     })
 }
@@ -49,10 +56,17 @@ pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
     if !cuid2::is_cuid2(&args.id) {
         return None;
     }
+    let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text(&args.id);
+
     Some(IDInfo {
         id_type: "CUID".to_string(),
         version: Some("2".to_string()),
         standard: args.id.to_string(),
+        size,
+        entropy: size,
+        hex,
+        bits,
+        color_map,
         ..Default::default()
     })
 }

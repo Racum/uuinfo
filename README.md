@@ -13,7 +13,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 ## Supported ID Formats
 
 - [UUID](https://www.rfc-editor.org/rfc/rfc9562.html): versions 1 to 8, Nil, Max, NCS and Microsoft GUID.
-- UUID wrappers: [ShortUUD](https://github.com/skorokithakis/shortuuid), [Base64](https://en.wikipedia.org/wiki/Base64) and [Uuid25](https://github.com/uuid25/python)
+- UUID wrappers: [ShortUUD](https://github.com/skorokithakis/shortuuid), [Base64](https://en.wikipedia.org/wiki/Base64), [Uuid25](https://github.com/uuid25/python) and integer
 - [ULID](https://github.com/ulid/spec)
 - [UPID](https://github.com/carderne/upid)
 - [MongoDB ObjectId](https://www.mongodb.com/docs/manual/reference/method/ObjectId/)
@@ -42,6 +42,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
   - [Mastodon](https://github.com/mastodon/mastodon/blob/main/lib/mastodon/snowflake.rb)
   - LinkedIn
   - [Frostflake](https://github.com/ordo-one/package-frostflake)
+  - [Flake ID](https://github.com/T-PWK/flake-idgen)
 - [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time) (seconds, ms, μs and ns)
 - [Hex-encoded Hash](https://en.wikipedia.org/wiki/Secure_Hash_Algorithms)
 - [IPFS CID](https://docs.ipfs.tech/concepts/content-addressing/) (v0 and v1)

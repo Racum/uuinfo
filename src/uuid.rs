@@ -217,3 +217,20 @@ pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
     id_info.uuid_wrap = Some(uuid_str);
     Some(id_info)
 }
+
+pub fn parse_uuid_integer(args: &Args) -> Option<IDInfo> {
+    let id_int: u128 = match args.id.trim().parse::<u128>() {
+        Ok(value) => value,
+        Err(_) => return None,
+    };
+    let uuid_str = Uuid::from_u128(id_int).to_string();
+    let mut new_args: Args = args.clone();
+    new_args.id = uuid_str.clone();
+    let mut id_info = match parse_uuid(&new_args) {
+        Some(value) => value,
+        None => return None,
+    };
+    id_info.id_type = format!("Integer of {}", id_info.id_type);
+    id_info.standard = uuid_str.clone();
+    Some(id_info)
+}

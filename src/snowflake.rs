@@ -179,6 +179,25 @@ fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
+fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
+    let id_int: u64 = args.id.trim().parse().unwrap();
+    let timestamp_raw = bits64(id_int, 0, 42);
+    let datacenter_id = bits64(id_int, 42, 5);
+    let worker_id = bits64(id_int, 47, 5);
+    let sequence = bits64(id_int, 52, 12);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    SnowflakeAnnotation {
+        version: Some("Flake ID".to_string()),
+        custom_string: None,
+        datetime: Some(datetime),
+        timestamp: Some(timestamp),
+        node1: Some(format!("{} (Datacenter ID)", datacenter_id)),
+        node2: Some(format!("{} (Worker ID)", worker_id)),
+        sequence: Some(sequence as u128),
+        color_map: Some("3333333333333333333333333333333333333333334444455555666666666666".to_string()),
+    }
+}
+
 fn annotate_snowflake_variant(args: &Args) -> SnowflakeAnnotation {
     match args.force {
         Some(value) => {
@@ -191,6 +210,7 @@ fn annotate_snowflake_variant(args: &Args) -> SnowflakeAnnotation {
                 IdFormat::SfSpaceflake => annotate_spaceflake(args),
                 IdFormat::SfLinkedin => annotate_linkedin(args),
                 IdFormat::SfFrostflake => annotate_frostflake(args),
+                IdFormat::SfFlakeid => annotate_flakeid(args),
                 _ => SnowflakeAnnotation::default(),
             };
             annotation
@@ -265,6 +285,7 @@ pub fn compare_snowflake(args: &Args) {
             format!("- {} LinkedIn", annotate_linkedin(args).datetime.unwrap_or("".to_string())),
             format!("- {} Mastodon", annotate_mastodon(args).datetime.unwrap_or("".to_string())),
             format!("- {} Frostflake", annotate_frostflake(args).datetime.unwrap_or("".to_string())),
+            format!("- {} Flake ID", annotate_flakeid(args).datetime.unwrap_or("".to_string())),
             format!("- {} TSID", tsid_time), // Not Snowflake, but 64-bit compatible:
         ];
         let id_int: u64 = args.id.trim().parse::<u64>().unwrap();

@@ -30,6 +30,8 @@ pub enum IdFormat {
     Uuid,
     /// ShortUUID
     Shortuuid,
+    /// UUID as Integer
+    UuidInt,
     /// UUID as Base64
     UuidB64,
     /// Uuid25
@@ -70,9 +72,9 @@ pub enum IdFormat {
     Stripe,
     /// Datadog Trace ID
     Datadog,
-    /// NUID
+    /// NUID (NATS)
     Nuid,
-    // TypeID
+    /// TypeID (Jetify)
     Typeid,
     /// Snowflake: Twitter
     SfTwitter,
@@ -90,6 +92,8 @@ pub enum IdFormat {
     SfSpaceflake,
     /// Snowflake: Frostflake
     SfFrostflake,
+    /// Snowflake Flake ID
+    SfFlakeid,
     /// Unix timestamp: Auto-detect
     Unix,
     /// Unix timestamp: Seconds
@@ -265,7 +269,7 @@ impl IDInfo {
 
         match self.bits.clone() {
             Some(bits) => {
-                let remaining_bits = bits.chars().count() % 32;
+                let remaining_bits = (32 - (bits.chars().count() % 32)) % 32;
                 let bits = format!("{}{}", bits, (0..remaining_bits).map(|_| ".").collect::<String>());
                 let color_map = Some(format!("{}{}", self.color_map.clone().unwrap(), (0..remaining_bits).map(|_| "0").collect::<String>()));
                 let hex = format!("{}{}", self.hex.clone().unwrap(), (0..remaining_bits / 4).map(|_| ".").collect::<String>());

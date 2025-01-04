@@ -1,4 +1,5 @@
 use crate::schema::{Args, IDInfo};
+use crate::utils::factor_size_hex_bits_color_from_text;
 
 pub const NANOID_ALPHABET: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
@@ -22,11 +23,17 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
     } else {
         Some(format!("{}, custom length ({})", alphabet_info, args.id.chars().count()))
     };
+    let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text(&args.id);
 
     Some(IDInfo {
         id_type: "Nano ID".to_string(),
         version,
         standard: args.id.to_string(),
+        size,
+        entropy: size,
+        hex,
+        bits,
+        color_map,
         ..Default::default()
     })
 }

@@ -1,4 +1,5 @@
 use chrono::{DateTime, SecondsFormat, Utc};
+use std::fmt::Write;
 
 pub fn bits64(value: u64, offset: u8, length: u8) -> u64 {
     value << offset >> (64 - length)
@@ -28,6 +29,18 @@ pub fn nanoseconds_to_iso8601(ns: u64) -> (String, String) {
     let dt: DateTime<Utc> = DateTime::from_timestamp(secs, nanos).unwrap();
     let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
     (format!("{:.3}", timestamp), datetime.to_string())
+}
+
+pub fn factor_size_hex_bits_color_from_text(text: &str) -> (u16, Option<String>, Option<String>, Option<String>) {
+    (
+        (text.chars().count() * 8) as u16,
+        Some(hex::encode(text.as_bytes())),
+        Some(text.as_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
+        Some((0..(text.chars().count() * 8)).map(|_| "2").collect::<String>()),
+    )
 }
 
 #[cfg(test)]
@@ -101,5 +114,14 @@ mod bits64 {
         let (ts, dt) = nanoseconds_to_iso8601(1734971723000000000);
         assert_eq!(ts, "1734971723.000");
         assert_eq!(dt, "2024-12-23T16:35:23.000Z");
+    }
+
+    #[test]
+    fn test_factor_size_hex_bits_color_from_text() {
+        let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text("Hello");
+        assert_eq!(size, 40);
+        assert_eq!(hex, Some("48656c6c6f".to_string()));
+        assert_eq!(bits, Some("0100100001100101011011000110110001101111".to_string()));
+        assert_eq!(color_map, Some("2222222222222222222222222222222222222222".to_string()));
     }
 }

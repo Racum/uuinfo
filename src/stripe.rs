@@ -1,4 +1,5 @@
 use crate::schema::{Args, IDInfo};
+use crate::utils::factor_size_hex_bits_color_from_text;
 
 const ALPHA_NUM: &str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -88,12 +89,25 @@ pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
         "whsec" => "Webhook Secret",
         _ => return None,
     };
+    let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
+    let prefix_bits = prefix.chars().count() * 8;
+    let code_bits = ((args.id.chars().count() * 8) - prefix_bits - 8) as u16;
 
     Some(IDInfo {
         id_type: "Stripe ID".to_string(),
         version: Some(version.to_string()),
         standard: args.id.clone(),
+        size,
+        entropy: code_bits,
         node1: Some(prefix),
+        hex,
+        bits,
+        color_map: Some(format!(
+            "{}{}{}",
+            (0..prefix_bits).map(|_| "4").collect::<String>(),
+            (0..8).map(|_| "0").collect::<String>(),
+            (0..code_bits).map(|_| "2").collect::<String>(),
+        )),
         ..Default::default()
     })
 }

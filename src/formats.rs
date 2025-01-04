@@ -19,17 +19,20 @@ use crate::typeid::parse_typeid;
 use crate::ulid::parse_ulid;
 use crate::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
 use crate::upid::parse_upid;
-use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25};
+use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25, parse_uuid_integer};
 use crate::xid::parse_xid;
 use crate::youtube::parse_youtube;
 
+type ParseFunction = fn(&Args) -> Option<IDInfo>;
+
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 28] = [
+const ALL_PARSERS: [ParseFunction; 29] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
     parse_short_uuid,
+    parse_uuid_integer,
     parse_ulid,
     parse_upid,
     parse_objectid,
@@ -56,26 +59,6 @@ const ALL_PARSERS: [fn(&Args) -> Option<IDInfo>; 28] = [
     parse_nanoid,
 ];
 
-#[rustfmt::skip]
-const VARIABLE_PARSERS: [fn(&Args) -> Option<IDInfo>; 7] = [
-    parse_typeid,
-    parse_ipfs,
-    parse_stripe,
-    parse_cuid2,
-    parse_sqid,
-    parse_nanoid,
-    parse_hashid,
-];
-
-pub fn parse_variable(args: &Args) -> Option<IDInfo> {
-    for parser in VARIABLE_PARSERS {
-        if let Some(value) = parser(args) {
-            return Some(value);
-        }
-    }
-    None
-}
-
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
     let mut valid_ids: Vec<IDInfo> = vec![];
     for parser in ALL_PARSERS {
@@ -86,47 +69,32 @@ pub fn parse_all(args: &Args) -> Vec<IDInfo> {
     valid_ids
 }
 
+pub fn pick_first_valid(args: &Args, parsers: Vec<ParseFunction>) -> Option<IDInfo> {
+    for parser in parsers {
+        if let Some(value) = parser(args) {
+            return Some(value);
+        }
+    }
+    None
+}
+
 pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
-    if args.id.trim().parse::<u64>().is_ok() {
+    if args.id.trim().parse::<u128>().is_ok() {
         // Numeric:
-        id_info = match parse_unix_recent(args) {
-            Some(value) => Some(value),
-            None => parse_snowflake(args),
-        }
+        id_info = pick_first_valid(args, vec![parse_unix_recent, parse_snowflake, parse_uuid_integer]);
     } else {
         // Fixed length:
         id_info = match args.id.chars().count() {
             56 | 64 | 96 | 128 => parse_hash(args),
             40 => parse_ksuid(args),
             36 => parse_uuid(args),
-            32 => match parse_datadog(args) {
-                Some(value) => Some(value),
-                None => parse_uuid(args),
-            },
-            27 => match parse_upid(args) {
-                Some(value) => Some(value),
-                None => parse_ksuid(args),
-            },
+            32 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
+            27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
             26 => parse_ulid(args),
-            25 => match parse_cuid1(args) {
-                Some(value) => Some(value),
-                None => parse_scru128(args),
-            },
-            24 => match parse_objectid(args) {
-                Some(value) => Some(value),
-                None => parse_base64_uuid(args),
-            },
-            22 => match parse_short_uuid(args) {
-                Some(value) => Some(value),
-                None => match parse_timeflake_base62(args) {
-                    Some(value) => Some(value),
-                    None => match parse_base64_uuid(args) {
-                        Some(value) => Some(value),
-                        None => parse_nuid(args),
-                    },
-                },
-            },
+            25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
+            24 => pick_first_valid(args, vec![parse_objectid, parse_base64_uuid]),
+            22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid]),
             21 => parse_nanoid(args),
             20 => parse_xid(args),
             18 => parse_flake(args),
@@ -138,7 +106,16 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
         // Variable length:
         id_info = match id_info {
             Some(value) => Some(value),
-            None => parse_variable(args),
+            #[rustfmt::skip]
+            None => pick_first_valid(args, vec![
+                parse_typeid,
+                parse_ipfs,
+                parse_stripe,
+                parse_cuid2,
+                parse_sqid,
+                parse_nanoid,
+                parse_hashid,
+            ]),
         };
     }
     id_info
@@ -150,6 +127,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Shortuuid => parse_short_uuid(args),
         IdFormat::UuidB64 => parse_base64_uuid(args),
         IdFormat::Uuid25 => parse_uuid25(args),
+        IdFormat::UuidInt => parse_uuid_integer(args),
         IdFormat::Ulid => parse_ulid(args),
         IdFormat::Upid => parse_upid(args),
         IdFormat::Timeflake => parse_timeflake_any(args),
@@ -170,6 +148,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::SfSony => parse_snowflake(args),
         IdFormat::SfSpaceflake => parse_snowflake(args),
         IdFormat::SfFrostflake => parse_snowflake(args),
+        IdFormat::SfFlakeid => parse_snowflake(args),
         IdFormat::Tsid => parse_tsid(args),
         IdFormat::Sqid => parse_sqid(args),
         IdFormat::Hashid => parse_hashid(args),
@@ -223,6 +202,7 @@ mod tests {
         _assert("32CQvwbvpbnkmkhhguznVH", "ShortUUID of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g==", "Padded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g", "Unpadded Base64 of UUID (RFC-4122)", "4 (random)");
+        _assert("2093703425379131962944436515747969848", "Integer of UUID (RFC-9562)", "7 (sortable timestamp and random)");
         // Snowflakes:
         _assert("1400000000000000000", "Snowflake", "Unknown (use -f to specify version)");
         // Unix timestamp
@@ -306,6 +286,12 @@ mod tests {
         _assert("UHKjBazX_UG8dEAJaikK1g==", IdFormat::UuidB64, "Padded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("UHKjBazX_UG8dEAJaikK1g", IdFormat::UuidB64, "Unpadded Base64 of UUID (RFC-4122)", "4 (random)");
         _assert("dpoadk8izg9y4tte7vy1xt94o", IdFormat::Uuid25, "Uuid25 of UUID (RFC-4122)", "4 (random)");
+        _assert(
+            "2093703425379131962944436515747969848",
+            IdFormat::UuidInt,
+            "Integer of UUID (RFC-9562)",
+            "7 (sortable timestamp and random)",
+        );
         // Snowflakes:
         _assert("1777150623882019211", IdFormat::SfTwitter, "Snowflake", "Twitter");
         _assert("1304369705066434662", IdFormat::SfDiscord, "Snowflake", "Discord");
@@ -314,6 +300,7 @@ mod tests {
         _assert("1015189130756840860", IdFormat::SfSpaceflake, "Snowflake", "Spaceflake");
         _assert("112277929257317646", IdFormat::SfMastodon, "Snowflake", "Mastodon");
         _assert("7256902784527069184", IdFormat::SfLinkedin, "Snowflake", "LinkedIn");
+        _assert("5828128208445124608", IdFormat::SfFlakeid, "Snowflake", "Flake ID");
         _assert("7423342004626526207", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
         _assert("JERHwh5PXjL", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
         // Unix timestamp
