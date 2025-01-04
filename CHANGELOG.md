@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Breeze ID support.
 - Flake ID support.
+- Puid support.
 - UUID as integer support.
 - Hex/bits table with color-map for all text-based formats.
 

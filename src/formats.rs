@@ -9,6 +9,7 @@ use crate::ksuid::parse_ksuid;
 use crate::nanoid::parse_nanoid;
 use crate::nuid::parse_nuid;
 use crate::objectid::parse_objectid;
+use crate::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::schema::{Args, IDInfo, IdFormat};
 use crate::scru::{parse_scru128, parse_scru64};
 use crate::snowflake::parse_snowflake;
@@ -28,7 +29,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [ParseFunction; 30] = [
+const ALL_PARSERS: [ParseFunction; 32] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -58,6 +59,8 @@ const ALL_PARSERS: [ParseFunction; 30] = [
     parse_hash,
     parse_ipfs,
     parse_breezeid,
+    parse_puid,
+    parse_shortpuid,
     parse_nanoid,
 ];
 
@@ -95,13 +98,14 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
             26 => parse_ulid(args),
             25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
-            24 => pick_first_valid(args, vec![parse_objectid, parse_base64_uuid]),
+            24 => pick_first_valid(args, vec![parse_objectid, parse_puid, parse_base64_uuid]),
             22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid]),
             21 => parse_nanoid(args),
             20 => parse_xid(args),
             18 => parse_flake(args),
+            14 => parse_shortpuid(args),
             13 => parse_tsid(args),
-            12 => parse_scru64(args),
+            12 => pick_first_valid(args, vec![parse_scru64, parse_shortpuid]),
             11 => parse_youtube(args),
             _ => None,
         };
@@ -168,6 +172,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Nuid => parse_nuid(args),
         IdFormat::Typeid => parse_typeid(args),
         IdFormat::Breezeid => parse_breezeid(args),
+        IdFormat::Puid => parse_puid_any(args),
     }
 }
 
@@ -237,6 +242,8 @@ mod tests {
         _assert("prefix_01h2xcejqtf2nbrexx3vqjhp41", "TypeID", "-");
         _assert("9NU6-XQLZ-BDIH-6HKE", "Breeze ID", "Default alphabet");
         _assert("9nu6-xqlz-bdih-6hke", "Breeze ID", "Lowercase alphabet");
+        _assert("he5fps6l2504cd1w3ag8ut8e", "Puid", "-");
+        _assert("aeby6ob5sso4zd", "Puid", "Short puid with node ID");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -344,6 +351,9 @@ mod tests {
         _assert("prefix_01h2xcejqtf2nbrexx3vqjhp41", IdFormat::Typeid, "TypeID", "-");
         _assert("9NU6-XQLZ-BDIH-6HKE", IdFormat::Breezeid, "Breeze ID", "Default alphabet");
         _assert("9nu6-xqlz-bdih-6hke", IdFormat::Breezeid, "Breeze ID", "Lowercase alphabet");
+        _assert("he5fps6l2504cd1w3ag8ut8e", IdFormat::Puid, "Puid", "-");
+        _assert("aeby6ob5sso4zd", IdFormat::Puid, "Puid", "Short puid with node ID");
+        _assert("aeby6ob5sso4", IdFormat::Puid, "Puid", "Short puid without node ID");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");

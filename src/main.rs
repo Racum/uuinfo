@@ -12,6 +12,7 @@ mod ksuid;
 mod nanoid;
 mod nuid;
 mod objectid;
+mod puid;
 mod scru;
 mod sqid;
 mod stripe;

@@ -78,6 +78,8 @@ pub enum IdFormat {
     Typeid,
     /// Breeze ID
     Breezeid,
+    /// PUID
+    Puid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
