@@ -13,6 +13,7 @@ mod nanoid;
 mod nuid;
 mod objectid;
 mod puid;
+mod pushid;
 mod scru;
 mod sqid;
 mod stripe;
@@ -53,7 +54,7 @@ fn main() {
     if args.everything {
         let valid_ids = parse_all(&args);
         if !valid_ids.is_empty() {
-            for value in parse_all(&args) {
+            for value in valid_ids {
                 value.print(&args);
             }
         } else {
