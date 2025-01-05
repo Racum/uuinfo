@@ -11,10 +11,7 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     let scru = match Scru128Id::try_from_str(&args.id) {
         Ok(value) => value,
         Err(_) => {
-            let uuid = match Uuid::try_parse(&args.id) {
-                Ok(value) => value,
-                Err(_) => return None,
-            };
+            let uuid = Uuid::try_parse(&args.id).ok()?;
             id_type = "SCRU128 wrapped in UUID";
             Scru128Id::from_u128(uuid.as_u128())
         }
@@ -44,10 +41,7 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
 
 pub fn parse_scru64(args: &Args) -> Option<IDInfo> {
     let binding = args.id.parse::<Scru64Id>();
-    let scru = match &binding {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let scru = &binding.ok()?;
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(scru.timestamp() * 256, None);
 
     Some(IDInfo {

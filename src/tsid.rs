@@ -8,14 +8,10 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
     let tsid_id: TSID = match TSID::try_from(args.id.as_str()) {
         Ok(value) => value,
         Err(_) => {
-            let id_int: u64 = match args.id.trim().parse::<u64>() {
-                Ok(value) => value,
-                Err(_) => return None,
-            };
+            let id_int: u64 = args.id.trim().parse::<u64>().ok()?;
             TSID::from(id_int)
         }
     };
-
     let id_int: u64 = tsid_id.number();
     let raw_timestamp = tsid_id.timestamp().timestamp_millis() as u64;
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(raw_timestamp, None);

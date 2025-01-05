@@ -7,12 +7,7 @@ pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {
         return None;
     }
-
-    let oid_bytes = match hex::decode(args.id.clone()) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
-
+    let oid_bytes = hex::decode(args.id.clone()).ok()?;
     let mut oid_extra_bytes: Vec<u8> = [0u8, 0u8, 0u8, 0u8].to_vec();
     oid_extra_bytes.extend_from_slice(&oid_bytes);
     let oid_int: u128 = u128::from_be_bytes(oid_extra_bytes.try_into().unwrap());

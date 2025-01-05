@@ -21,10 +21,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
     if prefix.chars().count() > 63 || !prefix.chars().all(|c| PREFIX_ALPHABET.contains(c)) {
         return None;
     }
-    let ulid = match Ulid::from_string(value) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let ulid = Ulid::from_string(value).ok()?;
     let uuid: Uuid = Uuid::from_bytes(ulid.to_bytes());
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(ulid.timestamp_ms(), None);
 

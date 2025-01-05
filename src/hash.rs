@@ -7,10 +7,7 @@ pub fn parse_hash(args: &Args) -> Option<IDInfo> {
         32 | 40 | 56 | 64 | 96 | 128 => (),
         _ => return None,
     }
-    let id_bytes = match hex::decode(args.id.clone()) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let id_bytes = hex::decode(args.id.clone()).ok()?;
     let bits = id_bytes.len() * 8;
     let version = match bits {
         128 => Some("Probably MD5".to_string()),

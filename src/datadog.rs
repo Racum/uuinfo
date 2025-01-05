@@ -4,14 +4,8 @@ use crate::schema::{Args, IDInfo};
 use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
 
 pub fn parse_datadog(args: &Args) -> Option<IDInfo> {
-    let id_bytes = match hex::decode(args.id.clone()) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
-    let id_bytes: [u8; 16] = match id_bytes.try_into() {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let id_bytes = hex::decode(args.id.clone()).ok()?;
+    let id_bytes: [u8; 16] = id_bytes.try_into().ok()?;
     let id_int: u128 = u128::from_be_bytes(id_bytes);
     let raw_ts = bits128(id_int, 0, 32);
     let zeroes = bits128(id_int, 32, 32);

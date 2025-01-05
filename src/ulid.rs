@@ -10,15 +10,10 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
     let ulid = match Ulid::from_string(&args.id) {
         Ok(value) => value,
         Err(_) => {
-            let uuid = match Uuid::try_parse(&args.id) {
-                Ok(value) => value,
-                Err(_) => return None,
-            };
             id_type = "ULID wrapped in UUID";
-            Ulid::from(uuid)
+            Ulid::from(Uuid::try_parse(&args.id).ok()?)
         }
     };
-
     let uuid = Uuid::from_bytes(ulid.to_bytes());
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(ulid.timestamp_ms(), None);
 

@@ -7,22 +7,10 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {
         return None;
     }
-    let timestamp_raw: u64 = match BASE36.decode_var_len(&args.id[0..8]) {
-        Some(value) => value,
-        None => return None,
-    };
-    let _ = match hex::decode(&args.id[8..14]) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
-    let process_id: u64 = match BASE36.decode_var_len(&args.id[14..18]) {
-        Some(value) => value,
-        None => return None,
-    };
-    let sequence: u64 = match BASE36.decode_var_len(&args.id[18..24]) {
-        Some(value) => value,
-        None => return None,
-    };
+    let timestamp_raw: u64 = BASE36.decode_var_len(&args.id[0..8])?;
+    let _ = hex::decode(&args.id[8..14]).ok()?;
+    let process_id: u64 = BASE36.decode_var_len(&args.id[14..18])?;
+    let sequence: u64 = BASE36.decode_var_len(&args.id[18..24])?;
     let machine_id = &args.id[8..14];
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
@@ -54,19 +42,13 @@ pub fn parse_shortpuid(args: &Args) -> Option<IDInfo> {
         12 | 14 => (),
         _ => return None,
     }
-    let timestamp_raw: u64 = match BASE36.decode_var_len(&args.id[0..12]) {
-        Some(value) => value,
-        None => return None,
-    };
+    let timestamp_raw: u64 = BASE36.decode_var_len(&args.id[0..12])?;
     let version: Option<String>;
     let node1: Option<String>;
     let color_map: Option<String>;
 
     if args.id.chars().count() == 14 {
-        let node_id: u64 = match BASE36.decode_var_len(&args.id[12..14]) {
-            Some(value) => value,
-            None => return None,
-        };
+        let node_id: u64 = BASE36.decode_var_len(&args.id[12..14])?;
         version = Some("Short puid with node ID".to_string());
         node1 = Some(format!("{} (Node ID)", node_id));
         color_map = Some(format!("{}{}", (0..96).map(|_| "3").collect::<String>(), (0..16).map(|_| "4").collect::<String>(),));

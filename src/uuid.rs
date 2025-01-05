@@ -14,11 +14,7 @@ pub const COLOR_MAP_UUID_16: &str = "3333333333333333333333333333333333333333333
 pub const COLOR_MAP_UUID_7: &str = "33333333333333333333333333333333333333333333333311112222222222220022222222222222222222222222222222222222222222222222222222222222";
 
 pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
-    let uuid = match Uuid::try_parse(&args.id) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
-
+    let uuid = Uuid::try_parse(&args.id).ok()?;
     let id_type: String;
     let mut version: Option<String> = None;
     let mut entropy: u16 = 0;
@@ -138,15 +134,8 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
 
 pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
     let translator = CustomTranslator::new(SHORT_UUID_ALPHABET).unwrap();
-    let suuid = match ShortUuidCustom::parse_str(&args.id, &translator) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
-    let uuid_str = match suuid.clone().to_uuid(&translator) {
-        Ok(value) => value.to_string(),
-        Err(_) => return None,
-    };
-
+    let suuid = ShortUuidCustom::parse_str(&args.id, &translator).ok()?;
+    let uuid_str = suuid.clone().to_uuid(&translator).ok()?.to_string();
     let mut new_args: Args = args.clone();
     new_args.id = uuid_str.clone();
     let mut id_info = match parse_uuid(&new_args) {
@@ -163,17 +152,11 @@ pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
 pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
     let mut padded = true;
     let uuid = match URL_SAFE.decode(&args.id) {
-        Ok(value) => match Uuid::from_slice_le(value.as_slice()) {
-            Ok(value) => value,
-            Err(_) => return None,
-        },
+        Ok(value) => Uuid::from_slice_le(value.as_slice()).ok()?,
         Err(_) => match URL_SAFE_NO_PAD.decode(&args.id) {
             Ok(value) => {
                 padded = false;
-                match Uuid::from_slice_le(value.as_slice()) {
-                    Ok(value) => value,
-                    Err(_) => return None,
-                }
+                Uuid::from_slice_le(value.as_slice()).ok()?
             }
             Err(_) => return None,
         },
@@ -181,10 +164,7 @@ pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
 
     let mut new_args: Args = args.clone();
     new_args.id = uuid.to_string();
-    let mut id_info = match parse_uuid(&new_args) {
-        Some(value) => value,
-        None => return None,
-    };
+    let mut id_info = parse_uuid(&new_args)?;
 
     if padded {
         id_info.id_type = format!("Padded Base64 of {}", id_info.id_type);
@@ -202,16 +182,10 @@ pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 25 {
         return None;
     }
-    let uuid_str = match Uuid25::parse(&args.id) {
-        Ok(value) => value.to_hyphenated().to_string(),
-        Err(_) => return None,
-    };
+    let uuid_str = Uuid25::parse(&args.id).ok()?.to_hyphenated().to_string();
     let mut new_args: Args = args.clone();
     new_args.id = uuid_str.clone();
-    let mut id_info = match parse_uuid(&new_args) {
-        Some(value) => value,
-        None => return None,
-    };
+    let mut id_info = parse_uuid(&new_args)?;
     id_info.id_type = format!("Uuid25 of {}", id_info.id_type);
     id_info.standard = args.id.to_string();
     id_info.uuid_wrap = Some(uuid_str);
@@ -219,17 +193,11 @@ pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_uuid_integer(args: &Args) -> Option<IDInfo> {
-    let id_int: u128 = match args.id.trim().parse::<u128>() {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let id_int: u128 = args.id.trim().parse::<u128>().ok()?;
     let uuid_str = Uuid::from_u128(id_int).to_string();
     let mut new_args: Args = args.clone();
     new_args.id = uuid_str.clone();
-    let mut id_info = match parse_uuid(&new_args) {
-        Some(value) => value,
-        None => return None,
-    };
+    let mut id_info = parse_uuid(&new_args)?;
     id_info.id_type = format!("Integer of {}", id_info.id_type);
     id_info.standard = uuid_str.clone();
     Some(id_info)

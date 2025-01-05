@@ -18,10 +18,7 @@ enum TimestampUnitAssumption {
 }
 
 fn parse_unix_core(args: &Args, assumption: TimestampUnitAssumption) -> Option<IDInfo> {
-    let id_int: u64 = match args.id.trim().parse::<u64>() {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let id_int: u64 = args.id.trim().parse::<u64>().ok()?;
     let (timestamp, datetime): (String, String);
     let version: String;
     let timestamp_ns: u64;

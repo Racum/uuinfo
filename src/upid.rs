@@ -10,12 +10,8 @@ pub fn parse_upid(args: &Args) -> Option<IDInfo> {
     let upid = match Upid::from_string(&args.id) {
         Ok(value) => value,
         Err(_) => {
-            let uuid = match Uuid::try_parse(&args.id) {
-                Ok(value) => value,
-                Err(_) => return None,
-            };
             id_type = "UPID wrapped in UUID";
-            Upid::from(uuid.as_u128())
+            Upid::from(Uuid::try_parse(&args.id).ok()?.as_u128())
         }
     };
 

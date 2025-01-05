@@ -4,24 +4,12 @@ use crate::schema::{Args, IDInfo};
 use crate::utils::{factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601};
 
 pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
-    if args.id.chars().count() != 25 {
+    if args.id.chars().count() != 25 || &args.id[0..1] != "c" {
         return None;
     }
-    if &args.id[0..1] != "c" {
-        return None;
-    }
-    let timestamp_raw: u64 = match BASE36.decode_var_len(&args.id[1..9]) {
-        Some(value) => value,
-        None => return None,
-    };
-    let sequence: u64 = match BASE36.decode_var_len(&args.id[9..13]) {
-        Some(value) => value,
-        None => return None,
-    };
-    let fingerprint: u64 = match BASE36.decode_var_len(&args.id[13..17]) {
-        Some(value) => value,
-        None => return None,
-    };
+    let timestamp_raw: u64 = BASE36.decode_var_len(&args.id[1..9])?;
+    let sequence: u64 = BASE36.decode_var_len(&args.id[9..13])?;
+    let fingerprint: u64 = BASE36.decode_var_len(&args.id[13..17])?;
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
 
@@ -50,10 +38,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
-    if args.id.chars().count() < 2 || args.id.chars().count() > 32 {
-        return None;
-    }
-    if !cuid2::is_cuid2(&args.id) {
+    if args.id.chars().count() < 2 || args.id.chars().count() > 32 || !cuid2::is_cuid2(&args.id) {
         return None;
     }
     let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text(&args.id);

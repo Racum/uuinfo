@@ -26,10 +26,7 @@ pub fn parse_hashid(args: &Args) -> Option<IDInfo> {
         Err(_) => return None,
     }
 
-    let numbers = match hashid_core.decode(&args.id) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let numbers = hashid_core.decode(&args.id).ok()?;
     if numbers.is_empty() {
         return None;
     }

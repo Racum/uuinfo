@@ -5,10 +5,7 @@ use std::str::FromStr;
 use crate::schema::{Args, IDInfo};
 
 pub fn parse_ipfs(args: &Args) -> Option<IDInfo> {
-    let cid = match Cid::from_str(&args.id) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
+    let cid = Cid::from_str(&args.id).ok()?;
     let version = match (cid.version(), cid.codec()) {
         (Version::V0, _) => "CID v0",
         (Version::V1, 114) => "CID v1 (IPNS)",

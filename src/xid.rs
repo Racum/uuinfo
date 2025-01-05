@@ -8,10 +8,7 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 20 {
         return None;
     }
-    let xid_bytes = match base32::decode(Alphabet::Rfc4648HexLower { padding: true }, &args.id) {
-        Some(value) => value,
-        None => return None,
-    };
+    let xid_bytes = base32::decode(Alphabet::Rfc4648HexLower { padding: true }, &args.id)?;
     let mut xid_extra_bytes: Vec<u8> = [0u8, 0u8, 0u8, 0u8].to_vec();
     xid_extra_bytes.extend_from_slice(&xid_bytes);
     let xid_int: u128 = u128::from_be_bytes(xid_extra_bytes.try_into().unwrap());

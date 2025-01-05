@@ -6,11 +6,7 @@ use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_timeflake_core(hex_id: &str) -> Option<IDInfo> {
-    let timeflake = match Timeflake::parse(hex_id) {
-        Ok(value) => value,
-        Err(_) => return None,
-    };
-
+    let timeflake = Timeflake::parse(hex_id).ok()?;
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timeflake.timestamp.as_millis() as u64, None);
 
     Some(IDInfo {
@@ -49,10 +45,7 @@ pub fn parse_timeflake_uuid(args: &Args) -> Option<IDInfo> {
         Ok(value) => hex::encode(value.as_bytes()),
         Err(_) => return None,
     };
-    let mut id_info = match parse_timeflake_hex(new_args) {
-        Some(value) => value,
-        None => return None,
-    };
+    let mut id_info = parse_timeflake_hex(new_args)?;
     id_info.id_type = "Timeflake wrapped in UUID".to_string();
     Some(id_info)
 }
