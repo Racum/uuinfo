@@ -40,6 +40,7 @@ pub fn parse_breezeid(args: &Args) -> Option<IDInfo> {
         id_type: "Breeze ID".to_string(),
         standard: args.id.to_string(),
         version,
+        parsed: Some("as ASCII".to_string()),
         size,
         entropy: size - (dashes * 8),
         hex,

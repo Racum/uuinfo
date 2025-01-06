@@ -29,6 +29,7 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
         id_type: "Nano ID".to_string(),
         version,
         standard: args.id.to_string(),
+        parsed: Some("as ASCII".to_string()),
         size,
         entropy: size,
         hex,

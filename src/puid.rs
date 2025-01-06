@@ -18,6 +18,7 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
     Some(IDInfo {
         id_type: "Puid".to_string(),
         standard: args.id.clone(),
+        parsed: Some("as ASCII, with base36 parts".to_string()),
         size,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),
@@ -64,6 +65,7 @@ pub fn parse_shortpuid(args: &Args) -> Option<IDInfo> {
         id_type: "Puid".to_string(),
         version,
         standard: args.id.clone(),
+        parsed: Some("as ASCII, with base36 parts".to_string()),
         size,
         datetime: Some(datetime),
         timestamp: Some(timestamp.to_string()),

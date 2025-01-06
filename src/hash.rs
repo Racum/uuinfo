@@ -23,6 +23,7 @@ pub fn parse_hash(args: &Args) -> Option<IDInfo> {
         id_type: "Hex-encoded Hash".to_string(),
         version,
         standard: args.id.to_string(),
+        parsed: Some("from hex".to_string()),
         size: bits as u16,
         entropy: bits as u16,
         hex: Some(hex::encode(&id_bytes)),

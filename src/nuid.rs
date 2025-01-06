@@ -11,6 +11,7 @@ pub fn parse_nuid(args: &Args) -> Option<IDInfo> {
     Some(IDInfo {
         id_type: "NUID".to_string(),
         standard: args.id.to_string(),
+        parsed: Some("as ASCII".to_string()),
         size: 176,
         entropy: 96,
         node1: Some(args.id[12..22].to_string()),

@@ -28,6 +28,7 @@ pub fn parse_sqid(args: &Args) -> Option<IDInfo> {
         id_type: "Sqid".to_string(),
         version,
         standard: args.id.clone(),
+        parsed: Some("as ASCII".to_string()),
         size,
         node1: Some(numbers.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(", ")),
         hex,

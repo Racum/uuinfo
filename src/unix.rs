@@ -86,6 +86,8 @@ fn parse_unix_core(args: &Args, assumption: TimestampUnitAssumption) -> Option<I
         version: Some(version),
         standard: args.id.to_string(),
         integer: Some(id_int as u128),
+        size: 64,
+        parsed: Some("as integer".to_string()),
         datetime: Some(datetime),
         timestamp: Some(timestamp),
         hex: Some(hex::encode(id_int.to_be_bytes())),

@@ -173,6 +173,7 @@ pub struct IDInfo {
     pub short_uuid: Option<String>,
     pub base64: Option<String>,
     pub uuid_wrap: Option<String>,
+    pub parsed: Option<String>,
     pub size: u16,
     pub entropy: u16,
     pub datetime: Option<String>,
@@ -218,7 +219,10 @@ impl IDInfo {
 
         let size = match self.size {
             0 => "-",
-            _ => &format!("{} bits", self.size),
+            _ => match &self.parsed {
+                Some(parsed) => &format!("{} bits ({})", self.size, parsed),
+                None => &format!("{} bits", self.size),
+            },
         };
 
         let entropy = match self.size {

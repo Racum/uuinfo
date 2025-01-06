@@ -30,6 +30,7 @@ pub fn parse_pushid(args: &Args) -> Option<IDInfo> {
     Some(IDInfo {
         id_type: "PushID (Firebase)".to_string(),
         standard: args.id.to_string(),
+        parsed: Some("from base64".to_string()),
         size: 120,
         entropy: 96,
         datetime: Some(datetime),

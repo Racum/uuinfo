@@ -116,6 +116,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         integer: Some(uuid.as_u128()),
         short_uuid: Some(short.to_string()),
         base64: Some(URL_SAFE.encode(uuid.to_bytes_le())),
+        parsed: Some("from hex".to_string()),
         size: 128,
         entropy,
         datetime,
@@ -145,7 +146,7 @@ pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
     id_info.id_type = format!("ShortUUID of {}", id_info.id_type);
     id_info.standard = args.id.to_string();
     id_info.uuid_wrap = Some(uuid_str);
-
+    id_info.parsed = Some("from base57".to_string());
     Some(id_info)
 }
 
@@ -174,7 +175,7 @@ pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
     id_info.standard = id_info.base64.clone().unwrap();
     id_info.base64 = None;
     id_info.uuid_wrap = Some(uuid.to_string());
-
+    id_info.parsed = Some("from base64".to_string());
     Some(id_info)
 }
 
@@ -189,6 +190,7 @@ pub fn parse_uuid25(args: &Args) -> Option<IDInfo> {
     id_info.id_type = format!("Uuid25 of {}", id_info.id_type);
     id_info.standard = args.id.to_string();
     id_info.uuid_wrap = Some(uuid_str);
+    id_info.parsed = Some("from base36".to_string());
     Some(id_info)
 }
 
@@ -200,5 +202,6 @@ pub fn parse_uuid_integer(args: &Args) -> Option<IDInfo> {
     let mut id_info = parse_uuid(&new_args)?;
     id_info.id_type = format!("Integer of {}", id_info.id_type);
     id_info.standard = uuid_str.clone();
+    id_info.parsed = Some("as integer".to_string());
     Some(id_info)
 }

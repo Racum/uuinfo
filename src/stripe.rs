@@ -97,6 +97,7 @@ pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
         id_type: "Stripe ID".to_string(),
         version: Some(version.to_string()),
         standard: args.id.clone(),
+        parsed: Some("as ASCII".to_string()),
         size,
         entropy: code_bits,
         node1: Some(prefix),

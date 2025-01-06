@@ -7,10 +7,12 @@ use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
     let mut id_type = "ULID";
+    let mut parsed = "from Crockford's base32";
     let ulid = match Ulid::from_string(&args.id) {
         Ok(value) => value,
         Err(_) => {
             id_type = "ULID wrapped in UUID";
+            parsed = "from hex";
             Ulid::from(Uuid::try_parse(&args.id).ok()?)
         }
     };
@@ -22,6 +24,7 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
         standard: ulid.to_string(),
         integer: Some(ulid.0),
         uuid_wrap: Some(uuid.to_string()),
+        parsed: Some(parsed.to_string()),
         size: 128,
         entropy: 80,
         datetime: Some(datetime),

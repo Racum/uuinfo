@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.4] - 2025-01-06
+
+### Added
+
+- Parsing information on the size field.
+
 ## [0.3.3] - 2025-01-05
 
 ### Added

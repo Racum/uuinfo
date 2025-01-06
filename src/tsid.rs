@@ -20,6 +20,7 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
         id_type: "TSID".to_string(),
         standard: format!("{}", tsid_id),
         integer: Some(id_int.into()),
+        parsed: Some("from Crockford's base32".to_string()),
         size: 64,
         entropy: 22,
         datetime: Some(datetime),

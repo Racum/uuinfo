@@ -8,11 +8,13 @@ use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     let mut id_type = "SCRU128";
+    let mut parsed = "from base36";
     let scru = match Scru128Id::try_from_str(&args.id) {
         Ok(value) => value,
         Err(_) => {
             let uuid = Uuid::try_parse(&args.id).ok()?;
             id_type = "SCRU128 wrapped in UUID";
+            parsed = "from hex";
             Scru128Id::from_u128(uuid.as_u128())
         }
     };
@@ -25,6 +27,7 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
         standard: scru.to_string(),
         integer: Some(scru.to_u128()),
         uuid_wrap: Some(uuid.to_string()),
+        parsed: Some(parsed.to_string()),
         size: 128,
         entropy: 80,
         datetime: Some(datetime),
@@ -48,6 +51,7 @@ pub fn parse_scru64(args: &Args) -> Option<IDInfo> {
         id_type: "SCRU64".to_string(),
         standard: args.id.to_string(),
         integer: Some(scru.to_u64() as u128),
+        parsed: Some("from base36".to_string()),
         size: 64,
         datetime: Some(datetime),
         timestamp: Some(timestamp),

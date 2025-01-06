@@ -30,6 +30,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
         standard: args.id.to_string(),
         integer: Some(ulid.0),
         uuid_wrap: Some(uuid.to_string()),
+        parsed: Some("from base32, suffix only".to_string()),
         size: 128,
         entropy: 74,
         datetime: Some(datetime),

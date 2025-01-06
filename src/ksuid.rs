@@ -137,14 +137,17 @@ use custom_ksuid::Ksuid;
 
 pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
     let version: Option<String>;
+    let parsed: Option<String>;
     let ksuid: Ksuid = match Ksuid::from_base62(&args.id) {
         Ok(value) => {
             version = Some("Base62-encoded".to_string());
+            parsed = Some("from base62".to_string());
             value
         }
         Err(_) => match Ksuid::from_hex(&args.id) {
             Ok(value) => {
                 version = Some("Hex-encoded".to_string());
+                parsed = Some("from hex".to_string());
                 value
             }
             Err(_) => return None,
@@ -159,6 +162,7 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         id_type: "KSUID".to_string(),
         version,
         standard: ksuid.to_base62(),
+        parsed,
         size: 160,
         entropy: 128,
         datetime,

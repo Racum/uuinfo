@@ -19,6 +19,7 @@ pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
         id_type: "MongoDB ObjectId".to_string(),
         standard: args.id.to_string(),
         integer: Some(oid_int),
+        parsed: Some("from hex".to_string()),
         size: 96,
         entropy: 40,
         datetime: Some(datetime),

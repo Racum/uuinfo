@@ -19,6 +19,7 @@ pub fn parse_datadog(args: &Args) -> Option<IDInfo> {
         id_type: "Datadog Trace ID".to_string(),
         standard: args.id.to_string(),
         integer: Some(id_int),
+        parsed: Some("from hex".to_string()),
         size: 128,
         entropy: 64,
         datetime: Some(datetime),

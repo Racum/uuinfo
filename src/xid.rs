@@ -22,6 +22,7 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
         id_type: "Xid".to_string(),
         standard: args.id.to_string(),
         integer: Some(xid_int),
+        parsed: Some("from base32hex".to_string()),
         size: 96,
         datetime: Some(datetime),
         timestamp: Some(timestamp),

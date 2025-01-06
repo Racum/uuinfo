@@ -5,7 +5,7 @@ use uuid::Uuid;
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
 
-pub fn parse_timeflake_core(hex_id: &str) -> Option<IDInfo> {
+pub fn parse_timeflake_core(hex_id: &str, from_base62: bool) -> Option<IDInfo> {
     let timeflake = Timeflake::parse(hex_id).ok()?;
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timeflake.timestamp.as_millis() as u64, None);
 
@@ -14,6 +14,7 @@ pub fn parse_timeflake_core(hex_id: &str) -> Option<IDInfo> {
         standard: format!("{:0>22}", base62::encode(timeflake.as_u128())),
         integer: Some(timeflake.as_u128()),
         uuid_wrap: Some(timeflake.as_uuid().to_string()),
+        parsed: Some(if from_base62 { "from base62".to_string() } else { "from hex".to_string() }),
         size: 128,
         entropy: 80,
         datetime: Some(datetime),
@@ -29,12 +30,12 @@ pub fn parse_timeflake_core(hex_id: &str) -> Option<IDInfo> {
 }
 
 pub fn parse_timeflake_hex(args: &Args) -> Option<IDInfo> {
-    parse_timeflake_core(&args.id)
+    parse_timeflake_core(&args.id, false)
 }
 
 pub fn parse_timeflake_base62(args: &Args) -> Option<IDInfo> {
     match base62::decode(&args.id) {
-        Ok(value) => parse_timeflake_core(&hex::encode(value.to_be_bytes())),
+        Ok(value) => parse_timeflake_core(&hex::encode(value.to_be_bytes()), true),
         Err(_) => None,
     }
 }

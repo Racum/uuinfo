@@ -22,6 +22,7 @@ pub fn parse_youtube(args: &Args) -> Option<IDInfo> {
         id_type: "YouTube Video ID".to_string(),
         standard: args.id.to_string(),
         integer: Some(id_int.into()),
+        parsed: Some("from base64".to_string()),
         size: 64,
         entropy: 64,
         hex: Some(hex::encode(id_int.to_be_bytes())),
