@@ -182,7 +182,6 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::schema::Output;
 
     #[test]
     fn test_auto_detect() {
