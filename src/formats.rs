@@ -187,14 +187,13 @@ mod tests {
     #[test]
     fn test_auto_detect() {
         fn _assert(id: &str, id_type: &str, version: &str) {
-            let args = Args {
+            let id_info = auto_detect(&Args {
                 id: id.to_string(),
-                output: Output::Card,
-                compare_snowflake: false,
                 ..Default::default()
-            };
-            assert_eq!(auto_detect(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
-            assert_eq!(auto_detect(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
+            })
+            .unwrap();
+            assert_eq!(id_info.id_type, id_type.to_string(), "{id} - {id_type} - {version}");
+            assert_eq!(id_info.version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
         }
 
         // UUID:
@@ -269,14 +268,14 @@ mod tests {
     #[test]
     fn test_force_format() {
         fn _assert(id: &str, force: IdFormat, id_type: &str, version: &str) {
-            let args = Args {
+            let id_info = force_format(&Args {
                 id: id.to_string(),
-                output: Output::Card,
                 force: Some(force),
                 ..Default::default()
-            };
-            assert_eq!(force_format(&args).unwrap().id_type, id_type.to_string(), "{id} - {id_type} - {version}");
-            assert_eq!(force_format(&args).unwrap().version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
+            })
+            .unwrap();
+            assert_eq!(id_info.id_type, id_type.to_string(), "{id} - {id_type} - {version}");
+            assert_eq!(id_info.version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
         }
 
         // UUID:
