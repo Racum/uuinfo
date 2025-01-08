@@ -1,31 +1,32 @@
-use crate::breezeid::parse_breezeid;
-use crate::cuid::{parse_cuid1, parse_cuid2};
-use crate::datadog::parse_datadog;
-use crate::flake::parse_flake;
-use crate::hash::parse_hash;
-use crate::hashid::parse_hashid;
-use crate::ipfs::parse_ipfs;
-use crate::ksuid::parse_ksuid;
-use crate::nanoid::parse_nanoid;
-use crate::network::{parse_ipv4, parse_ipv6, parse_mac};
-use crate::nuid::parse_nuid;
-use crate::objectid::parse_objectid;
-use crate::puid::{parse_puid, parse_puid_any, parse_shortpuid};
-use crate::pushid::parse_pushid;
 use crate::schema::{Args, IDInfo, IdFormat};
-use crate::scru::{parse_scru128, parse_scru64};
-use crate::snowflake::parse_snowflake;
-use crate::sqid::parse_sqid;
-use crate::stripe::parse_stripe;
-use crate::timeflake::{parse_timeflake_any, parse_timeflake_base62};
-use crate::tsid::parse_tsid;
-use crate::typeid::parse_typeid;
-use crate::ulid::parse_ulid;
-use crate::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
-use crate::upid::parse_upid;
-use crate::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25, parse_uuid_integer};
-use crate::xid::parse_xid;
-use crate::youtube::parse_youtube;
+
+use crate::formats::breezeid::parse_breezeid;
+use crate::formats::cuid::{parse_cuid1, parse_cuid2};
+use crate::formats::datadog::parse_datadog;
+use crate::formats::flake::parse_flake;
+use crate::formats::hash::parse_hash;
+use crate::formats::hashid::parse_hashid;
+use crate::formats::ipfs::parse_ipfs;
+use crate::formats::ksuid::parse_ksuid;
+use crate::formats::nanoid::parse_nanoid;
+use crate::formats::network::{parse_ipv4, parse_ipv6, parse_mac};
+use crate::formats::nuid::parse_nuid;
+use crate::formats::objectid::parse_objectid;
+use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
+use crate::formats::pushid::parse_pushid;
+use crate::formats::scru::{parse_scru128, parse_scru64};
+use crate::formats::snowflake::{compare_snowflake as snowflake_compare, parse_snowflake};
+use crate::formats::sqid::parse_sqid;
+use crate::formats::stripe::parse_stripe;
+use crate::formats::timeflake::{parse_timeflake_any, parse_timeflake_base62};
+use crate::formats::tsid::parse_tsid;
+use crate::formats::typeid::parse_typeid;
+use crate::formats::ulid::parse_ulid;
+use crate::formats::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
+use crate::formats::upid::parse_upid;
+use crate::formats::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25, parse_uuid_integer};
+use crate::formats::xid::parse_xid;
+use crate::formats::youtube::parse_youtube;
 
 type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
@@ -187,6 +188,10 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ipv6 => parse_ipv6(args),
         IdFormat::Mac => parse_mac(args),
     }
+}
+
+pub fn compare_snowflake(args: &Args) {
+    snowflake_compare(args)
 }
 
 #[cfg(test)]

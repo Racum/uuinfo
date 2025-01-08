@@ -3,8 +3,8 @@ use colored::*;
 use std::fmt::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use crate::formats::tsid::parse_tsid;
 use crate::schema::{Args, IDInfo, IdFormat};
-use crate::tsid::parse_tsid;
 use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, nanoseconds_to_iso8601};
 
 #[derive(Debug)]

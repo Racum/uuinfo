@@ -1,40 +1,14 @@
 use clap::Parser;
 use std::io;
 
-mod breezeid;
-mod cuid;
-mod datadog;
-mod flake;
-mod hash;
-mod hashid;
-mod ipfs;
-mod ksuid;
-mod nanoid;
-mod network;
-mod nuid;
-mod objectid;
-mod puid;
-mod pushid;
-mod scru;
-mod sqid;
-mod stripe;
-mod timeflake;
-mod tsid;
-mod typeid;
-mod ulid;
-mod unix;
-mod upid;
-mod utils;
-mod uuid;
-mod xid;
-mod youtube;
-
-mod schema;
-use crate::schema::Args;
-mod snowflake;
-use crate::snowflake::compare_snowflake;
 mod formats;
-use crate::formats::{auto_detect, force_format, parse_all};
+mod id_format;
+mod schema;
+mod utils;
+
+use crate::id_format::{auto_detect, compare_snowflake, force_format, parse_all};
+use crate::schema::Args;
+mod display;
 
 fn main() {
     let mut args = Args::parse();
