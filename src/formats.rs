@@ -7,6 +7,7 @@ use crate::hashid::parse_hashid;
 use crate::ipfs::parse_ipfs;
 use crate::ksuid::parse_ksuid;
 use crate::nanoid::parse_nanoid;
+use crate::network::{parse_ipv4, parse_ipv6, parse_mac};
 use crate::nuid::parse_nuid;
 use crate::objectid::parse_objectid;
 use crate::puid::{parse_puid, parse_puid_any, parse_shortpuid};
@@ -30,7 +31,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [ParseFunction; 33] = [
+const ALL_PARSERS: [ParseFunction; 36] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -64,6 +65,9 @@ const ALL_PARSERS: [ParseFunction; 33] = [
     parse_puid,
     parse_shortpuid,
     parse_nanoid,
+    parse_ipv4,
+    parse_ipv6,
+    parse_mac,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -120,6 +124,9 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_ipfs,
                 parse_stripe,
                 parse_breezeid,
+                parse_ipv4,
+                parse_ipv6,
+                parse_mac,
                 parse_cuid2,
                 parse_sqid,
                 parse_nanoid,
@@ -176,6 +183,9 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Breezeid => parse_breezeid(args),
         IdFormat::Puid => parse_puid_any(args),
         IdFormat::Pushid => parse_pushid(args),
+        IdFormat::Ipv4 => parse_ipv4(args),
+        IdFormat::Ipv6 => parse_ipv6(args),
+        IdFormat::Mac => parse_mac(args),
     }
 }
 
@@ -262,6 +272,13 @@ mod tests {
         _assert("QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR", "IPFS", "CID v0");
         _assert("bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi", "IPFS", "CID v1");
         _assert("k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8", "IPFS", "CID v1 (IPNS)");
+        // Network:
+        _assert("127.0.0.1", "IPv4 Address", "Loopback");
+        _assert("10.0.0.1", "IPv4 Address", "Private");
+        _assert("200.0.0.1", "IPv4 Address", "-");
+        _assert("::1", "IPv6 Address", "Loopback");
+        _assert("1::1", "IPv6 Address", "-");
+        _assert("00:00:00:00:00:00", "MAC Address", "-");
     }
 
     #[test]
@@ -382,5 +399,12 @@ mod tests {
         _assert("QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR", IdFormat::Ipfs, "IPFS", "CID v0");
         _assert("bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi", IdFormat::Ipfs, "IPFS", "CID v1");
         _assert("k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8", IdFormat::Ipfs, "IPFS", "CID v1 (IPNS)");
+        // Network:
+        _assert("127.0.0.1", IdFormat::Ipv4, "IPv4 Address", "Loopback");
+        _assert("10.0.0.1", IdFormat::Ipv4, "IPv4 Address", "Private");
+        _assert("200.0.0.1", IdFormat::Ipv4, "IPv4 Address", "-");
+        _assert("::1", IdFormat::Ipv6, "IPv6 Address", "Loopback");
+        _assert("1::1", IdFormat::Ipv6, "IPv6 Address", "-");
+        _assert("00:00:00:00:00:00", IdFormat::Mac, "MAC Address", "-");
     }
 }

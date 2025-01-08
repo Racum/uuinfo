@@ -114,6 +114,12 @@ pub enum IdFormat {
     Hash,
     /// IPFS Address (CID, IPNS)
     Ipfs,
+    /// Network: IPv4
+    Ipv4,
+    /// Network: IPv6
+    Ipv6,
+    /// Network: MAC Address
+    Mac,
 }
 
 /// Shows debug information about complex ID.

@@ -10,6 +10,7 @@ mod hashid;
 mod ipfs;
 mod ksuid;
 mod nanoid;
+mod network;
 mod nuid;
 mod objectid;
 mod puid;
