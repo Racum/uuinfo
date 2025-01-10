@@ -426,4 +426,34 @@ mod tests {
         _assert("0-553-38257-8", IdFormat::Isbn, "ISBN-10", "-");
         _assert("0553382578", IdFormat::Isbn, "ISBN-10", "-");
     }
+
+    #[test]
+    fn test_all_parsers_no_panic() {
+        let mut values = vec![
+            "".to_string(),
+            " ".to_string(),
+            "0".to_string(),
+            ":;,.!@#$%^&*(){}".to_string(),
+            r"\-_|<>|_-/".to_string(),
+            "\"~`'".to_string(),
+            "-------------".to_string(),
+            "-".to_string(),
+            "null".to_string(),
+            "\n".to_string(),
+            "\0".to_string(),
+            "💩💩💩".to_string(),
+        ];
+        for i in 0..100 {
+            values.push((0..i).map(|_| "0").collect::<String>());
+        }
+        values.push((0..10_000).map(|_| "0").collect::<String>());
+        for value in values {
+            for parser in ALL_PARSERS {
+                _ = parser(&Args {
+                    id: value.clone(),
+                    ..Default::default()
+                })
+            }
+        }
+    }
 }
