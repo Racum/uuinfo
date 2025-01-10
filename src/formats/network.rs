@@ -1,16 +1,11 @@
-use std::{fmt::Write, str::FromStr};
-
-use ipaddress::IPAddress;
 use mac_address::MacAddress;
-use num_traits::cast::ToPrimitive;
+use std::net::{Ipv4Addr, Ipv6Addr};
+use std::{fmt::Write, str::FromStr};
 
 use crate::schema::{Args, IDInfo};
 
 pub fn parse_ipv4(args: &Args) -> Option<IDInfo> {
-    let ip: IPAddress = IPAddress::parse(&args.id).ok()?;
-    if !ip.is_ipv4() {
-        return None;
-    }
+    let ip = Ipv4Addr::from_str(&args.id).ok()?;
     let mut version: Option<String> = None;
     if ip.is_loopback() {
         version = Some("Loopback".to_string());
@@ -23,11 +18,11 @@ pub fn parse_ipv4(args: &Args) -> Option<IDInfo> {
         id_type: "IPv4 Address".to_string(),
         version,
         standard: args.id.clone(),
-        integer: Some(ip.host_address.to_u128()?),
+        integer: Some(ip.to_bits() as u128),
         parsed: Some("from integer parts".to_string()),
         size: 32,
-        hex: Some(hex::encode(ip.host_address.to_bytes_be())),
-        bits: Some(ip.host_address.to_bytes_be().iter().fold(String::new(), |mut output, c| {
+        hex: Some(hex::encode(ip.to_bits().to_be_bytes())),
+        bits: Some(ip.to_bits().to_be_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
@@ -37,10 +32,7 @@ pub fn parse_ipv4(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_ipv6(args: &Args) -> Option<IDInfo> {
-    let ip: IPAddress = IPAddress::parse(&args.id).ok()?;
-    if !ip.is_ipv6() {
-        return None;
-    }
+    let ip = Ipv6Addr::from_str(&args.id).ok()?;
     let mut version: Option<String> = None;
     if ip.is_loopback() {
         version = Some("Loopback".to_string());
@@ -50,11 +42,14 @@ pub fn parse_ipv6(args: &Args) -> Option<IDInfo> {
         id_type: "IPv6 Address".to_string(),
         version,
         standard: args.id.clone().to_lowercase(),
-        integer: Some(ip.host_address.to_u128()?),
+        integer: Some(ip.to_bits()),
         parsed: Some("from hex parts".to_string()),
         size: 128,
-        hex: Some(ip.parts_hex_str().join("")),
-        bits: Some(ip.bits()),
+        hex: Some(hex::encode(ip.to_bits().to_be_bytes())),
+        bits: Some(ip.to_bits().to_be_bytes().iter().fold(String::new(), |mut output, c| {
+            let _ = write!(output, "{c:08b}");
+            output
+        })),
         color_map: Some((0..128).map(|_| "0").collect::<String>()),
         ..Default::default()
     })

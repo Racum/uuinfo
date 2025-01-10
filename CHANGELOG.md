@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.7] - 2025-01-09
+
+### Changed
+
+Change ipaddress crate and its dependencies to std::net::*.
+
 ## [0.3.6] - 2025-01-08
 
 ### Changed

@@ -139,10 +139,7 @@ pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
     let uuid_str = suuid.clone().to_uuid(&translator).ok()?.to_string();
     let mut new_args: Args = args.clone();
     new_args.id = uuid_str.clone();
-    let mut id_info = match parse_uuid(&new_args) {
-        Some(value) => value,
-        None => return None,
-    };
+    let mut id_info = parse_uuid(&new_args)?;
     id_info.id_type = format!("ShortUUID of {}", id_info.id_type);
     id_info.standard = args.id.to_string();
     id_info.uuid_wrap = Some(uuid_str);
