@@ -50,6 +50,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Hex-encoded Hash](https://en.wikipedia.org/wiki/Secure_Hash_Algorithms)
 - [IPFS CID](https://docs.ipfs.tech/concepts/content-addressing/) (v0 and v1)
 - Network: [IPv4](https://en.wikipedia.org/wiki/IPv4), [IPv6](https://en.wikipedia.org/wiki/IPv6) and [MAC Address](https://en.wikipedia.org/wiki/MAC_address)
+- [ISBN](https://en.wikipedia.org/wiki/ISBN) (10 and 13)
 
 ## Installation
 

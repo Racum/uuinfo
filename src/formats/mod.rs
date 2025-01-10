@@ -5,6 +5,7 @@ pub mod flake;
 pub mod hash;
 pub mod hashid;
 pub mod ipfs;
+pub mod isbn;
 pub mod ksuid;
 pub mod nanoid;
 pub mod network;

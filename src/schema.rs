@@ -110,6 +110,8 @@ pub enum IdFormat {
     Ipv6,
     /// Network: MAC Address
     Mac,
+    /// ISBN
+    Isbn,
 }
 
 /// Shows debug information about complex ID.

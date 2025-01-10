@@ -7,6 +7,7 @@ use crate::formats::flake::parse_flake;
 use crate::formats::hash::parse_hash;
 use crate::formats::hashid::parse_hashid;
 use crate::formats::ipfs::parse_ipfs;
+use crate::formats::isbn::parse_isbn;
 use crate::formats::ksuid::parse_ksuid;
 use crate::formats::nanoid::parse_nanoid;
 use crate::formats::network::{parse_ipv4, parse_ipv6, parse_mac};
@@ -32,7 +33,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [ParseFunction; 36] = [
+const ALL_PARSERS: [ParseFunction; 37] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -69,6 +70,7 @@ const ALL_PARSERS: [ParseFunction; 36] = [
     parse_ipv4,
     parse_ipv6,
     parse_mac,
+    parse_isbn,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -94,7 +96,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
     if args.id.trim().parse::<u128>().is_ok() {
         // Numeric:
-        id_info = pick_first_valid(args, vec![parse_unix_recent, parse_snowflake, parse_uuid_integer]);
+        id_info = pick_first_valid(args, vec![parse_isbn, parse_unix_recent, parse_snowflake, parse_uuid_integer]);
     } else {
         // Fixed length:
         id_info = match args.id.chars().count() {
@@ -121,6 +123,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             Some(value) => Some(value),
             #[rustfmt::skip]
             None => pick_first_valid(args, vec![
+                parse_isbn,
                 parse_typeid,
                 parse_ipfs,
                 parse_stripe,
@@ -187,6 +190,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ipv4 => parse_ipv4(args),
         IdFormat::Ipv6 => parse_ipv6(args),
         IdFormat::Mac => parse_mac(args),
+        IdFormat::Isbn => parse_isbn(args),
     }
 }
 
@@ -284,6 +288,11 @@ mod tests {
         _assert("::1", "IPv6 Address", "Loopback");
         _assert("1::1", "IPv6 Address", "-");
         _assert("00:00:00:00:00:00", "MAC Address", "-");
+        // ISBN:
+        _assert("978-0-553-38257-0", "ISBN-13", "-");
+        _assert("9780553382570", "ISBN-13", "-");
+        _assert("0-553-38257-8", "ISBN-10", "-");
+        _assert("0553382578", "ISBN-10", "-");
     }
 
     #[test]
@@ -411,5 +420,10 @@ mod tests {
         _assert("::1", IdFormat::Ipv6, "IPv6 Address", "Loopback");
         _assert("1::1", IdFormat::Ipv6, "IPv6 Address", "-");
         _assert("00:00:00:00:00:00", IdFormat::Mac, "MAC Address", "-");
+        // ISBN:
+        _assert("978-0-553-38257-0", IdFormat::Isbn, "ISBN-13", "-");
+        _assert("9780553382570", IdFormat::Isbn, "ISBN-13", "-");
+        _assert("0-553-38257-8", IdFormat::Isbn, "ISBN-10", "-");
+        _assert("0553382578", IdFormat::Isbn, "ISBN-10", "-");
     }
 }
