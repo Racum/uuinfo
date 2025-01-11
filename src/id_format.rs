@@ -19,6 +19,7 @@ use crate::formats::scru::{parse_scru128, parse_scru64};
 use crate::formats::snowflake::{compare_snowflake as snowflake_compare, parse_snowflake};
 use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
+use crate::formats::threads::parse_threads;
 use crate::formats::tid::parse_tid;
 use crate::formats::timeflake::{parse_timeflake_any, parse_timeflake_base62};
 use crate::formats::tsid::parse_tsid;
@@ -194,6 +195,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Mac => parse_mac(args),
         IdFormat::Isbn => parse_isbn(args),
         IdFormat::Tid => parse_tid(args),
+        IdFormat::Threads => parse_threads(args),
     }
 }
 

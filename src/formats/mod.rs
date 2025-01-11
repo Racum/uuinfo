@@ -17,6 +17,7 @@ pub mod scru;
 pub mod snowflake;
 pub mod sqid;
 pub mod stripe;
+pub mod threads;
 pub mod tid;
 pub mod timeflake;
 pub mod tsid;
