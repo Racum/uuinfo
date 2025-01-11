@@ -35,6 +35,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Breeze ID](https://github.com/tzwel/breezeid)
 - [Puid](https://github.com/pid/puid)
 - [PushID](https://firebase.blog/posts/2015/02/the-2120-ways-to-ensure-unique_68/) (Firebase)
+- [TID](https://atproto.com/specs/tid) (AT Protocol, Bluesky)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)

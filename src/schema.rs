@@ -72,6 +72,8 @@ pub enum IdFormat {
     Puid,
     /// PushID (Firebase)
     Pushid,
+    /// TID (AT Protocol, Bluesky)
+    Tid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -80,7 +82,7 @@ pub enum IdFormat {
     SfDiscord,
     /// Snowflake: Instagram "Shard ID"
     SfInstagram,
-    /// Snowflake: LinkedIn (also OnlineAppZone)
+    /// Snowflake: LinkedIn
     SfLinkedin,
     /// Snowflake: Sony "Sonyflake"
     SfSony,

@@ -19,6 +19,7 @@ use crate::formats::scru::{parse_scru128, parse_scru64};
 use crate::formats::snowflake::{compare_snowflake as snowflake_compare, parse_snowflake};
 use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
+use crate::formats::tid::parse_tid;
 use crate::formats::timeflake::{parse_timeflake_any, parse_timeflake_base62};
 use crate::formats::tsid::parse_tsid;
 use crate::formats::typeid::parse_typeid;
@@ -33,7 +34,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-const ALL_PARSERS: [ParseFunction; 37] = [
+const ALL_PARSERS: [ParseFunction; 38] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -71,6 +72,7 @@ const ALL_PARSERS: [ParseFunction; 37] = [
     parse_ipv6,
     parse_mac,
     parse_isbn,
+    parse_tid,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -113,7 +115,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             20 => pick_first_valid(args, vec![parse_xid, parse_stripe, parse_pushid]),
             18 => parse_flake(args),
             14 => parse_shortpuid(args),
-            13 => parse_tsid(args),
+            13 => pick_first_valid(args, vec![parse_tid, parse_tsid]),
             12 => pick_first_valid(args, vec![parse_scru64, parse_shortpuid]),
             11 => parse_youtube(args),
             _ => None,
@@ -191,6 +193,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ipv6 => parse_ipv6(args),
         IdFormat::Mac => parse_mac(args),
         IdFormat::Isbn => parse_isbn(args),
+        IdFormat::Tid => parse_tid(args),
     }
 }
 
@@ -265,6 +268,7 @@ mod tests {
         _assert("he5fps6l2504cd1w3ag8ut8e", "Puid", "-");
         _assert("aeby6ob5sso4zd", "Puid", "Short puid with node ID");
         _assert("-OFrJ24CPTXLcIPPjvh3", "PushID (Firebase)", "-");
+        _assert("3lfegaoywdk2w", "TID (AT Protocol, Bluesky)", "-");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -388,6 +392,8 @@ mod tests {
         _assert("aeby6ob5sso4zd", IdFormat::Puid, "Puid", "Short puid with node ID");
         _assert("aeby6ob5sso4", IdFormat::Puid, "Puid", "Short puid without node ID");
         _assert("-OFrJ24CPTXLcIPPjvh3", IdFormat::Pushid, "PushID (Firebase)", "-");
+        _assert("3lfegaoywdk2w", IdFormat::Tid, "TID (AT Protocol, Bluesky)", "-");
+
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");

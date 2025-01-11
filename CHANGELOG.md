@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.9] - 2025-01-11
+
+### Added
+
+- TID (AT Protocol, Bluesky) support.
+
 ## [0.3.8] - 2025-01-10
 
 ### Added
