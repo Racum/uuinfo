@@ -136,6 +136,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_mac,
                 parse_cuid2,
                 parse_sqid,
+                parse_threads,
                 parse_nanoid,
                 parse_hashid,
             ]),
@@ -271,6 +272,7 @@ mod tests {
         _assert("aeby6ob5sso4zd", "Puid", "Short puid with node ID");
         _assert("-OFrJ24CPTXLcIPPjvh3", "PushID (Firebase)", "-");
         _assert("3lfegaoywdk2w", "TID (AT Protocol, Bluesky)", "-");
+        _assert("DEr_fXvuw6D", "Thread ID (Meta Threads)", "-");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -395,7 +397,8 @@ mod tests {
         _assert("aeby6ob5sso4", IdFormat::Puid, "Puid", "Short puid without node ID");
         _assert("-OFrJ24CPTXLcIPPjvh3", IdFormat::Pushid, "PushID (Firebase)", "-");
         _assert("3lfegaoywdk2w", IdFormat::Tid, "TID (AT Protocol, Bluesky)", "-");
-
+        _assert("DEr_fXvuw6D", IdFormat::Threads, "Thread ID (Meta Threads)", "-");
+        _assert("3543204764587855491", IdFormat::Threads, "Thread ID (Meta Threads)", "-");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");
@@ -450,6 +453,7 @@ mod tests {
             "\n".to_string(),
             "\0".to_string(),
             "💩💩💩".to_string(),
+            "DEXRi0AAUl1BU".to_string(),
         ];
         for i in 0..100 {
             values.push((0..i).map(|_| "0").collect::<String>());

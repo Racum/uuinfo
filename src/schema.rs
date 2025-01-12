@@ -74,7 +74,7 @@ pub enum IdFormat {
     Pushid,
     /// TID (AT Protocol, Bluesky)
     Tid,
-    /// Threads
+    /// Thread ID (Meta Threads)
     Threads,
     /// Snowflake: Twitter
     SfTwitter,
