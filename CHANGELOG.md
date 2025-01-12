@@ -69,7 +69,7 @@ Network IDs: MAC Address, IPv4, IPv6.
 - NUID (NATS) support.
 - TypeID (Jetify) support.
 
-## [0.3.0] - 2025-01-91
+## [0.3.0] - 2025-01-01
 
 ### Added
 
