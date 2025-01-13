@@ -10,7 +10,7 @@ use crate::formats::ipfs::parse_ipfs;
 use crate::formats::isbn::parse_isbn;
 use crate::formats::ksuid::parse_ksuid;
 use crate::formats::nanoid::parse_nanoid;
-use crate::formats::network::{parse_ipv4, parse_ipv6, parse_mac};
+use crate::formats::network::{parse_imei, parse_ipv4, parse_ipv6, parse_mac};
 use crate::formats::nuid::parse_nuid;
 use crate::formats::objectid::parse_objectid;
 use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
@@ -99,7 +99,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
     if args.id.trim().parse::<u128>().is_ok() {
         // Numeric:
-        id_info = pick_first_valid(args, vec![parse_isbn, parse_unix_recent, parse_snowflake, parse_uuid_integer]);
+        id_info = pick_first_valid(args, vec![parse_isbn, parse_imei, parse_unix_recent, parse_snowflake, parse_uuid_integer]);
     } else {
         // Fixed length:
         id_info = match args.id.chars().count() {
@@ -137,6 +137,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_cuid2,
                 parse_sqid,
                 parse_threads,
+                parse_imei,
                 parse_nanoid,
                 parse_hashid,
             ]),
@@ -194,6 +195,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ipv4 => parse_ipv4(args),
         IdFormat::Ipv6 => parse_ipv6(args),
         IdFormat::Mac => parse_mac(args),
+        IdFormat::Imei => parse_imei(args),
         IdFormat::Isbn => parse_isbn(args),
         IdFormat::Tid => parse_tid(args),
         IdFormat::Threads => parse_threads(args),
@@ -296,6 +298,8 @@ mod tests {
         _assert("::1", "IPv6 Address", "Loopback");
         _assert("1::1", "IPv6 Address", "-");
         _assert("00:00:00:00:00:00", "MAC Address", "-");
+        _assert("35-588906-014977-7", "IMEI", "-");
+        _assert("355889060149777", "IMEI", "-");
         // ISBN:
         _assert("978-0-553-38257-0", "ISBN-13", "-");
         _assert("9780553382570", "ISBN-13", "-");
@@ -431,6 +435,8 @@ mod tests {
         _assert("::1", IdFormat::Ipv6, "IPv6 Address", "Loopback");
         _assert("1::1", IdFormat::Ipv6, "IPv6 Address", "-");
         _assert("00:00:00:00:00:00", IdFormat::Mac, "MAC Address", "-");
+        _assert("35-588906-014977-7", IdFormat::Imei, "IMEI", "-");
+        _assert("355889060149777", IdFormat::Imei, "IMEI", "-");
         // ISBN:
         _assert("978-0-553-38257-0", IdFormat::Isbn, "ISBN-13", "-");
         _assert("9780553382570", IdFormat::Isbn, "ISBN-13", "-");

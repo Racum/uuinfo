@@ -51,7 +51,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Unix timestamp](https://en.wikipedia.org/wiki/Unix_time) (seconds, ms, μs and ns)
 - [Hex-encoded Hash](https://en.wikipedia.org/wiki/Secure_Hash_Algorithms)
 - [IPFS CID](https://docs.ipfs.tech/concepts/content-addressing/) (v0 and v1)
-- Network: [IPv4](https://en.wikipedia.org/wiki/IPv4), [IPv6](https://en.wikipedia.org/wiki/IPv6) and [MAC Address](https://en.wikipedia.org/wiki/MAC_address)
+- Network: [IPv4](https://en.wikipedia.org/wiki/IPv4), [IPv6](https://en.wikipedia.org/wiki/IPv6), [MAC Address](https://en.wikipedia.org/wiki/MAC_address) and [IMEI](https://en.wikipedia.org/wiki/International_Mobile_Equipment_Identity)
 - [ISBN](https://en.wikipedia.org/wiki/ISBN) (10 and 13)
 
 ## Installation

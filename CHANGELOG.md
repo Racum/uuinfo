@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.11] - 2025-01-13
+
+### Added
+
+- IMEI support.
+
 ## [0.3.10] - 2025-01-12
 
 ### Added

@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.3.10"
+version = "0.3.11"
 edition = "2021"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -50,3 +50,4 @@ resize-slice = "0.1.3"  # Used by custom_base62
 cid = "0.11.1"
 mac_address = "1.1.7"
 isbn = "0.4.0"
+imei = "=1.1.1"

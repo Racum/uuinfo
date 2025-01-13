@@ -114,6 +114,8 @@ pub enum IdFormat {
     Ipv6,
     /// Network: MAC Address
     Mac,
+    /// Network: IMEI
+    Imei,
     /// ISBN
     Isbn,
 }
