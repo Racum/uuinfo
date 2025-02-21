@@ -1,5 +1,5 @@
 use base64::engine::GeneralPurpose;
-use base64::{alphabet, engine, Engine as _};
+use base64::{Engine as _, alphabet, engine};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};

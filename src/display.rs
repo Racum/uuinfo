@@ -1,5 +1,5 @@
 use std::cmp;
-use std::io::{stdout, Write};
+use std::io::{Write, stdout};
 
 use clap::ValueEnum;
 use colored::*;
