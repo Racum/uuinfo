@@ -4,6 +4,7 @@ use crate::formats::breezeid::parse_breezeid;
 use crate::formats::cuid::{parse_cuid1, parse_cuid2};
 use crate::formats::datadog::parse_datadog;
 use crate::formats::flake::parse_flake;
+use crate::formats::geo::parse_h3;
 use crate::formats::hash::parse_hash;
 use crate::formats::hashid::parse_hashid;
 use crate::formats::ipfs::parse_ipfs;
@@ -199,6 +200,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Isbn => parse_isbn(args),
         IdFormat::Tid => parse_tid(args),
         IdFormat::Threads => parse_threads(args),
+        IdFormat::H3 => parse_h3(args),
     }
 }
 

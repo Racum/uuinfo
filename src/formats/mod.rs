@@ -2,6 +2,7 @@ pub mod breezeid;
 pub mod cuid;
 pub mod datadog;
 pub mod flake;
+pub mod geo;
 pub mod hash;
 pub mod hashid;
 pub mod ipfs;

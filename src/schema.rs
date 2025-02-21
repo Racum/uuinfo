@@ -118,6 +118,8 @@ pub enum IdFormat {
     Imei,
     /// ISBN
     Isbn,
+    /// Geo: H3 Grid System
+    H3,
 }
 
 /// Shows debug information about complex ID.

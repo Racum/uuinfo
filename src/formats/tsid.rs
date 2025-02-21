@@ -15,10 +15,15 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
         Err(_) => return None,
     }
 
+    let parsed: Option<String>;
     let tsid_id: TSID = match TSID::try_from(args.id.as_str()) {
-        Ok(value) => value,
+        Ok(value) => {
+            parsed = Some("from Crockford's base32".to_string());
+            value
+        }
         Err(_) => {
             let id_int: u64 = args.id.trim().parse::<u64>().ok()?;
+            parsed = Some("as integer".to_string());
             TSID::from(id_int)
         }
     };
@@ -30,7 +35,7 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
         id_type: "TSID".to_string(),
         standard: format!("{}", tsid_id),
         integer: Some(id_int.into()),
-        parsed: Some("from Crockford's base32".to_string()),
+        parsed,
         size: 64,
         entropy: 22,
         datetime: Some(datetime),
