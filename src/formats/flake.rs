@@ -31,6 +31,9 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
     let worker_id = bits128(id_int, 64, 48);
     let sequence = bits128(id_int, 112, 16);
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, None);
+    if datetime.starts_with("Invalid") {
+        return None;
+    }
 
     Some(IDInfo {
         id_type: id_type.to_string(),

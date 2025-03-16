@@ -1,20 +1,22 @@
 use clap::Parser;
 use std::io;
 
+mod compare;
 mod formats;
 mod id_format;
 mod schema;
 mod utils;
 
-use crate::id_format::{auto_detect, compare_snowflake, force_format, parse_all};
+use crate::compare::compare_times;
+use crate::id_format::{auto_detect, force_format, parse_all};
 use crate::schema::Args;
 mod display;
 
 fn main() {
     let mut args = Args::parse();
 
-    if args.compare_snowflake {
-        compare_snowflake(&args)
+    if args.compare {
+        compare_times(&args)
     }
 
     if &args.id == "-" {

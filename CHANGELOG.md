@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.0] - 2025-03-16
+
+### Added
+
+- Time comparison in all time-aware ID types.
+- H3 Index (Geo) support.
+
 ## [0.3.11] - 2025-01-13
 
 ### Added

@@ -1,18 +1,15 @@
 use base58::{FromBase58, ToBase58};
-use colored::*;
 use std::fmt::Write;
-use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::formats::tsid::parse_tsid;
 use crate::schema::{Args, IDInfo, IdFormat};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, nanoseconds_to_iso8601};
+use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
 
 #[derive(Debug)]
-struct SnowflakeAnnotation {
-    version: Option<String>,
+pub struct SnowflakeAnnotation {
+    pub version: Option<String>,
     custom_string: Option<String>,
-    datetime: Option<String>,
-    timestamp: Option<String>,
+    pub datetime: Option<String>,
+    pub timestamp: Option<String>,
     node1: Option<String>,
     node2: Option<String>,
     sequence: Option<u128>,
@@ -34,7 +31,7 @@ impl Default for SnowflakeAnnotation {
     }
 }
 
-fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 1, 41);
     let worker_id = bits64(id_int, 42, 10);
@@ -52,7 +49,7 @@ fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 0, 42);
     let worker_id = bits64(id_int, 42, 5);
@@ -71,7 +68,7 @@ fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 0, 41);
     let shard_id = bits64(id_int, 41, 13);
@@ -89,7 +86,7 @@ fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 1, 39);
     let sequence = bits64(id_int, 40, 8);
@@ -107,7 +104,7 @@ fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 1, 41);
     let node_id = bits64(id_int, 42, 5);
@@ -126,7 +123,7 @@ fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 1, 41);
     let worker_id = bits64(id_int, 42, 10);
@@ -144,7 +141,7 @@ fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 0, 48);
     let sequence = bits64(id_int, 48, 16);
@@ -161,7 +158,7 @@ fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 0, 32);
     let sequence = bits64(id_int, 32, 21);
@@ -179,7 +176,7 @@ fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
     }
 }
 
-fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
+pub fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
     let id_int: u64 = args.id.trim().parse().unwrap();
     let timestamp_raw = bits64(id_int, 0, 42);
     let datacenter_id = bits64(id_int, 42, 5);
@@ -266,46 +263,4 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
         color_map: annotation.color_map,
         ..Default::default()
     })
-}
-
-pub fn compare_snowflake(args: &Args) {
-    if args.id.trim().parse::<u64>().is_ok() {
-        println!("Date/times of the Snowflake ID if parsed as:");
-        let tsid_time: String = match parse_tsid(args) {
-            Some(value) => value.datetime.unwrap(),
-            None => "-".to_string(),
-        };
-        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64;
-        let mut snowflake_times = vec![
-            format!("- {} {}", nanoseconds_to_iso8601(now).1, "--- Now ---".yellow()),
-            format!("- {} Twitter", annotate_twitter(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Discord", annotate_discord(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Instagram", annotate_instagram(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Sony", annotate_sony(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Spaceflake", annotate_spaceflake(args).datetime.unwrap_or("".to_string())),
-            format!("- {} LinkedIn", annotate_linkedin(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Mastodon", annotate_mastodon(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Frostflake", annotate_frostflake(args).datetime.unwrap_or("".to_string())),
-            format!("- {} Flake ID", annotate_flakeid(args).datetime.unwrap_or("".to_string())),
-            format!("- {} TSID", tsid_time), // Not Snowflake, but 64-bit compatible:
-        ];
-        let id_int: u64 = args.id.trim().parse::<u64>().unwrap();
-        snowflake_times.push(format!("- {} Unix timestamp (nanoseconds)", nanoseconds_to_iso8601(id_int).1));
-        if let Some(value) = id_int.checked_mul(1000) {
-            snowflake_times.push(format!("- {} Unix timestamp (microseconds)", nanoseconds_to_iso8601(value).1));
-        }
-        if let Some(value) = id_int.checked_mul(1_000_000) {
-            snowflake_times.push(format!("- {} Unix timestamp (milliseconds)", nanoseconds_to_iso8601(value).1));
-        }
-        if let Some(value) = id_int.checked_mul(1_000_000_000) {
-            snowflake_times.push(format!("- {} Unix timestamp (seconds)", nanoseconds_to_iso8601(value).1));
-        }
-        snowflake_times.sort();
-        for time in &snowflake_times {
-            println!("{time}");
-        }
-    } else {
-        println!("Not a valid Snowflake ID.");
-    }
-    std::process::exit(0);
 }

@@ -53,6 +53,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [IPFS CID](https://docs.ipfs.tech/concepts/content-addressing/) (v0 and v1)
 - Network: [IPv4](https://en.wikipedia.org/wiki/IPv4), [IPv6](https://en.wikipedia.org/wiki/IPv6), [MAC Address](https://en.wikipedia.org/wiki/MAC_address) and [IMEI](https://en.wikipedia.org/wiki/International_Mobile_Equipment_Identity)
 - [ISBN](https://en.wikipedia.org/wiki/ISBN) (10 and 13)
+- Geo: [H3 Index](https://h3geo.org)
 
 ## Installation
 
@@ -105,28 +106,28 @@ Check the `--help` for a complete list of values of `-f`/`--force`.
 
 Snowflake is **not** an “ID format”, but rather a **category** of formats; since it is just a number, **uuinfo** can’t detect what variation was used to generate it, thus, specifying the variant with `-f`/`—force` is required to be able to get anything useful from it.
 
-Fortunately, **uuinfo** can compare Snowflakes and sort them by date; for example:
+Fortunately, **uuinfo** can compare time-aware IDs and sort them by date; for example:
 
 ```
 $ date
-Sat Dec 28 12:47:07 -03 2024
+Sun Mar 16 15:54:30 CET 2025
 
-$ uuinfo --compare-snowflake 1777150623882019211
-Date/times of the Snowflake ID if parsed as:
-- 1983-02-11T01:32:03.000Z Frostflake
-- 1983-06-06T00:02:06.595Z LinkedIn
-- 2018-05-11T21:08:05.018Z Instagram
-- 2024-04-08T01:45:01.252Z Twitter
-- 2024-12-28T15:47:08.000Z --- Now ---
-- 2026-04-25T20:57:03.000Z Unix timestamp (nanoseconds)
-- 2028-06-05T00:02:06.595Z Discord
-- 2028-06-05T00:02:06.595Z Spaceflake
+$ uuinfo --compare 1777150623882019211
+Date/times of the valid IDs parsed as:
+- 1983-02-11T01:32:03.000Z Snowflake: Frostflake
+- 1983-06-06T00:02:06.595Z Snowflake: LinkedIn
+- 1983-06-06T00:02:06.595Z Snowflake: Flake ID
+- 2018-05-11T21:08:05.018Z Thread ID (Meta Threads)
+- 2018-05-11T21:08:05.018Z Snowflake: Instagram
+- 2024-04-08T01:45:01.252Z Snowflake: Twitter
+- 2025-03-16T14:54:32.000Z --- Now ---
+- 2026-04-25T20:57:03.000Z Unix timestamp: Assuming nanoseconds
+- 2028-06-05T00:02:06.595Z Snowflake: Discord
+- 2028-06-05T00:02:06.595Z Snowflake: Spaceflake
 - 2033-06-05T00:02:06.595Z TSID
-- 2048-03-26T00:05:16.480Z Sony
-- 2829-04-23T02:15:02.106Z Mastodon
+- 2048-03-26T00:05:16.480Z Snowflake: Sony
+- 2829-04-23T02:15:02.106Z Snowflake: Mastodon
 ```
-
-Notice that **TSID**, although not a Snowflake variant, it is similar enough (64-bit with timestamp) to be compared together.
 
 In this case, the ID `1777150623882019211` is probably from Twitter, since it is the most recent value from the list that is not in the future.
 

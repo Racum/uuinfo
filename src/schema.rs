@@ -144,7 +144,7 @@ pub struct Args {
 
     /// Compare times of different Snowflake versions
     #[arg(short = 'c', long)]
-    pub compare_snowflake: bool,
+    pub compare: bool,
 
     /// Use custom alphabet for Sqids and Nono ID
     #[arg(short = 'a', long)]
@@ -162,11 +162,18 @@ impl Default for Args {
             output: Output::Card,
             force: None,
             everything: false,
-            compare_snowflake: false,
+            compare: false,
             alphabet: None,
             salt: None,
         }
     }
+}
+
+#[derive(Debug)]
+pub struct TimestampComparable {
+    pub timestamp: f64,   // For sorting.
+    pub datetime: String, // To show.
+    pub name: String,     // To show: ID Type and Version
 }
 
 #[allow(dead_code)]
