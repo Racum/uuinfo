@@ -1,20 +1,10 @@
 use std::fmt::Write;
-use std::panic;
 use tsid::TSID;
 
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
-    // Panic trap:
-    match panic::catch_unwind(|| {
-        panic::set_hook(Box::new(|_info| {}));
-        TSID::try_from(args.id.as_str()).ok() // Bug on tsid crate: this should not panic.
-    }) {
-        Ok(_) => (),
-        Err(_) => return None,
-    }
-
     let parsed: Option<String>;
     let tsid_id: TSID = match TSID::try_from(args.id.as_str()) {
         Ok(value) => {

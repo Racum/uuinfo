@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.2] - 2025-05-20
+
+### Changed
+
+Remove TSID panic trap.
+Update dependencies.
+
 ## [0.4.1] - 2025-04-05
 
 ### Removed

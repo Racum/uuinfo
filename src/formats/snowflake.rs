@@ -227,7 +227,7 @@ pub fn parse_snowflake(args: &Args) -> Option<IDInfo> {
                 if bytes.len() > 8 {
                     return None;
                 }
-                buffer.extend(std::iter::repeat(0).take(8 - bytes.len()));
+                buffer.extend(std::iter::repeat_n(0, 8 - bytes.len()));
                 buffer.extend(bytes);
                 let id_bytes: [u8; 8] = buffer.try_into().unwrap();
                 parsed_args.id = u64::from_be_bytes(id_bytes).to_string()
