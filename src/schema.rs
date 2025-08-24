@@ -28,6 +28,8 @@ pub enum IdFormat {
     Uuid25,
     /// ULID
     Ulid,
+    /// Julid
+    Julid,
     /// UPID
     Upid,
     /// Timeflake

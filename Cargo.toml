@@ -52,3 +52,4 @@ isbn = "0.4.0"
 imei = "=1.1.1"
 h3ron = "0.18.0"
 tsid = "0.3.4"
+julid-rs = { version = "1.6.1803398874989", default-features = false, features = ["chrono", "uuid"] }

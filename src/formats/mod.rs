@@ -7,6 +7,7 @@ pub mod hash;
 pub mod hashid;
 pub mod ipfs;
 pub mod isbn;
+pub mod julid;
 pub mod ksuid;
 pub mod nanoid;
 pub mod network;

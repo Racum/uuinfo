@@ -9,6 +9,7 @@ use crate::formats::hash::parse_hash;
 use crate::formats::hashid::parse_hashid;
 use crate::formats::ipfs::parse_ipfs;
 use crate::formats::isbn::parse_isbn;
+use crate::formats::julid::parse_julid;
 use crate::formats::ksuid::parse_ksuid;
 use crate::formats::nanoid::parse_nanoid;
 use crate::formats::network::{parse_imei, parse_ipv4, parse_ipv6, parse_mac};
@@ -36,13 +37,14 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 39] = [
+pub const ALL_PARSERS: [ParseFunction; 40] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
     parse_short_uuid,
     parse_uuid_integer,
     parse_ulid,
+    parse_julid,
     parse_upid,
     parse_objectid,
     parse_ksuid,
@@ -110,7 +112,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             36 => parse_uuid(args),
             32 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
             27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
-            26 => parse_ulid(args),
+            26 => pick_first_valid(args, vec![parse_julid, parse_ulid]),
             25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
             24 => pick_first_valid(args, vec![parse_objectid, parse_puid, parse_base64_uuid]),
             22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid]),
@@ -157,6 +159,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Uuid25 => parse_uuid25(args),
         IdFormat::UuidInt => parse_uuid_integer(args),
         IdFormat::Ulid => parse_ulid(args),
+        IdFormat::Julid => parse_julid(args),
         IdFormat::Upid => parse_upid(args),
         IdFormat::Timeflake => parse_timeflake_any(args),
         IdFormat::Flake => parse_flake(args),
@@ -249,6 +252,7 @@ mod tests {
         _assert("1734971723000000000", "Unix timestamp", "Assuming nanoseconds");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", "ULID", "-");
+        _assert("01K3ESSGBY0002QCB9YXT6Q6MN", "Julid", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", "UPID", "A (default)");
         _assert("6592008029c8c3e4dc76256c", "MongoDB ObjectId", "-");
         _assert("1HCpXwx2EK9oYluWbacgeCnFcLf", "KSUID", "Base62-encoded");
