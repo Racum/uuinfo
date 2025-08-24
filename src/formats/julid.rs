@@ -2,7 +2,7 @@ use julid::Julid;
 use std::fmt::Write;
 use uuid::Uuid;
 
-use crate::schema::{Args, IDInfo};
+use crate::schema::{Args, IDInfo, IdFormat};
 
 pub fn parse_julid(args: &Args) -> Option<IDInfo> {
     let mut id_type = "Julid";
@@ -18,7 +18,7 @@ pub fn parse_julid(args: &Args) -> Option<IDInfo> {
 
     // there's not a bulletproof way to detect a Julid from a ULID, so we just say if there's any
     // bits set in the high end of the counter section it's probably a regular ULID
-    if julid.counter().leading_zeros() < 8 {
+    if julid.counter().leading_zeros() < 8 && args.force != Some(IdFormat::Julid) {
         return None;
     }
 

@@ -377,6 +377,11 @@ mod tests {
         _assert("1734971723000000000", IdFormat::UnixNs, "Unix timestamp", "As nanoseconds");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Ulid, "ULID", "-");
+        // force a ULID to be treated as a Julid
+        _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Julid, "Julid", "-");
+        _assert("01K3EWBQW7000EJNJW8G8WNXKA", IdFormat::Julid, "Julid", "-");
+        // force a Julid to be treated as a ULID
+        _assert("01K3EWBQW7000EJNJW8G8WNXKA", IdFormat::Ulid, "ULID", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", IdFormat::Upid, "UPID", "A (default)");
         _assert("6592008029c8c3e4dc76256c", IdFormat::Mongodb, "MongoDB ObjectId", "-");
         _assert("1HCpXwx2EK9oYluWbacgeCnFcLf", IdFormat::Ksuid, "KSUID", "Base62-encoded");
