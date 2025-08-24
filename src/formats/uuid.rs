@@ -1,4 +1,4 @@
-use base64::{Engine as _, engine::general_purpose::URL_SAFE, engine::general_purpose::URL_SAFE_NO_PAD};
+use base64::{engine::general_purpose::URL_SAFE, engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
 use short_uuid::{CustomTranslator, ShortUuidCustom};
 use std::fmt::Write;
 use uuid::{Uuid, Variant};

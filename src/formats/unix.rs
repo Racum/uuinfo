@@ -204,13 +204,11 @@ mod tests {
 
     #[test]
     fn test_parse_unix_recent_none() {
-        assert!(
-            parse_unix_recent(&Args {
-                id: "1000000000".to_string(),
-                ..Default::default()
-            })
-            .is_none()
-        );
+        assert!(parse_unix_recent(&Args {
+            id: "1000000000".to_string(),
+            ..Default::default()
+        })
+        .is_none());
     }
 
     #[test]

@@ -2,7 +2,7 @@ use colored::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::formats::snowflake::{
-    SnowflakeAnnotation, annotate_discord, annotate_flakeid, annotate_frostflake, annotate_instagram, annotate_linkedin, annotate_mastodon, annotate_sony, annotate_spaceflake, annotate_twitter,
+    annotate_discord, annotate_flakeid, annotate_frostflake, annotate_instagram, annotate_linkedin, annotate_mastodon, annotate_sony, annotate_spaceflake, annotate_twitter, SnowflakeAnnotation,
 };
 use crate::id_format::ALL_PARSERS;
 use crate::schema::{Args, TimestampComparable};

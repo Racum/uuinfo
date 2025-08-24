@@ -16,7 +16,7 @@ use crate::formats::nuid::parse_nuid;
 use crate::formats::objectid::parse_objectid;
 use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
-use crate::formats::scru::{parse_scru64, parse_scru128};
+use crate::formats::scru::{parse_scru128, parse_scru64};
 use crate::formats::snowflake::parse_snowflake;
 use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
@@ -28,7 +28,7 @@ use crate::formats::typeid::parse_typeid;
 use crate::formats::ulid::parse_ulid;
 use crate::formats::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
 use crate::formats::upid::parse_upid;
-use crate::formats::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid_integer, parse_uuid25};
+use crate::formats::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid25, parse_uuid_integer};
 use crate::formats::xid::parse_xid;
 use crate::formats::youtube::parse_youtube;
 
