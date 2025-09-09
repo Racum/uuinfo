@@ -1,8 +1,10 @@
 use std::cmp;
 use std::io::{Write, stdout};
 
+use chrono::Utc;
 use clap::ValueEnum;
 use colored::*;
+use timediff::TimeDiff;
 
 use crate::schema::{Args, IDInfo, Output};
 
@@ -14,14 +16,20 @@ impl std::fmt::Display for Output {
 
 impl IDInfo {
     pub fn print_card(&self) {
-        let timestamp = match self.timestamp.as_deref() {
-            Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
-            None => "-".to_string(),
+        let formatted_timestamp = match (self.timestamp.as_deref(), self.datetime.as_deref()) {
+            (Some(timestamp), Some(datetime)) => {
+                let timestamp_sec: f64 = timestamp.parse::<f64>().unwrap_or_default();
+                let now = Utc::now().timestamp() as f64;
+                let diff = timestamp_sec - now;
+                format!("{} ({}) [{}]", timestamp, datetime, TimeDiff::to_diff(diff.to_string() + "sec").parse().unwrap())
+            }
+            (Some(timestamp), None) => format!("{}", timestamp),
+            _ => "-".to_string(),
         };
 
         const MIN_R_SPACE: usize = 43;
         let l_space = 9;
-        let r_space = cmp::max(MIN_R_SPACE, timestamp.chars().count());
+        let r_space = cmp::max(MIN_R_SPACE, formatted_timestamp.chars().count());
 
         fn limit_r(text: String) -> String {
             match text.char_indices().nth(MIN_R_SPACE) {
@@ -68,7 +76,7 @@ impl IDInfo {
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Size", size);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Entropy".green(), entropy);
-        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Timestamp".cyan(), timestamp);
+        println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Timestamp".cyan(), formatted_timestamp);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 1".purple(), limit_r(self.node1.clone().unwrap_or("-".to_string())));
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 2".red(), limit_r(self.node2.clone().unwrap_or("-".to_string())));
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Sequence".blue(), sequence);

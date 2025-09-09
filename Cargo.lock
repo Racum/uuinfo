@@ -689,6 +689,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
+name = "humantime"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9b112acc8b3adf4b107a8ec20977da0273a8c386765a3ec0229bd500a1443f9f"
+
+[[package]]
 name = "iana-time-zone"
 version = "0.1.63"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1385,6 +1391,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6ce47aafe422264b2b2c394060dcd71498e7290dd7b11b140c279508f7f55bda"
 
 [[package]]
+name = "timediff"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ec397e7943b73844bbf8329640375f30d62fc65ee0180489ccf54e0b32462cd"
+dependencies = [
+ "humantime",
+]
+
+[[package]]
 name = "timeflake-rs"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1503,6 +1518,7 @@ dependencies = [
  "serde_json",
  "short-uuid",
  "sqids",
+ "timediff",
  "timeflake-rs",
  "tsid",
  "ulid",
