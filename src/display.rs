@@ -18,10 +18,9 @@ impl IDInfo {
     pub fn print_card(&self) {
         let formatted_timestamp = match (self.timestamp.as_deref(), self.datetime.as_deref()) {
             (Some(timestamp), Some(datetime)) => {
-                let timestamp_sec: f64 = timestamp.parse::<f64>().unwrap_or_default();
-                let now = Utc::now().timestamp() as f64;
-                let diff = timestamp_sec - now;
-                format!("{} ({}) [{}]", timestamp, datetime, TimeDiff::to_diff(diff.to_string() + "sec").parse().unwrap())
+                let timestamp_sec = timestamp.parse::<f64>().unwrap_or_default() as i64;
+                let diff = timestamp_sec - Utc::now().timestamp();
+                format!("{} ({}) [{}]", timestamp, datetime, TimeDiff::to_diff((diff).to_string() + "s").parse().unwrap_or('-'.to_string()))
             }
             (Some(timestamp), None) => format!("{}", timestamp),
             _ => "-".to_string(),
