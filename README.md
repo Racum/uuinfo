@@ -161,8 +161,6 @@ $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 ┠───────────┼─────────────────────────────────────────────┨
 ┃ String    │ 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa        ┃
 ┃ Integer   │ 2098319972277167143349324748782480042       ┃
-┃ ShortUUID │ 2J2YViS7khb9taUUPULmrj                      ┃
-┃ Base64    │ KR-UAQB8qnqqqqqqqqqqqg==                    ┃
 ┠───────────┼─────────────────────────────────────────────┨
 ┃ Size      │ 128 bits                                    ┃
 ┃ Entropy   │ 74 bits                                     ┃
@@ -198,8 +196,6 @@ $ uuinfo -o json 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | jq
   "version": "7 (sortable timestamp and random)",
   "standard": "01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa",
   "integer": 2098319972277167143349324748782480042,
-  "short_uuid": "2J2YViS7khb9taUUPULmrj",
-  "base64": "KR-UAQB8qnqqqqqqqqqqqg==",
   "uuid_wrap": null,
   "size": 128,
   "entropy": 74,

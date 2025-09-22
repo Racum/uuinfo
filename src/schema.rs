@@ -183,8 +183,6 @@ pub struct IDInfo {
     pub version: Option<String>,
     pub standard: String,
     pub integer: Option<u128>,
-    pub short_uuid: Option<String>,
-    pub base64: Option<String>,
     pub uuid_wrap: Option<String>,
     pub parsed: Option<String>,
     pub size: u16,

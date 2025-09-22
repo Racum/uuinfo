@@ -21,8 +21,6 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
     let mut color_map: Option<String> = Some(COLOR_MAP_UUID_GENERIC.to_string());
     let mut datetime: Option<String> = None;
     let mut timestamp: Option<String> = None;
-    let translator = CustomTranslator::new(SHORT_UUID_ALPHABET).unwrap();
-    let short = ShortUuidCustom::from_uuid(&uuid, &translator).to_string();
 
     if uuid.is_nil() {
         id_type = "Nil UUID (all zeros)".to_string();
@@ -73,15 +71,15 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         }
     }
 
-    if uuid.get_variant() == Variant::RFC4122 {
-        if let Some(ts) = uuid.get_timestamp() {
-            let secs: i64 = ts.to_unix().0.try_into().unwrap();
-            let nanos: u32 = ts.to_unix().1;
-            let ms = (secs * 1000) as u64 + (nanos / 1_000_000) as u64;
-            let formatted_time = milliseconds_to_seconds_and_iso8601(ms, None);
-            timestamp = Some(formatted_time.0);
-            datetime = Some(formatted_time.1);
-        }
+    if uuid.get_variant() == Variant::RFC4122
+        && let Some(ts) = uuid.get_timestamp()
+    {
+        let secs: i64 = ts.to_unix().0.try_into().unwrap();
+        let nanos: u32 = ts.to_unix().1;
+        let ms = (secs * 1000) as u64 + (nanos / 1_000_000) as u64;
+        let formatted_time = milliseconds_to_seconds_and_iso8601(ms, None);
+        timestamp = Some(formatted_time.0);
+        datetime = Some(formatted_time.1);
     }
 
     let node1: Option<String> = match uuid.get_node_id() {
@@ -114,8 +112,6 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         version,
         standard: uuid.to_string(),
         integer: Some(uuid.as_u128()),
-        short_uuid: Some(short.to_string()),
-        base64: Some(URL_SAFE.encode(uuid.to_bytes_le())),
         parsed: Some("from hex".to_string()),
         size: 128,
         entropy,
@@ -169,8 +165,7 @@ pub fn parse_base64_uuid(args: &Args) -> Option<IDInfo> {
     } else {
         id_info.id_type = format!("Unpadded Base64 of {}", id_info.id_type);
     }
-    id_info.standard = id_info.base64.clone().unwrap();
-    id_info.base64 = None;
+    id_info.standard = args.id.clone();
     id_info.uuid_wrap = Some(uuid.to_string());
     id_info.parsed = Some("from base64".to_string());
     Some(id_info)

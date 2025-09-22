@@ -24,17 +24,17 @@ const SNOWFLAKE_ANNOTATE_FUNCTIONS: [fn(&Args) -> SnowflakeAnnotation; 9] = [
 fn all_parsers_times(args: &Args) -> Vec<TimestampComparable> {
     let mut all_times: Vec<TimestampComparable> = vec![];
     for parser in ALL_PARSERS {
-        if let Some(value) = parser(args) {
-            if value.datetime.is_some() {
-                all_times.push(TimestampComparable {
-                    timestamp: value.timestamp.clone().unwrap_or_default().parse::<f64>().unwrap_or_default(),
-                    datetime: value.datetime.unwrap_or_default(),
-                    name: match value.version {
-                        Some(version) => format!("{}: {}", value.id_type, version),
-                        None => value.id_type,
-                    },
-                });
-            }
+        if let Some(value) = parser(args)
+            && value.datetime.is_some()
+        {
+            all_times.push(TimestampComparable {
+                timestamp: value.timestamp.clone().unwrap_or_default().parse::<f64>().unwrap_or_default(),
+                datetime: value.datetime.unwrap_or_default(),
+                name: match value.version {
+                    Some(version) => format!("{}: {}", value.id_type, version),
+                    None => value.id_type,
+                },
+            });
         }
     }
     all_times

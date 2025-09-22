@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.5.0] - 2025-09-22
+
+### Changed
+
+Update dependencies.
+
+### Removed
+
+ShortUUID from the display.
+Base64 from the display.
+
 ## [0.4.2] - 2025-05-20
 
 ### Changed

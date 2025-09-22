@@ -55,12 +55,6 @@ impl IDInfo {
         if let Some(value) = self.uuid_wrap.as_deref() {
             println!("┃ {:<l_space$} │ {:<r_space$} ┃", "UUID wrap", value);
         }
-        if let Some(value) = self.short_uuid.as_deref() {
-            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "ShortUUID", value);
-        }
-        if let Some(value) = self.base64.as_deref() {
-            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Base64", value);
-        }
         let sequence = match self.sequence {
             Some(value) => value.to_string(),
             None => "-".to_string(),

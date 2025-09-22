@@ -21,10 +21,10 @@ fn main() {
 
     if &args.id == "-" {
         let mut buffer = String::new();
-        if io::stdin().read_line(&mut buffer).is_ok() {
-            if let Some(value) = buffer.split('\n').next() {
-                args.id = value.to_string();
-            }
+        if io::stdin().read_line(&mut buffer).is_ok()
+            && let Some(value) = buffer.split('\n').next()
+        {
+            args.id = value.to_string();
         }
     }
 
