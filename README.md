@@ -15,6 +15,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [UUID](https://www.rfc-editor.org/rfc/rfc9562.html): versions 1 to 8, Nil, Max, NCS and Microsoft GUID.
 - UUID wrappers: [ShortUUD](https://github.com/skorokithakis/shortuuid), [Base64](https://en.wikipedia.org/wiki/Base64), [Uuid25](https://github.com/uuid25/python) and integer
 - [ULID](https://github.com/ulid/spec)
+- [Julid](https://proclamations.nebcorp-hias.com/sundries/presenting-julids/)
 - [UPID](https://github.com/carderne/upid)
 - [MongoDB ObjectId](https://www.mongodb.com/docs/manual/reference/method/ObjectId/)
 - [KSUID](https://github.com/segmentio/ksuid)

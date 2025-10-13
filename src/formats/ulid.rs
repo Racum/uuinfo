@@ -38,3 +38,24 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
         ..Default::default()
     })
 }
+
+fn julid_sequence(integer: u128) -> u128 {
+    integer << 48 >> 112
+}
+
+pub fn parse_julid(args: &Args) -> Option<IDInfo> {
+    let mut julid = parse_ulid(args)?;
+    julid.id_type = "Julid".to_string();
+    julid.color_map = Some("33333333333333333333333333333333333333333333333366666666666666662222222222222222222222222222222222222222222222222222222222222222".to_string());
+    julid.entropy = 64;
+    julid.sequence = Some(julid_sequence(julid.integer?));
+    Some(julid)
+}
+
+pub fn parse_ulid_any(args: &Args) -> Option<IDInfo> {
+    let ulid = parse_ulid(args)?;
+    if julid_sequence(ulid.integer?) < 128 {
+        return parse_julid(args);
+    }
+    Some(ulid)
+}

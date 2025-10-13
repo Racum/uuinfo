@@ -28,6 +28,8 @@ pub enum IdFormat {
     Uuid25,
     /// ULID
     Ulid,
+    /// Julid
+    Julid,
     /// UPID
     Upid,
     /// Timeflake
@@ -150,6 +152,10 @@ pub struct Args {
     #[arg(short = 'a', long)]
     pub alphabet: Option<String>,
 
+    /// Show relative time if timestamp is available.
+    #[arg(short = 'r', long)]
+    pub relative: bool,
+
     /// Custom salt for Hashids
     #[arg(long)]
     pub salt: Option<String>,
@@ -164,6 +170,7 @@ impl Default for Args {
             everything: false,
             compare: false,
             alphabet: None,
+            relative: false,
             salt: None,
         }
     }
@@ -189,6 +196,7 @@ pub struct IDInfo {
     pub entropy: u16,
     pub datetime: Option<String>,
     pub timestamp: Option<String>,
+    pub relative_time: Option<String>,
     pub sequence: Option<u128>,
     pub node1: Option<String>,
     pub node2: Option<String>,

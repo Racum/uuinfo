@@ -1,8 +1,10 @@
 use std::cmp;
 use std::io::{Write, stdout};
 
+use chrono::Utc;
 use clap::ValueEnum;
 use colored::*;
+use timediff::TimeDiff;
 
 use crate::schema::{Args, IDInfo, Output};
 
@@ -13,7 +15,7 @@ impl std::fmt::Display for Output {
 }
 
 impl IDInfo {
-    pub fn print_card(&self) {
+    pub fn print_card(&self, args: &Args) {
         let timestamp = match self.timestamp.as_deref() {
             Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
             None => "-".to_string(),
@@ -63,6 +65,13 @@ impl IDInfo {
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Size", size);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Entropy".green(), entropy);
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Timestamp".cyan(), timestamp);
+
+        if let Some(value) = self.relative_time.clone()
+            && args.relative
+        {
+            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Relative".cyan(), value);
+        }
+
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 1".purple(), limit_r(self.node1.clone().unwrap_or("-".to_string())));
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 2".red(), limit_r(self.node2.clone().unwrap_or("-".to_string())));
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Sequence".blue(), sequence);
@@ -167,15 +176,20 @@ impl IDInfo {
         }
     }
 
-    pub fn print(&self, args: &Args) {
+    pub fn print(&mut self, args: &Args) {
+        if self.timestamp.is_some() {
+            let timestamp_sec = self.timestamp.clone().unwrap().parse::<f64>().unwrap_or_default() as i64;
+            let diff = timestamp_sec - Utc::now().timestamp();
+            self.relative_time = Some(TimeDiff::to_diff((diff).to_string() + "s").parse().unwrap_or('-'.to_string()));
+        }
         if args.everything {
-            self.print_card();
+            self.print_card(args);
         } else {
             match args.output {
                 Output::Short => self.print_short(),
                 Output::Json => self.print_json(),
                 Output::Binary => self.print_binary(),
-                _ => self.print_card(),
+                _ => self.print_card(args),
             }
         }
     }

@@ -25,7 +25,7 @@ use crate::formats::tid::parse_tid;
 use crate::formats::timeflake::{parse_timeflake_any, parse_timeflake_base62};
 use crate::formats::tsid::parse_tsid;
 use crate::formats::typeid::parse_typeid;
-use crate::formats::ulid::parse_ulid;
+use crate::formats::ulid::{parse_julid, parse_ulid, parse_ulid_any};
 use crate::formats::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
 use crate::formats::upid::parse_upid;
 use crate::formats::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid_integer, parse_uuid25};
@@ -36,13 +36,14 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 39] = [
+pub const ALL_PARSERS: [ParseFunction; 40] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
     parse_short_uuid,
     parse_uuid_integer,
     parse_ulid,
+    parse_julid,
     parse_upid,
     parse_objectid,
     parse_ksuid,
@@ -110,7 +111,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             36 => parse_uuid(args),
             32 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
             27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
-            26 => parse_ulid(args),
+            26 => parse_ulid_any(args),
             25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
             24 => pick_first_valid(args, vec![parse_objectid, parse_puid, parse_base64_uuid]),
             22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid]),
@@ -157,6 +158,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Uuid25 => parse_uuid25(args),
         IdFormat::UuidInt => parse_uuid_integer(args),
         IdFormat::Ulid => parse_ulid(args),
+        IdFormat::Julid => parse_julid(args),
         IdFormat::Upid => parse_upid(args),
         IdFormat::Timeflake => parse_timeflake_any(args),
         IdFormat::Flake => parse_flake(args),
@@ -249,6 +251,7 @@ mod tests {
         _assert("1734971723000000000", "Unix timestamp", "Assuming nanoseconds");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", "ULID", "-");
+        _assert("01K3ESSGBY0002QCB9YXT6Q6MN", "Julid", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", "UPID", "A (default)");
         _assert("6592008029c8c3e4dc76256c", "MongoDB ObjectId", "-");
         _assert("1HCpXwx2EK9oYluWbacgeCnFcLf", "KSUID", "Base62-encoded");
@@ -373,6 +376,11 @@ mod tests {
         _assert("1734971723000000000", IdFormat::UnixNs, "Unix timestamp", "As nanoseconds");
         // Other:
         _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Ulid, "ULID", "-");
+        // force a ULID to be treated as a Julid
+        _assert("01JCXSGZMZQQJ2M93WC0T8KT02", IdFormat::Julid, "Julid", "-");
+        _assert("01K3EWBQW7000EJNJW8G8WNXKA", IdFormat::Julid, "Julid", "-");
+        // force a Julid to be treated as a ULID
+        _assert("01K3EWBQW7000EJNJW8G8WNXKA", IdFormat::Ulid, "ULID", "-");
         _assert("abcd_2adnrb7b6jkyos6xusvmaa", IdFormat::Upid, "UPID", "A (default)");
         _assert("6592008029c8c3e4dc76256c", IdFormat::Mongodb, "MongoDB ObjectId", "-");
         _assert("1HCpXwx2EK9oYluWbacgeCnFcLf", IdFormat::Ksuid, "KSUID", "Base62-encoded");

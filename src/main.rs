@@ -31,7 +31,7 @@ fn main() {
     if args.everything {
         let valid_ids = parse_all(&args);
         if !valid_ids.is_empty() {
-            for value in valid_ids {
+            for mut value in valid_ids {
                 value.print(&args);
             }
         } else {
@@ -40,14 +40,14 @@ fn main() {
     } else {
         match &args.force {
             Some(_) => match force_format(&args) {
-                Some(value) => value.print(&args),
+                Some(mut value) => value.print(&args),
                 None => {
                     println!("Invalid ID for this format.");
                     std::process::exit(1);
                 }
             },
             None => match auto_detect(&args) {
-                Some(value) => value.print(&args),
+                Some(mut value) => value.print(&args),
                 None => {
                     println!("Unknown ID type.");
                     std::process::exit(1);
