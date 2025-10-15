@@ -45,3 +45,17 @@ pub fn parse_hashid(args: &Args) -> Option<IDInfo> {
         ..Default::default()
     })
 }
+
+pub fn parse_hashid_maybe(args: &Args) -> Option<IDInfo> {
+    let parsed = parse_hashid(args)?;
+    let binding = parsed.node1.clone()?;
+    let mut segments = binding.split(", ").collect::<Vec<_>>();
+    if segments.len() == 1 {
+        return None;
+    }
+    segments.remove(0);
+    if segments.iter().all(|x| *x == "0") {
+        return None;
+    }
+    Some(parsed)
+}

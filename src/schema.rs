@@ -80,6 +80,8 @@ pub enum IdFormat {
     Threads,
     /// DUNS Number
     Duns,
+    /// ASIN (Amazon)
+    Asin,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

@@ -1,5 +1,6 @@
 use crate::schema::{Args, IDInfo, IdFormat};
 
+use crate::formats::asin::parse_asin;
 use crate::formats::breezeid::parse_breezeid;
 use crate::formats::cuid::{parse_cuid1, parse_cuid2};
 use crate::formats::datadog::parse_datadog;
@@ -7,7 +8,7 @@ use crate::formats::duns::parse_duns;
 use crate::formats::flake::parse_flake;
 use crate::formats::geo::parse_h3;
 use crate::formats::hash::parse_hash;
-use crate::formats::hashid::parse_hashid;
+use crate::formats::hashid::{parse_hashid, parse_hashid_maybe};
 use crate::formats::ipfs::parse_ipfs;
 use crate::formats::isbn::parse_isbn;
 use crate::formats::ksuid::parse_ksuid;
@@ -19,7 +20,7 @@ use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
 use crate::formats::scru::{parse_scru64, parse_scru128};
 use crate::formats::snowflake::parse_snowflake;
-use crate::formats::sqid::parse_sqid;
+use crate::formats::sqid::{parse_sqid, parse_sqid_maybe};
 use crate::formats::stripe::parse_stripe;
 use crate::formats::threads::parse_threads;
 use crate::formats::tid::parse_tid;
@@ -37,7 +38,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 41] = [
+pub const ALL_PARSERS: [ParseFunction; 42] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -49,8 +50,6 @@ pub const ALL_PARSERS: [ParseFunction; 41] = [
     parse_objectid,
     parse_ksuid,
     parse_xid,
-    parse_cuid1,
-    parse_cuid2,
     parse_scru128,
     parse_scru64,
     parse_timeflake_any,
@@ -59,8 +58,9 @@ pub const ALL_PARSERS: [ParseFunction; 41] = [
     parse_nuid,
     parse_typeid,
     parse_pushid,
-    parse_sqid,
-    parse_hashid,
+    parse_threads,
+    parse_sqid_maybe,
+    parse_hashid_maybe,
     parse_youtube,
     parse_stripe,
     parse_datadog,
@@ -71,14 +71,16 @@ pub const ALL_PARSERS: [ParseFunction; 41] = [
     parse_breezeid,
     parse_puid,
     parse_shortpuid,
-    parse_nanoid,
     parse_ipv4,
     parse_ipv6,
     parse_mac,
     parse_isbn,
     parse_tid,
     parse_duns,
-    parse_threads,
+    parse_asin,
+    parse_nanoid,
+    parse_cuid1,
+    parse_cuid2,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -140,13 +142,14 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_ipv4,
                 parse_ipv6,
                 parse_mac,
+                parse_asin,
                 parse_cuid2,
-                parse_sqid,
+                parse_sqid_maybe,
                 parse_duns,
                 parse_threads,
                 parse_imei,
+                parse_hashid_maybe,
                 parse_nanoid,
-                parse_hashid,
             ]),
         };
     }
@@ -208,6 +211,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Tid => parse_tid(args),
         IdFormat::Threads => parse_threads(args),
         IdFormat::Duns => parse_duns(args),
+        IdFormat::Asin => parse_asin(args),
         IdFormat::H3 => parse_h3(args),
     }
 }
@@ -283,6 +287,7 @@ mod tests {
         _assert("3lfegaoywdk2w", "TID (AT Protocol, Bluesky)", "-");
         _assert("DEr_fXvuw6D", "Thread ID (Meta Threads)", "-");
         _assert("15-048-3782", "DUNS Number", "-");
+        _assert("B00DQC2FPM", "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", "H3 Grid System", "H3 Cell (Mode 1)");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
@@ -418,6 +423,7 @@ mod tests {
         _assert("DEr_fXvuw6D", IdFormat::Threads, "Thread ID (Meta Threads)", "-");
         _assert("3543204764587855491", IdFormat::Threads, "Thread ID (Meta Threads)", "-");
         _assert("15-048-3782", IdFormat::Duns, "DUNS Number", "-");
+        _assert("B00DQC2FPM", IdFormat::Asin, "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", IdFormat::H3, "H3 Grid System", "H3 Cell (Mode 1)");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");

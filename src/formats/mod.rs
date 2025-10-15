@@ -1,3 +1,4 @@
+pub mod asin;
 pub mod breezeid;
 pub mod cuid;
 pub mod datadog;

@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - DUNS Number support.
+- ASIN (Amazon) support.
 
 ## [0.6.0] - 2025-10-14
 
