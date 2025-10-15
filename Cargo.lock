@@ -1548,7 +1548,7 @@ dependencies = [
 
 [[package]]
 name = "uuinfo"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "base32",
  "base58",
@@ -1566,6 +1566,7 @@ dependencies = [
  "imei",
  "isbn",
  "mac_address",
+ "regex",
  "resize-slice",
  "scru128",
  "scru64",

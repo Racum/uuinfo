@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.6.0"
+version = "0.6.1"
 edition = "2024"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -53,3 +53,4 @@ imei = "=1.1.1"
 h3ron = "0.18.0"
 tsid = "0.3.4"
 timediff = "0.2.3"
+regex = "1.12.2"

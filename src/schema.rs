@@ -78,6 +78,8 @@ pub enum IdFormat {
     Tid,
     /// Thread ID (Meta Threads)
     Threads,
+    /// DUNS Number
+    Duns,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

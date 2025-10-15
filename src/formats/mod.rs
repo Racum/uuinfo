@@ -1,6 +1,7 @@
 pub mod breezeid;
 pub mod cuid;
 pub mod datadog;
+pub mod duns;
 pub mod flake;
 pub mod geo;
 pub mod hash;
