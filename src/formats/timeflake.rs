@@ -25,6 +25,7 @@ pub fn parse_timeflake_core(hex_id: &str, from_base62: bool) -> Option<IDInfo> {
             output
         })),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        high_confidence: from_base62,
         ..Default::default()
     })
 }

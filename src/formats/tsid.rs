@@ -6,9 +6,11 @@ use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
     let parsed: Option<String>;
+    let mut from_base32 = false;
     let tsid_id: TSID = match TSID::try_from(args.id.as_str()) {
         Ok(value) => {
             parsed = Some("from Crockford's base32".to_string());
+            from_base32 = true;
             value
         }
         Err(_) => {
@@ -36,6 +38,7 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("3333333333333333333333333333333333333333332222222222222222222222".to_string()),
+        high_confidence: from_base32,
         ..Default::default()
     })
 }

@@ -8,11 +8,13 @@ use crate::utils::milliseconds_to_seconds_and_iso8601;
 pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
     let mut id_type = "ULID";
     let mut parsed = "from Crockford's base32";
+    let mut from_base32 = true;
     let ulid = match Ulid::from_string(&args.id) {
         Ok(value) => value,
         Err(_) => {
             id_type = "ULID wrapped in UUID";
             parsed = "from hex";
+            from_base32 = false;
             Ulid::from(Uuid::try_parse(&args.id).ok()?)
         }
     };
@@ -35,6 +37,7 @@ pub fn parse_ulid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        high_confidence: from_base32,
         ..Default::default()
     })
 }

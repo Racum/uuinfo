@@ -41,6 +41,7 @@ pub fn parse_pushid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("333333333333333333333333333333333333333333333333222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

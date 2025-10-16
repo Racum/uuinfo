@@ -34,6 +34,7 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
             (0..32).map(|_| "5").collect::<String>(),
             (0..48).map(|_| "6").collect::<String>(),
         )),
+        high_confidence: true,
         ..Default::default()
     })
 }
@@ -73,6 +74,7 @@ pub fn parse_shortpuid(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map,
+        high_confidence: true,
         ..Default::default()
     })
 }

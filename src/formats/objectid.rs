@@ -31,6 +31,7 @@ pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("333333333333333333333333333333332222222222222222222222222222222222222222666666666666666666666666".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

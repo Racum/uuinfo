@@ -30,6 +30,7 @@ pub fn parse_h3(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("0111100044444444444555555555555555555555555555555555555555555555".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

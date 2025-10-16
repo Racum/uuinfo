@@ -525,9 +525,9 @@ checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
 
 [[package]]
 name = "fstr"
-version = "0.2.14"
+version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "53360f36a6b540355748cd42397b872e66105f0adc2742b59baf32f3e2233867"
+checksum = "fa16da5411b972ad442cbadc4e55f5acd0b7b31edf64ac34efe34efee5cdbbfb"
 
 [[package]]
 name = "generic-array"
@@ -1548,7 +1548,7 @@ dependencies = [
 
 [[package]]
 name = "uuinfo"
-version = "0.6.1"
+version = "0.6.2"
 dependencies = [
  "base32",
  "base58",

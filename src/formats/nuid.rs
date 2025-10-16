@@ -18,6 +18,7 @@ pub fn parse_nuid(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map: Some(format!("{}{}", (0..(12 * 8)).map(|_| "2").collect::<String>(), (0..(10 * 8)).map(|_| "4").collect::<String>())),
+        high_confidence: true,
         ..Default::default()
     })
 }

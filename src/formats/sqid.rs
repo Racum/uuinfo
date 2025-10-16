@@ -5,10 +5,12 @@ use crate::utils::factor_size_hex_bits_color_from_text;
 
 pub fn parse_sqid(args: &Args) -> Option<IDInfo> {
     let mut version: Option<String> = Some("Default alphabet".to_string());
+    let mut default_alpha = true;
     let sqids = match &args.alphabet {
         Some(alphabet) => match Sqids::builder().alphabet(alphabet.chars().collect()).build() {
             Ok(value) => {
                 version = Some("Custom alphabet".to_string());
+                default_alpha = false;
                 value
             }
             Err(_) => {
@@ -34,20 +36,7 @@ pub fn parse_sqid(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map: Some((0..size).map(|_| "4").collect::<String>()),
+        high_confidence: default_alpha && numbers.len() > 1 && !numbers.iter().skip(1).all(|x| *x == 0),
         ..Default::default()
     })
-}
-
-pub fn parse_sqid_maybe(args: &Args) -> Option<IDInfo> {
-    let parsed = parse_sqid(args)?;
-    let binding = parsed.node1.clone()?;
-    let mut segments = binding.split(", ").collect::<Vec<_>>();
-    if segments.len() == 1 {
-        return None;
-    }
-    segments.remove(0);
-    if segments.iter().all(|x| *x == "0") {
-        return None;
-    }
-    Some(parsed)
 }

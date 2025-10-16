@@ -32,6 +32,7 @@ pub fn parse_hash(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some((0..bits).map(|_| "2").collect::<String>()),
+        high_confidence: false,
         ..Default::default()
     })
 }

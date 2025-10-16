@@ -34,6 +34,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
             (0..32).map(|_| "4").collect::<String>(),
             (0..64).map(|_| "2").collect::<String>(),
         )),
+        high_confidence: true,
         ..Default::default()
     })
 }
@@ -54,6 +55,7 @@ pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map,
+        high_confidence: args.id.chars().count() == 24,
         ..Default::default()
     })
 }

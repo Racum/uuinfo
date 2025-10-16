@@ -38,6 +38,7 @@ pub fn parse_threads(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("3333333333333333333333333333333333333333344444444444446666666666".to_string()),
+        high_confidence: args.id.chars().count() == 11 || args.id.chars().count() == 12,
         ..Default::default()
     })
 }

@@ -8,10 +8,12 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
     let uuid: Uuid;
     let mut id_type = "Flake (Boundary)";
     let mut parsed = "from base62";
+    let mut from_base62 = false;
     let id_int = match args.id.chars().count() {
         18 => match base62::decode(&args.id) {
             Ok(value) => {
                 uuid = Uuid::from_bytes(value.to_be_bytes());
+                from_base62 = true;
                 value
             }
             Err(_) => return None,
@@ -52,6 +54,7 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("33333333333333333333333333333333333333333333333333333333333333334444444444444444444444444444444444444444444444446666666666666666".to_string()),
+        high_confidence: from_base62 && id_int >> 108 == 0,
         ..Default::default()
     })
 }

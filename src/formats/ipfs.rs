@@ -31,7 +31,7 @@ pub fn parse_ipfs(args: &Args) -> Option<IDInfo> {
             (0..(version_map)).map(|_| "1").collect::<String>(),
             (0..(entropy_map)).map(|_| "2").collect::<String>()
         )),
-
+        high_confidence: true,
         ..Default::default()
     })
 }

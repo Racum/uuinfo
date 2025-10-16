@@ -32,6 +32,7 @@ pub fn parse_isbn13(args: &Args) -> Option<IDInfo> {
             (0..(sequence_size * 8)).map(|_| "6").collect::<String>(),
             (0..8).map(|_| "0").collect::<String>(),
         )),
+        high_confidence: true,
         ..Default::default()
     })
 }
@@ -63,6 +64,7 @@ pub fn parse_isbn10(args: &Args) -> Option<IDInfo> {
             (0..(sequence_size * 8)).map(|_| "6").collect::<String>(),
             (0..8).map(|_| "0").collect::<String>(),
         )),
+        high_confidence: true,
         ..Default::default()
     })
 }

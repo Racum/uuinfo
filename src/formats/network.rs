@@ -29,6 +29,7 @@ pub fn parse_ipv4(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some((0..32).map(|_| "0").collect::<String>()),
+        high_confidence: true,
         ..Default::default()
     })
 }
@@ -53,6 +54,7 @@ pub fn parse_ipv6(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some((0..128).map(|_| "0").collect::<String>()),
+        high_confidence: true,
         ..Default::default()
     })
 }
@@ -85,6 +87,7 @@ pub fn parse_mac(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some(format!("{}{}", (0..24).map(|_| "4").collect::<String>(), (0..24).map(|_| "6").collect::<String>(),)),
+        high_confidence: true,
         ..Default::default()
     })
 }
@@ -115,6 +118,7 @@ pub fn parse_imei(args: &Args) -> Option<IDInfo> {
             (0..48).map(|_| "6").collect::<String>(),
             (0..8).map(|_| "5").collect::<String>(),
         )),
+        high_confidence: true,
         ..Default::default()
     })
 }

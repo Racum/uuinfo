@@ -109,6 +109,7 @@ pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
             (0..8).map(|_| "0").collect::<String>(),
             (0..code_bits).map(|_| "2").collect::<String>(),
         )),
+        high_confidence: true,
         ..Default::default()
     })
 }

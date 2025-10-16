@@ -96,6 +96,7 @@ fn parse_unix_core(args: &Args, assumption: TimestampUnitAssumption) -> Option<I
             output
         })),
         color_map: Some("3333333333333333333333333333333333333333333333333333333333333333".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

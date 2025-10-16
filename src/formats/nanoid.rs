@@ -8,9 +8,11 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
         return None;
     }
     let mut alphabet_info = "Default alphabet";
+    let mut default_alpha = true;
     let alphabet = match &args.alphabet {
         Some(alpha) => {
             alphabet_info = "Custom alphabet";
+            default_alpha = false;
             alpha
         }
         None => NANOID_ALPHABET,
@@ -18,7 +20,9 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
     if !args.id.chars().all(|c| alphabet.contains(c)) {
         return None;
     }
+    let mut default_len = false;
     let version = if args.id.chars().count() == 21 {
+        default_len = true;
         Some(format!("{}, default length", alphabet_info))
     } else {
         Some(format!("{}, custom length ({})", alphabet_info, args.id.chars().count()))
@@ -35,6 +39,7 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map,
+        high_confidence: default_alpha && default_len,
         ..Default::default()
     })
 }

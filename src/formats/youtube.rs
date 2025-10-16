@@ -31,6 +31,7 @@ pub fn parse_youtube(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("2222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

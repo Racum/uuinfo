@@ -125,6 +125,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map,
+        high_confidence: !(uuid.as_u128() << 32 >> 96 == 0 && uuid.as_u128() != 0),
         ..Default::default()
     })
 }

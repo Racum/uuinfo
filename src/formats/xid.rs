@@ -35,6 +35,7 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("333333333333333333333333333333334444444444444444444444445555555555555555666666666666666666666666".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

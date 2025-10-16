@@ -173,6 +173,7 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("3333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

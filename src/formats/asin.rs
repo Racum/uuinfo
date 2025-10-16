@@ -25,6 +25,7 @@ pub fn parse_asin(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("6666666666666666666666666666666666666666666666666666666666666666".to_string()),
+        high_confidence: id_int >= 1117159523352576,
         ..Default::default()
     })
 }

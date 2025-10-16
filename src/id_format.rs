@@ -8,7 +8,7 @@ use crate::formats::duns::parse_duns;
 use crate::formats::flake::parse_flake;
 use crate::formats::geo::parse_h3;
 use crate::formats::hash::parse_hash;
-use crate::formats::hashid::{parse_hashid, parse_hashid_maybe};
+use crate::formats::hashid::parse_hashid;
 use crate::formats::ipfs::parse_ipfs;
 use crate::formats::isbn::parse_isbn;
 use crate::formats::ksuid::parse_ksuid;
@@ -20,7 +20,7 @@ use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
 use crate::formats::scru::{parse_scru64, parse_scru128};
 use crate::formats::snowflake::parse_snowflake;
-use crate::formats::sqid::{parse_sqid, parse_sqid_maybe};
+use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
 use crate::formats::threads::parse_threads;
 use crate::formats::tid::parse_tid;
@@ -38,7 +38,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 42] = [
+pub const ALL_PARSERS: [ParseFunction; 44] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -59,8 +59,8 @@ pub const ALL_PARSERS: [ParseFunction; 42] = [
     parse_typeid,
     parse_pushid,
     parse_threads,
-    parse_sqid_maybe,
-    parse_hashid_maybe,
+    parse_sqid,
+    parse_hashid,
     parse_youtube,
     parse_stripe,
     parse_datadog,
@@ -81,12 +81,16 @@ pub const ALL_PARSERS: [ParseFunction; 42] = [
     parse_nanoid,
     parse_cuid1,
     parse_cuid2,
+    parse_h3,
+    parse_imei,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
     let mut valid_ids: Vec<IDInfo> = vec![];
     for parser in ALL_PARSERS {
-        if let Some(value) = parser(args) {
+        if let Some(value) = parser(args)
+            && value.high_confidence
+        {
             valid_ids.push(value);
         }
     }
@@ -112,8 +116,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
         id_info = match args.id.chars().count() {
             56 | 64 | 96 | 128 => parse_hash(args),
             40 => parse_ksuid(args),
-            36 => parse_uuid(args),
-            32 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
+            32 | 36 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
             27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
             26 => parse_ulid_any(args),
             25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
@@ -144,11 +147,11 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_mac,
                 parse_asin,
                 parse_cuid2,
-                parse_sqid_maybe,
+                parse_sqid,
                 parse_duns,
                 parse_threads,
                 parse_imei,
-                parse_hashid_maybe,
+                parse_hashid,
                 parse_nanoid,
             ]),
         };

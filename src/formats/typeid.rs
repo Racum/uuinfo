@@ -18,7 +18,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
         }
         None => return None,
     }
-    if prefix.chars().count() > 63 || !prefix.chars().all(|c| PREFIX_ALPHABET.contains(c)) {
+    if prefix.chars().count() == 0 || prefix.chars().count() > 63 || !prefix.chars().all(|c| PREFIX_ALPHABET.contains(c)) {
         return None;
     }
     let ulid = Ulid::from_string(value).ok()?;
@@ -42,6 +42,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("33333333333333333333333333333333333333333333333311112222222222220022222222222222222222222222222222222222222222222222222222222222".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

@@ -38,6 +38,7 @@ pub fn parse_tid(args: &Args) -> Option<IDInfo> {
             output
         })),
         color_map: Some("0333333333333333333333333333333333333333333333333333334444444444".to_string()),
+        high_confidence: true,
         ..Default::default()
     })
 }

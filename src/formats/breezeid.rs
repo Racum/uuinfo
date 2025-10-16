@@ -27,10 +27,10 @@ pub fn parse_breezeid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() < 4 || args.id.chars().count() > 128 || args.id.ends_with('-') {
         return None;
     }
-    let (color_map, dashes, version) = match try_parse_color_dashes(&args.id, ALPHABET) {
-        Some(value) => (value.0, value.1, Some("Default alphabet".to_string())),
+    let (color_map, dashes, version, high_confidence) = match try_parse_color_dashes(&args.id, ALPHABET) {
+        Some(value) => (value.0, value.1, Some("Default alphabet".to_string()), true),
         None => match try_parse_color_dashes(&args.id, &ALPHABET.to_lowercase()) {
-            Some(value) => (value.0, value.1, Some("Lowercase alphabet".to_string())),
+            Some(value) => (value.0, value.1, Some("Lowercase alphabet".to_string()), false),
             None => return None,
         },
     };
@@ -46,6 +46,7 @@ pub fn parse_breezeid(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map: Some(color_map),
+        high_confidence,
         ..Default::default()
     })
 }

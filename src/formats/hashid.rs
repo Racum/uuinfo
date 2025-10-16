@@ -42,20 +42,7 @@ pub fn parse_hashid(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map: Some((0..size).map(|_| "4").collect::<String>()),
+        high_confidence: numbers.len() > 1 && !numbers.iter().skip(1).all(|x| *x == 0),
         ..Default::default()
     })
-}
-
-pub fn parse_hashid_maybe(args: &Args) -> Option<IDInfo> {
-    let parsed = parse_hashid(args)?;
-    let binding = parsed.node1.clone()?;
-    let mut segments = binding.split(", ").collect::<Vec<_>>();
-    if segments.len() == 1 {
-        return None;
-    }
-    segments.remove(0);
-    if segments.iter().all(|x| *x == "0") {
-        return None;
-    }
-    Some(parsed)
 }

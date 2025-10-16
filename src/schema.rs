@@ -209,6 +209,8 @@ pub struct IDInfo {
     pub bits: Option<String>,
     #[serde(skip_serializing)]
     pub color_map: Option<String>,
+    #[serde(skip_serializing)]
+    pub high_confidence: bool,
 }
 
 /*
