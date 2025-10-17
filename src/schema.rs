@@ -82,6 +82,8 @@ pub enum IdFormat {
     Duns,
     /// ASIN (Amazon)
     Asin,
+    /// SnowID
+    Snowid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -98,7 +100,7 @@ pub enum IdFormat {
     SfSpaceflake,
     /// Snowflake: Frostflake
     SfFrostflake,
-    /// Snowflake Flake ID
+    /// Snowflake: Flake ID
     SfFlakeid,
     /// Unix timestamp: Auto-detect
     Unix,

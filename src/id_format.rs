@@ -20,6 +20,7 @@ use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
 use crate::formats::scru::{parse_scru64, parse_scru128};
 use crate::formats::snowflake::parse_snowflake;
+use crate::formats::snowid::parse_snowid;
 use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
 use crate::formats::threads::parse_threads;
@@ -38,7 +39,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 44] = [
+pub const ALL_PARSERS: [ParseFunction; 45] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -59,6 +60,7 @@ pub const ALL_PARSERS: [ParseFunction; 44] = [
     parse_typeid,
     parse_pushid,
     parse_threads,
+    parse_snowid,
     parse_sqid,
     parse_hashid,
     parse_youtube,
@@ -129,7 +131,9 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             14 => parse_shortpuid(args),
             13 => pick_first_valid(args, vec![parse_tid, parse_tsid]),
             12 => pick_first_valid(args, vec![parse_scru64, parse_shortpuid]),
-            11 => parse_youtube(args),
+            // 11 => parse_youtube(args),
+            11 => pick_first_valid(args, vec![parse_youtube, parse_snowid]),
+            10 => pick_first_valid(args, vec![parse_asin, parse_snowid]),
             _ => None,
         };
         // Variable length:
@@ -145,9 +149,9 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_ipv4,
                 parse_ipv6,
                 parse_mac,
-                parse_asin,
                 parse_cuid2,
                 parse_sqid,
+                parse_snowid,
                 parse_duns,
                 parse_threads,
                 parse_imei,
@@ -216,6 +220,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Duns => parse_duns(args),
         IdFormat::Asin => parse_asin(args),
         IdFormat::H3 => parse_h3(args),
+        IdFormat::Snowid => parse_snowid(args),
     }
 }
 
@@ -276,7 +281,7 @@ mod tests {
         _assert("8HFaR8qWtRlGDHnO57", "Flake (Boundary)", "-");
         _assert("XBCdxzsCR2FEFeSwhnjCo", "Nano ID", "Default alphabet, default length");
         _assert("0J4AEXRN106Z0", "TSID", "-");
-        _assert("86Rf07xd4z", "Sqid", "Default alphabet");
+        _assert("86Rf07", "Sqid", "Default alphabet");
         _assert("gocwRvLhDf8", "YouTube Video ID", "-");
         _assert("cus_lO1DEQWBbQAACfHO", "Stripe ID", "Customer ID");
         _assert("6772800700000000d97a8af26532e259", "Datadog Trace ID", "-");
@@ -289,6 +294,7 @@ mod tests {
         _assert("-OFrJ24CPTXLcIPPjvh3", "PushID (Firebase)", "-");
         _assert("3lfegaoywdk2w", "TID (AT Protocol, Bluesky)", "-");
         _assert("DEr_fXvuw6D", "Thread ID (Meta Threads)", "-");
+        _assert("HYOYoYloLw", "SnowID", "-");
         _assert("15-048-3782", "DUNS Number", "-");
         _assert("B00DQC2FPM", "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", "H3 Grid System", "H3 Cell (Mode 1)");
@@ -425,6 +431,8 @@ mod tests {
         _assert("3lfegaoywdk2w", IdFormat::Tid, "TID (AT Protocol, Bluesky)", "-");
         _assert("DEr_fXvuw6D", IdFormat::Threads, "Thread ID (Meta Threads)", "-");
         _assert("3543204764587855491", IdFormat::Threads, "Thread ID (Meta Threads)", "-");
+        _assert("HYOYoYloLw", IdFormat::Snowid, "SnowID", "-");
+        _assert("237640531155357696", IdFormat::Snowid, "SnowID", "-");
         _assert("15-048-3782", IdFormat::Duns, "DUNS Number", "-");
         _assert("B00DQC2FPM", IdFormat::Asin, "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", IdFormat::H3, "H3 Grid System", "H3 Cell (Mode 1)");

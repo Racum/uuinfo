@@ -18,6 +18,7 @@ pub mod puid;
 pub mod pushid;
 pub mod scru;
 pub mod snowflake;
+pub mod snowid;
 pub mod sqid;
 pub mod stripe;
 pub mod threads;

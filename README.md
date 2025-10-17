@@ -38,6 +38,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [PushID](https://firebase.blog/posts/2015/02/the-2120-ways-to-ensure-unique_68/) (Firebase)
 - [TID](https://atproto.com/specs/tid) (AT Protocol, Bluesky)
 - [Thread ID](https://developers.facebook.com/docs/threads) (Meta Threads)
+- [SnowID](https://github.com/qeeqez/snowid-rust)
 - [DUNS Number](https://en.wikipedia.org/wiki/Data_Universal_Numbering_System)
 - [ASIN](https://en.wikipedia.org/wiki/Amazon_Standard_Identification_Number) (Amazon)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128

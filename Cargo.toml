@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.6.2"
+version = "0.6.3"
 edition = "2024"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.3] - 2025-10-17
+
+### Added
+
+- SnowID support.
+
 ## [0.6.2] - 2025-10-17
 
 ### Changed
