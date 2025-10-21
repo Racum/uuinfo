@@ -6,6 +6,7 @@ use crate::formats::cuid::{parse_cuid1, parse_cuid2};
 use crate::formats::datadog::parse_datadog;
 use crate::formats::duns::parse_duns;
 use crate::formats::flake::parse_flake;
+use crate::formats::gdocs::parse_gdocs;
 use crate::formats::geo::parse_h3;
 use crate::formats::hash::parse_hash;
 use crate::formats::hashid::parse_hashid;
@@ -39,7 +40,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 45] = [
+pub const ALL_PARSERS: [ParseFunction; 46] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -85,6 +86,7 @@ pub const ALL_PARSERS: [ParseFunction; 45] = [
     parse_cuid2,
     parse_h3,
     parse_imei,
+    parse_gdocs,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -117,6 +119,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
         // Fixed length:
         id_info = match args.id.chars().count() {
             56 | 64 | 96 | 128 => parse_hash(args),
+            44 => parse_gdocs(args),
             40 => parse_ksuid(args),
             32 | 36 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
             27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
@@ -221,6 +224,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Asin => parse_asin(args),
         IdFormat::H3 => parse_h3(args),
         IdFormat::Snowid => parse_snowid(args),
+        IdFormat::Gdocs => parse_gdocs(args),
     }
 }
 
@@ -298,6 +302,7 @@ mod tests {
         _assert("15-048-3782", "DUNS Number", "-");
         _assert("B00DQC2FPM", "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", "H3 Grid System", "H3 Cell (Mode 1)");
+        _assert("1ZQWherERWu_ZXMGhW0Yw_VxnHFPc3hxLBQ2FjSEalFE", "Google Docs ID", "-");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -436,6 +441,7 @@ mod tests {
         _assert("15-048-3782", IdFormat::Duns, "DUNS Number", "-");
         _assert("B00DQC2FPM", IdFormat::Asin, "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", IdFormat::H3, "H3 Grid System", "H3 Cell (Mode 1)");
+        _assert("1ZQWherERWu_ZXMGhW0Yw_VxnHFPc3hxLBQ2FjSEalFE", IdFormat::Gdocs, "Google Docs ID", "-");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");

@@ -41,6 +41,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [SnowID](https://github.com/qeeqez/snowid-rust)
 - [DUNS Number](https://en.wikipedia.org/wiki/Data_Universal_Numbering_System)
 - [ASIN](https://en.wikipedia.org/wiki/Amazon_Standard_Identification_Number) (Amazon)
+- Google Docs ID
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)

@@ -84,6 +84,8 @@ pub enum IdFormat {
     Asin,
     /// SnowID
     Snowid,
+    /// Google Docs ID
+    Gdocs,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

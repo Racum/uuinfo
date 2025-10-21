@@ -4,6 +4,7 @@ pub mod cuid;
 pub mod datadog;
 pub mod duns;
 pub mod flake;
+pub mod gdocs;
 pub mod geo;
 pub mod hash;
 pub mod hashid;

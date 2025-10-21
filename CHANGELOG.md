@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.4] - 2025-10-21
+
+### Added
+
+- Google Docs ID support.
+
+
 ## [0.6.3] - 2025-10-17
 
 ### Added
