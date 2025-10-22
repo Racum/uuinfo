@@ -20,8 +20,10 @@ use crate::formats::objectid::parse_objectid;
 use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
 use crate::formats::scru::{parse_scru64, parse_scru128};
+use crate::formats::slack::parse_slack;
 use crate::formats::snowflake::parse_snowflake;
 use crate::formats::snowid::parse_snowid;
+use crate::formats::spotify::parse_spotify;
 use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
 use crate::formats::threads::parse_threads;
@@ -40,7 +42,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 46] = [
+pub const ALL_PARSERS: [ParseFunction; 48] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -87,6 +89,8 @@ pub const ALL_PARSERS: [ParseFunction; 46] = [
     parse_h3,
     parse_imei,
     parse_gdocs,
+    parse_slack,
+    parse_spotify,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -126,7 +130,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             26 => parse_ulid_any(args),
             25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
             24 => pick_first_valid(args, vec![parse_objectid, parse_puid, parse_base64_uuid]),
-            22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid]),
+            22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid, parse_spotify]),
             21 => parse_nanoid(args),
             20 => pick_first_valid(args, vec![parse_xid, parse_stripe, parse_pushid]),
             18 => parse_flake(args),
@@ -134,8 +138,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             14 => parse_shortpuid(args),
             13 => pick_first_valid(args, vec![parse_tid, parse_tsid]),
             12 => pick_first_valid(args, vec![parse_scru64, parse_shortpuid]),
-            // 11 => parse_youtube(args),
-            11 => pick_first_valid(args, vec![parse_youtube, parse_snowid]),
+            11 => pick_first_valid(args, vec![parse_slack, parse_youtube, parse_snowid]),
             10 => pick_first_valid(args, vec![parse_asin, parse_snowid]),
             _ => None,
         };
@@ -225,6 +228,8 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::H3 => parse_h3(args),
         IdFormat::Snowid => parse_snowid(args),
         IdFormat::Gdocs => parse_gdocs(args),
+        IdFormat::Slack => parse_slack(args),
+        IdFormat::Spotify => parse_spotify(args),
     }
 }
 
@@ -239,7 +244,7 @@ mod tests {
                 id: id.to_string(),
                 ..Default::default()
             })
-            .unwrap();
+            .expect(id_type);
             assert_eq!(id_info.id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(id_info.version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
         }
@@ -303,6 +308,7 @@ mod tests {
         _assert("B00DQC2FPM", "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", "H3 Grid System", "H3 Cell (Mode 1)");
         _assert("1ZQWherERWu_ZXMGhW0Yw_VxnHFPc3hxLBQ2FjSEalFE", "Google Docs ID", "-");
+        _assert("C12345ABCDE", "Slack ID", "Channel ID");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -343,7 +349,7 @@ mod tests {
                 force: Some(force),
                 ..Default::default()
             })
-            .unwrap();
+            .expect(id_type);
             assert_eq!(id_info.id_type, id_type.to_string(), "{id} - {id_type} - {version}");
             assert_eq!(id_info.version.unwrap_or("-".to_string()), version.to_string(), "{id} - {id_type} - {version}");
         }
@@ -442,6 +448,8 @@ mod tests {
         _assert("B00DQC2FPM", IdFormat::Asin, "ASIN (Amazon)", "-");
         _assert("89283082e73ffff", IdFormat::H3, "H3 Grid System", "H3 Cell (Mode 1)");
         _assert("1ZQWherERWu_ZXMGhW0Yw_VxnHFPc3hxLBQ2FjSEalFE", IdFormat::Gdocs, "Google Docs ID", "-");
+        _assert("C12345ABCDE", IdFormat::Slack, "Slack ID", "Channel ID");
+        _assert("4PTG3Z6ehGkBFwjybzWkR8", IdFormat::Spotify, "Spotify ID", "-");
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");

@@ -86,6 +86,10 @@ pub enum IdFormat {
     Snowid,
     /// Google Docs ID
     Gdocs,
+    /// Slack ID
+    Slack,
+    /// Spotify ID
+    Spotify,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
