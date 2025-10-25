@@ -90,6 +90,8 @@ pub enum IdFormat {
     Slack,
     /// Spotify ID
     Spotify,
+    /// Nano64
+    Nano64,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

@@ -11,6 +11,7 @@ pub mod hashid;
 pub mod ipfs;
 pub mod isbn;
 pub mod ksuid;
+pub mod nano64;
 pub mod nanoid;
 pub mod network;
 pub mod nuid;
