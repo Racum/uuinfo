@@ -92,6 +92,8 @@ pub enum IdFormat {
     Spotify,
     /// Nano64
     Nano64,
+    /// OrderlyID
+    Orderlyid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

@@ -16,6 +16,7 @@ pub mod nanoid;
 pub mod network;
 pub mod nuid;
 pub mod objectid;
+pub mod orderlyid;
 pub mod puid;
 pub mod pushid;
 pub mod scru;

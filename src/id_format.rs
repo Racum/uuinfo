@@ -18,6 +18,7 @@ use crate::formats::nanoid::parse_nanoid;
 use crate::formats::network::{parse_imei, parse_ipv4, parse_ipv6, parse_mac};
 use crate::formats::nuid::parse_nuid;
 use crate::formats::objectid::parse_objectid;
+use crate::formats::orderlyid::parse_orderlyid;
 use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
 use crate::formats::scru::{parse_scru64, parse_scru128};
@@ -43,7 +44,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 49] = [
+pub const ALL_PARSERS: [ParseFunction; 50] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -63,6 +64,7 @@ pub const ALL_PARSERS: [ParseFunction; 49] = [
     parse_nuid,
     parse_typeid,
     parse_pushid,
+    parse_orderlyid,
     parse_threads,
     parse_snowid,
     parse_nano64,
@@ -150,6 +152,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             Some(value) => Some(value),
             #[rustfmt::skip]
             None => pick_first_valid(args, vec![
+                parse_orderlyid,
                 parse_isbn,
                 parse_typeid,
                 parse_ipfs,
@@ -234,6 +237,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Slack => parse_slack(args),
         IdFormat::Spotify => parse_spotify(args),
         IdFormat::Nano64 => parse_nano64(args),
+        IdFormat::Orderlyid => parse_orderlyid(args),
     }
 }
 
@@ -315,6 +319,7 @@ mod tests {
         _assert("C12345ABCDE", "Slack ID", "Channel ID");
         _assert("199C01B6659-5861C", "Nano64", "-");
         _assert("199C01B66595861C", "Nano64", "-");
+        _assert("order_00myngy59c0003000dfk59mg3e36j3rr-9xgg", "OrderlyID, type order", "Version 1, privacy off, with checksum");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -457,6 +462,12 @@ mod tests {
         _assert("C12345ABCDE", IdFormat::Slack, "Slack ID", "Channel ID");
         _assert("4PTG3Z6ehGkBFwjybzWkR8", IdFormat::Spotify, "Spotify ID", "-");
         _assert("199C01B6659-5861C", IdFormat::Nano64, "Nano64", "-");
+        _assert(
+            "order_00myngy59c0003000dfk59mg3e36j3rr-9xgg",
+            IdFormat::Orderlyid,
+            "OrderlyID, type order",
+            "Version 1, privacy off, with checksum",
+        );
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");
         _assert("e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e", IdFormat::Hash, "Hex-encoded Hash", "Probably SHA-1");

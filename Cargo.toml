@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.6.6"
+version = "0.6.7"
 edition = "2024"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -48,7 +48,7 @@ hash-ids = "0.3.1"
 resize-slice = "0.1.3"  # Used by custom_base62
 cid = "0.11.1"
 mac_address = "1.1.8"
-isbn = "0.6.0"
+isbn = "0.7.0"
 imei = "=1.1.1"
 h3ron = "0.18.0"
 tsid = "0.3.4"
