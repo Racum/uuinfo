@@ -198,6 +198,7 @@ pub fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
 fn annotate_snowflake_variant(args: &Args) -> SnowflakeAnnotation {
     match args.force {
         Some(value) => {
+            #[allow(clippy::wildcard_enum_match_arm)]
             let annotation: SnowflakeAnnotation = match value {
                 IdFormat::SfTwitter => annotate_twitter(args),
                 IdFormat::SfMastodon => annotate_mastodon(args),

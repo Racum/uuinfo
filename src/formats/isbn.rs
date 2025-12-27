@@ -9,9 +9,9 @@ pub fn parse_isbn13(args: &Args) -> Option<IDInfo> {
     let id = Isbn13::from_str(&args.id).ok()?;
     let binding = id.hyphenate().ok()?;
     let parts = binding.split('-').collect::<Vec<_>>();
-    let node1_size = parts[0].chars().count() + parts[1].chars().count();
-    let node2_size = parts[2].chars().count();
-    let sequence_size = parts[3].chars().count();
+    let node1_size = parts.first()?.chars().count() + parts.get(2)?.chars().count();
+    let node2_size = parts.get(2)?.chars().count();
+    let sequence_size = parts.get(3)?.chars().count();
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&id.to_string());
 
     Some(IDInfo {
@@ -21,8 +21,8 @@ pub fn parse_isbn13(args: &Args) -> Option<IDInfo> {
         parsed: Some("as ASCII, no dashes".to_string()),
         size,
         node1: Some(id.registration_group().unwrap_or("-").to_string()),
-        node2: Some(format!("{} (Publisher ID)", parts[2])),
-        sequence: parts[3].parse::<u128>().ok(),
+        node2: Some(format!("{} (Publisher ID)", parts.get(2)?)),
+        sequence: parts.get(3)?.parse::<u128>().ok(),
         hex,
         bits,
         color_map: Some(format!(
@@ -41,9 +41,9 @@ pub fn parse_isbn10(args: &Args) -> Option<IDInfo> {
     let id = Isbn10::from_str(&args.id).ok()?;
     let binding = id.hyphenate().ok()?;
     let parts = binding.split('-').collect::<Vec<_>>();
-    let node1_size = parts[0].chars().count();
-    let node2_size = parts[1].chars().count();
-    let sequence_size = parts[2].chars().count();
+    let node1_size = parts.first()?.chars().count();
+    let node2_size = parts.get(1)?.chars().count();
+    let sequence_size = parts.get(2)?.chars().count();
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&id.to_string());
 
     Some(IDInfo {
@@ -53,8 +53,8 @@ pub fn parse_isbn10(args: &Args) -> Option<IDInfo> {
         parsed: Some("as ASCII, no dashes".to_string()),
         size,
         node1: Some(id.registration_group().unwrap_or("-").to_string()),
-        node2: Some(format!("{} (Publisher ID)", parts[1])),
-        sequence: parts[2].parse::<u128>().ok(),
+        node2: Some(format!("{} (Publisher ID)", parts.get(1)?)),
+        sequence: parts.get(2)?.parse::<u128>().ok(),
         hex,
         bits,
         color_map: Some(format!(

@@ -15,6 +15,7 @@ impl std::fmt::Display for Output {
 }
 
 impl IDInfo {
+    #[allow(clippy::indexing_slicing)]
     pub fn print_card(&self, args: &Args) {
         let timestamp = match self.timestamp.as_deref() {
             Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
@@ -164,7 +165,7 @@ impl IDInfo {
         match &self.integer {
             Some(number) => {
                 let slice_offset: usize = ((128 - &self.size) / 8).into();
-                stdout().write_all(&number.to_be_bytes()[slice_offset..16]).unwrap();
+                stdout().write_all(number.to_be_bytes().get(slice_offset..16).unwrap()).unwrap();
             }
             None => match &self.hex {
                 Some(value) => {

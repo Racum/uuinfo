@@ -3,6 +3,7 @@ use std::fmt::Write;
 use crate::schema::{Args, IDInfo};
 use crate::utils::milliseconds_to_seconds_and_iso8601;
 
+#[allow(clippy::indexing_slicing)]
 mod custom_base62 {
     // Based on https://github.com/ecstatic-morse/ksuid/blob/master/src/base62.rs
 

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.8] - 2025-12-27
+
+### Added
+
+- More Clippy checks.
+
 ## [0.6.7] - 2025-12-10
 
 ### Added

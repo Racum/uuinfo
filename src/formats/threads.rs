@@ -10,6 +10,7 @@ pub fn parse_threads(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() <= 12 {
         // This is basically an Instagram snowflake wrapped in base64 with the leading A’s removed.
         let padded_id = format!("{:A>12}", &args.id);
+        #[allow(clippy::indexing_slicing)]
         let id_bytes = &URL_SAFE_NO_PAD.decode(&padded_id).ok()?[1..9];
         id_int = u64::from_be_bytes(id_bytes.try_into().ok()?);
         parsed = Some("from base64".to_string());

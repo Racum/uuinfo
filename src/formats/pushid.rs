@@ -22,7 +22,7 @@ pub fn parse_pushid(args: &Args) -> Option<IDInfo> {
     }
     let id_bytes = pushid_base64_engine().decode(&args.id).ok()?;
     let mut ts_buffer: Vec<u8> = vec![0, 0];
-    ts_buffer.extend(&id_bytes[0..6]);
+    ts_buffer.extend(id_bytes.get(0..6)?);
     let ts_bytes: [u8; 8] = ts_buffer.try_into().ok()?;
     let timestamp_raw = u64::from_be_bytes(ts_bytes);
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);

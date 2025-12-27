@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.6.7"
+version = "0.6.8"
 edition = "2024"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -54,3 +54,11 @@ h3ron = "0.18.0"
 tsid = "0.3.4"
 timediff = "0.2.3"
 regex = "1.12.2"
+
+[lints.clippy]
+indexing_slicing = "deny"
+fallible_impl_from = "deny"
+wildcard_enum_match_arm = "deny"
+unneeded_field_pattern = "deny"
+fn_params_excessive_bools = "deny"
+must_use_candidate = "deny"

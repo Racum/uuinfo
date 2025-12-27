@@ -64,7 +64,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
                     _ => Some(COLOR_MAP_UUID_GENERIC.to_string()),
                 };
             }
-            _ => {
+            Variant::Future | _ => {
                 id_type = "Unknown UUID-like".to_string();
                 color_map = Some(COLOR_MAP_UUID_NO_RFC.to_string());
             }
@@ -99,10 +99,10 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
     let sequence: Option<u128> = match uuid.get_version_num() {
         1 | 6 => {
             let sequence_bytes = &uuid.as_bytes()[8..10];
-            let mut first_byte = sequence_bytes[0];
+            let mut first_byte = *sequence_bytes.first()?;
             first_byte <<= 2;
             first_byte >>= 2;
-            Some(u16::from_be_bytes([first_byte, sequence_bytes[1]]).into())
+            Some(u16::from_be_bytes([first_byte, *sequence_bytes.get(1)?]).into())
         }
         _ => None,
     };

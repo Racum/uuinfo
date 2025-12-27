@@ -10,9 +10,9 @@ pub fn parse_gdocs(args: &Args) -> Option<IDInfo> {
     let id_bytes = URL_SAFE_NO_PAD.decode(&args.id).ok()?;
     if !(id_bytes.len() == 33
         // Starts with '110101' :
-        && id_bytes[0] >> 2 == 53
+        && id_bytes.first()? >> 2 == 53
         // Ends with '00':
-        && id_bytes[id_bytes.len() - 1] << 6 >> 6 == 0)
+        && id_bytes.last()? << 6 >> 6 == 0)
     {
         return None;
     }

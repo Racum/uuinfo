@@ -10,15 +10,15 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
     if parts.len() != 2 {
         return None;
     };
-    let prefix = parts[0];
-    let parts: &Vec<&str> = &parts[1].split('-').collect();
-    let value = parts[0];
+    let prefix = parts.first()?;
+    let parts: &Vec<&str> = &parts.get(1)?.split('-').collect();
+    let value = parts.first()?;
     if prefix.len() == 1 || prefix.len() > 31 || value.len() != 32 {
         return None;
     };
     let mut checksum = "no checksum";
     if parts.len() == 2 {
-        if parts[1].len() != 4 {
+        if parts.get(1)?.len() != 4 {
             return None;
         }
         checksum = "with checksum";
@@ -27,7 +27,7 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
 
     // Timestamp, flags and tenant:
     let mut buffer1: Vec<u8> = vec![0; 16];
-    buffer1[..9].copy_from_slice(&parsed_bytes[0..9]);
+    buffer1.get_mut(..9)?.copy_from_slice(parsed_bytes.get(0..9)?);
     let ts_flags_tenant = u128::from_be_bytes(buffer1.try_into().ok()?);
     let timestamp_raw = ts_flags_tenant >> 80;
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, Some(1577836800000));
@@ -44,7 +44,7 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
 
     // Sequence, shard and random:
     let mut buffer2: Vec<u8> = vec![0; 16];
-    buffer2[..11].copy_from_slice(&parsed_bytes[9..20]);
+    buffer2.get_mut(..11)?.copy_from_slice(parsed_bytes.get(9..20)?);
     let seq_shard_random = u128::from_be_bytes(buffer2.try_into().ok()?);
     let sequence = seq_shard_random >> 116;
     let shard = seq_shard_random << 12 >> 112;
