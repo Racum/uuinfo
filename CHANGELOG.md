@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.10] - 2026-01-11
+
+### Added
+
+- SWHID (Software Hash ID) support.
+
 ## [0.6.9] - 2026-01-09
 
 ### Changed

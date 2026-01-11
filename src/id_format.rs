@@ -28,6 +28,7 @@ use crate::formats::snowid::parse_snowid;
 use crate::formats::spotify::parse_spotify;
 use crate::formats::sqid::parse_sqid;
 use crate::formats::stripe::parse_stripe;
+use crate::formats::swhid::parse_swhid;
 use crate::formats::threads::parse_threads;
 use crate::formats::tid::parse_tid;
 use crate::formats::timeflake::{parse_timeflake_any, parse_timeflake_base62};
@@ -44,7 +45,7 @@ type ParseFunction = fn(&Args) -> Option<IDInfo>;
 
 #[rustfmt::skip]
 #[allow(dead_code)]
-pub const ALL_PARSERS: [ParseFunction; 50] = [
+pub const ALL_PARSERS: [ParseFunction; 51] = [
     parse_uuid,
     parse_base64_uuid,
     parse_uuid25,
@@ -95,6 +96,7 @@ pub const ALL_PARSERS: [ParseFunction; 50] = [
     parse_gdocs,
     parse_slack,
     parse_spotify,
+    parse_swhid,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -169,6 +171,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
                 parse_imei,
                 parse_hashid,
                 parse_nanoid,
+                parse_swhid,
             ]),
         };
     }
@@ -238,6 +241,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Spotify => parse_spotify(args),
         IdFormat::Nano64 => parse_nano64(args),
         IdFormat::Orderlyid => parse_orderlyid(args),
+        IdFormat::Swhid => parse_swhid(args),
     }
 }
 
@@ -320,6 +324,7 @@ mod tests {
         _assert("199C01B6659-5861C", "Nano64", "-");
         _assert("199C01B66595861C", "Nano64", "-");
         _assert("order_00myngy59c0003000dfk59mg3e36j3rr-9xgg", "OrderlyID, type order", "Version 1, privacy off, with checksum");
+        _assert("swh:1:dir:65a597ec22d11d3a406784f6f5787a252605561b", "SWHID (Software Hash ID)", "Schema: 1, object type: Directory");
         // Hash-based:
         _assert("b265f33f6fe99bd366dae49c45d2c3d288fdd852024103e85c07002d", "Hex-encoded Hash", "Probably SHA-224");
         _assert("4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865", "Hex-encoded Hash", "Probably SHA-256");
@@ -467,6 +472,12 @@ mod tests {
             IdFormat::Orderlyid,
             "OrderlyID, type order",
             "Version 1, privacy off, with checksum",
+        );
+        _assert(
+            "swh:1:dir:65a597ec22d11d3a406784f6f5787a252605561b",
+            IdFormat::Swhid,
+            "SWHID (Software Hash ID)",
+            "Schema: 1, object type: Directory",
         );
         // Hash-based:
         _assert("b026324c6904b2a9cb4b88d6d61c81d1", IdFormat::Hash, "Hex-encoded Hash", "Probably MD5");

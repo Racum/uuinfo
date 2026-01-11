@@ -94,6 +94,8 @@ pub enum IdFormat {
     Nano64,
     /// OrderlyID
     Orderlyid,
+    /// SWHID (Software Hash ID)
+    Swhid,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

@@ -26,6 +26,7 @@ pub mod snowid;
 pub mod spotify;
 pub mod sqid;
 pub mod stripe;
+pub mod swhid;
 pub mod threads;
 pub mod tid;
 pub mod timeflake;

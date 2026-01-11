@@ -46,6 +46,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [Spotify ID](https://developer.spotify.com/documentation/web-api/concepts/spotify-uris-ids)
 - [Nano64](https://github.com/only-cliches/nano64)
 - [OrderlyID](https://github.com/orderlykit/orderlyid)
+- [SWHID](https://www.swhid.org) (Software Hash ID)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)
