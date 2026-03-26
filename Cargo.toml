@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.6.10"
+version = "0.6.11"
 edition = "2024"
 authors = ["Ronaldo Racum <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -30,14 +30,14 @@ hex = "0.4.3"
 short-uuid = "0.2.0"
 ulid = { version = "1.2.1", features = ["uuid"] }
 uuid = "1.16.0"
-upid = "0.2.0"
+upid = "0.3.1"
 timeflake-rs = "0.3.0"
 base62 = "2.2.1"
 colored = "3.0.0"
 base32 = "0.5.1"
 basen = "0.1.0"
 cuid2 = "0.1.4"
-scru128 = "3.1.0"
+scru128 = "4.0.0"
 scru64 = "2.0.1"
 uuid25 = "0.3.5"
 serde = { version = "1.0.219", features = ["derive"] }

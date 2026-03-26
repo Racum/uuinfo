@@ -1,5 +1,4 @@
 use scru64::Scru64Id;
-use scru128::Scru128Id;
 use std::fmt::Write;
 use uuid::Uuid;
 
@@ -10,14 +9,15 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     let mut id_type = "SCRU128";
     let mut parsed = "from base36";
     let mut from_base36 = true;
-    let scru = match Scru128Id::try_from_str(&args.id) {
+    let binding = args.id.parse::<scru128::Id>();
+    let scru = match &binding {
         Ok(value) => value,
         Err(_) => {
             let uuid = Uuid::try_parse(&args.id).ok()?;
             id_type = "SCRU128 wrapped in UUID";
             parsed = "from hex";
             from_base36 = false;
-            Scru128Id::from_u128(uuid.as_u128())
+            &scru128::Id::from_u128(uuid.as_u128())
         }
     };
 
