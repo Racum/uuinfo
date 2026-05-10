@@ -7,7 +7,7 @@ pub const UPPER_BASE36: Base<36> = Base::new(b"0123456789ABCDEFGHIJKLMNOPQRSTUVW
 
 pub fn parse_slack(args: &Args) -> Option<IDInfo> {
     let id_len = args.id.chars().count();
-    if id_len < 3 || id_len > 20 {
+    if !(3..=20).contains(&id_len) {
         return None;
     }
     let mut offset = 1;
@@ -45,7 +45,11 @@ pub fn parse_slack(args: &Args) -> Option<IDInfo> {
         node1: Some(format!("{} ({})", prefix, version)),
         hex,
         bits,
-        color_map: Some(format!("{}{}", repeat_char('4', offset * 8), repeat_char('2', (id_len - offset) * 8),)),
+        color_map: Some(format!(
+            "{}{}",
+            repeat_char('4', offset * 8),
+            repeat_char('2', (id_len - offset) * 8),
+        )),
         high_confidence: true,
         ..Default::default()
     })

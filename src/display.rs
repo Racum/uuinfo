@@ -61,16 +61,16 @@ impl IDInfo {
         }
 
         let size = match self.size {
-            0 => "-",
+            0 => "-".to_string(),
             _ => match &self.parsed {
-                Some(parsed) => &format!("{} bits ({})", self.size, parsed),
-                None => &format!("{} bits", self.size),
+                Some(parsed) => format!("{} bits ({})", self.size, parsed),
+                None => format!("{} bits", self.size),
             },
         };
 
         let entropy = match self.size {
-            0 => "-",
-            _ => &format!("{} bits", self.entropy),
+            0 => "-".to_string(),
+            _ => format!("{} bits", self.entropy),
         };
 
         println!("┏━{:━<l_space$}━┯{:━<r_space$}━━┓", "", "");
@@ -192,14 +192,17 @@ impl IDInfo {
 
     pub fn print_binary(&self) {
         match &self.integer {
-            Some(number) => {
-                let slice_offset: usize = ((128 - &self.size) / 8).into();
-                stdout().write_all(number.to_be_bytes().get(slice_offset..16).unwrap()).unwrap();
+            Some(number) if self.size <= 128 => {
+                let slice_offset: usize = ((128 - self.size) / 8).into();
+                if let Some(bytes) = number.to_be_bytes().get(slice_offset..16) {
+                    stdout().write_all(bytes).unwrap();
+                }
             }
-            None => match &self.hex {
+            _ => match &self.hex {
                 Some(value) => {
-                    let bytes = hex::decode(value).unwrap();
-                    stdout().write_all(&bytes).unwrap();
+                    if let Ok(bytes) = hex::decode(value) {
+                        stdout().write_all(&bytes).unwrap();
+                    }
                 }
                 None => println!("{}", self.standard),
             },

@@ -16,7 +16,8 @@ fn main() {
     let mut args = Args::parse();
 
     if args.compare {
-        compare_times(&args)
+        compare_times(&args);
+        return;
     }
 
     if args.id == "-" {

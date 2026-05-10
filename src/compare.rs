@@ -83,6 +83,4 @@ pub fn compare_times(args: &Args) {
             println!("{}", line);
         }
     }
-
-    std::process::exit(0);
 }

@@ -5,7 +5,7 @@ pub const NANOID_ALPHABET: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefgh
 
 pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
     let id_len = args.id.chars().count();
-    if id_len < 2 || id_len > 36 {
+    if !(2..=36).contains(&id_len) {
         return None;
     }
     let mut alphabet_info = "Default alphabet";

@@ -35,14 +35,17 @@ pub fn repeat_char(c: char, n: usize) -> String {
 }
 
 pub fn factor_size_hex_bits_color_from_text(text: &str) -> (u16, Option<String>, Option<String>, Option<String>) {
+    if !text.is_ascii() {
+        return (0, None, None, None);
+    }
     (
-        (text.chars().count() * 8) as u16,
+        (text.len() * 8) as u16,
         Some(hex::encode(text.as_bytes())),
         Some(text.as_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        Some(repeat_char('2', text.chars().count() * 8)),
+        Some(repeat_char('2', text.len() * 8)),
     )
 }
 

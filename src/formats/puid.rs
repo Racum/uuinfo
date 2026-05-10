@@ -27,7 +27,13 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
         sequence: Some(sequence as u128),
         hex,
         bits,
-        color_map: Some(format!("{}{}{}{}", repeat_char('3', 64), repeat_char('4', 48), repeat_char('5', 32), repeat_char('6', 48),)),
+        color_map: Some(format!(
+            "{}{}{}{}",
+            repeat_char('3', 64),
+            repeat_char('4', 48),
+            repeat_char('5', 32),
+            repeat_char('6', 48),
+        )),
         high_confidence: true,
         ..Default::default()
     })

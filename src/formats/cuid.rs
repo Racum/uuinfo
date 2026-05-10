@@ -41,7 +41,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
 
 pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
     let id_len = args.id.chars().count();
-    if id_len < 2 || id_len > 32 || !cuid2::is_cuid2(&args.id) {
+    if !(2..=32).contains(&id_len) || !cuid2::is_cuid2(&args.id) {
         return None;
     }
     let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text(&args.id);
