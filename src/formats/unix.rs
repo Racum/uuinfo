@@ -2,7 +2,7 @@ use std::fmt::Write;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::nanoseconds_to_iso8601;
+use crate::utils::{nanoseconds_to_iso8601, repeat_char};
 
 const RECENT_DAYS_AGO: u64 = 365 * 10;
 const RECENT_DAYS_AHEAD: u64 = 365;
@@ -95,7 +95,7 @@ fn parse_unix_core(args: &Args, assumption: TimestampUnitAssumption) -> Option<I
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("3333333333333333333333333333333333333333333333333333333333333333".to_string()),
+        color_map: Some(repeat_char('3', 64)),
         high_confidence: true,
         ..Default::default()
     })

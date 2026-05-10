@@ -2,7 +2,7 @@ use base58::{FromBase58, ToBase58};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo, IdFormat};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 #[derive(Debug)]
 pub struct SnowflakeAnnotation {
@@ -26,7 +26,7 @@ impl Default for SnowflakeAnnotation {
             node1: None,
             node2: None,
             sequence: None,
-            color_map: Some("0000000000000000000000000000000000000000000000000000000000000000".to_string()),
+            color_map: Some(repeat_char('0', 64)),
         }
     }
 }
@@ -47,7 +47,7 @@ pub fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Worker ID)", worker_id)),
         node2: None,
         sequence: Some(sequence as u128),
-        color_map: Some("0333333333333333333333333333333333333333334444444444666666666666".to_string()),
+        color_map: Some(repeat_char('0', 1) + &repeat_char('3', 41) + &repeat_char('4', 10) + &repeat_char('6', 12)),
     }
 }
 
@@ -68,7 +68,7 @@ pub fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Worker ID)", worker_id)),
         node2: Some(format!("{} (Process ID)", process_id)),
         sequence: Some(sequence as u128),
-        color_map: Some("3333333333333333333333333333333333333333334444455555666666666666".to_string()),
+        color_map: Some(repeat_char('3', 42) + &repeat_char('4', 5) + &repeat_char('5', 5) + &repeat_char('6', 12)),
     }
 }
 
@@ -88,7 +88,7 @@ pub fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Shard ID)", shard_id)),
         node2: None,
         sequence: Some(sequence as u128),
-        color_map: Some("3333333333333333333333333333333333333333344444444444446666666666".to_string()),
+        color_map: Some(repeat_char('3', 41) + &repeat_char('4', 13) + &repeat_char('6', 10)),
     }
 }
 
@@ -108,7 +108,7 @@ pub fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Machine ID)", machine_id)),
         node2: None,
         sequence: Some(sequence as u128),
-        color_map: Some("0333333333333333333333333333333333333333666666664444444444444444".to_string()),
+        color_map: Some(repeat_char('0', 1) + &repeat_char('3', 39) + &repeat_char('6', 8) + &repeat_char('4', 16)),
     }
 }
 
@@ -129,7 +129,7 @@ pub fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Node ID)", node_id)),
         node2: Some(format!("{} (Worker ID)", worker_id)),
         sequence: Some(sequence as u128),
-        color_map: Some("0333333333333333333333333333333333333333334444455555666666666666".to_string()),
+        color_map: Some(repeat_char('0', 1) + &repeat_char('3', 41) + &repeat_char('4', 5) + &repeat_char('5', 5) + &repeat_char('6', 12)),
     }
 }
 
@@ -149,7 +149,7 @@ pub fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Worker ID)", worker_id)),
         node2: None,
         sequence: Some(sequence as u128),
-        color_map: Some("0333333333333333333333333333333333333333334444444444666666666666".to_string()),
+        color_map: Some(repeat_char('0', 1) + &repeat_char('3', 41) + &repeat_char('4', 10) + &repeat_char('6', 12)),
     }
 }
 
@@ -168,7 +168,7 @@ pub fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
         node1: None,
         node2: None,
         sequence: Some(sequence as u128),
-        color_map: Some("3333333333333333333333333333333333333333333333336666666666666666".to_string()),
+        color_map: Some(repeat_char('3', 48) + &repeat_char('6', 16)),
     }
 }
 
@@ -188,7 +188,7 @@ pub fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
         node1: Some(generator.to_string()),
         node2: None,
         sequence: Some(sequence as u128),
-        color_map: Some("3333333333333333333333333333333366666666666666666666644444444444".to_string()),
+        color_map: Some(repeat_char('3', 32) + &repeat_char('6', 21) + &repeat_char('4', 11)),
     }
 }
 
@@ -209,7 +209,7 @@ pub fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
         node1: Some(format!("{} (Datacenter ID)", datacenter_id)),
         node2: Some(format!("{} (Worker ID)", worker_id)),
         sequence: Some(sequence as u128),
-        color_map: Some("3333333333333333333333333333333333333333334444455555666666666666".to_string()),
+        color_map: Some(repeat_char('3', 42) + &repeat_char('4', 5) + &repeat_char('5', 5) + &repeat_char('6', 12)),
     }
 }
 

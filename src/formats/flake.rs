@@ -2,7 +2,7 @@ use std::fmt::Write;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_flake(args: &Args) -> Option<IDInfo> {
     let uuid: Uuid;
@@ -53,7 +53,7 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("33333333333333333333333333333333333333333333333333333333333333334444444444444444444444444444444444444444444444446666666666666666".to_string()),
+        color_map: Some(repeat_char('3', 64) + &repeat_char('4', 48) + &repeat_char('6', 16)),
         high_confidence: from_base62 && id_int >> 108 == 0,
         ..Default::default()
     })

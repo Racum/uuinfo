@@ -3,7 +3,7 @@ use ulid::Ulid;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
 
 const PREFIX_ALPHABET: &str = "abcdefghijklmnopqrstuvwxyz_";
 
@@ -41,7 +41,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("33333333333333333333333333333333333333333333333311112222222222220022222222222222222222222222222222222222222222222222222222222222".to_string()),
+        color_map: Some(repeat_char('3', 48) + &repeat_char('1', 4) + &repeat_char('2', 12) + &repeat_char('0', 2) + &repeat_char('2', 62)),
         high_confidence: true,
         ..Default::default()
     })

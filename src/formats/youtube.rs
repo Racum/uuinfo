@@ -2,6 +2,7 @@ use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
+use crate::utils::repeat_char;
 
 /*
     The elements of YouTube’s alphabet match the URL_SAFE regex,
@@ -30,7 +31,7 @@ pub fn parse_youtube(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("2222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        color_map: Some(repeat_char('2', 64)),
         high_confidence: true,
         ..Default::default()
     })

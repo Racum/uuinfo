@@ -104,12 +104,7 @@ pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
         node1: Some(prefix),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}",
-            repeat_char('4', prefix_bits),
-            repeat_char('0', 8),
-            repeat_char('2', code_bits as usize),
-        )),
+        color_map: Some(repeat_char('4', prefix_bits) + &repeat_char('0', 8) + &repeat_char('2', code_bits as usize)),
         high_confidence: true,
         ..Default::default()
     })

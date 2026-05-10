@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_nano64(args: &Args) -> Option<IDInfo> {
     let hex_id = args.id.replace("-", "").to_uppercase();
@@ -26,7 +26,7 @@ pub fn parse_nano64(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("3333333333333333333333333333333333333333333322222222222222222222".to_string()),
+        color_map: Some(repeat_char('3', 44) + &repeat_char('2', 20)),
         high_confidence: true,
         ..Default::default()
     })

@@ -67,16 +67,7 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!(
-            "{}{}{}{}{}{}{}",
-            repeat_char('3', 48),
-            repeat_char('1', 3),
-            repeat_char('0', 5),
-            repeat_char('4', 16),
-            repeat_char('6', 12),
-            repeat_char('5', 16),
-            repeat_char('2', 60),
-        )),
+        color_map: Some(repeat_char('3', 48) + &repeat_char('1', 3) + &repeat_char('0', 5) + &repeat_char('4', 16) + &repeat_char('6', 12) + &repeat_char('5', 16) + &repeat_char('2', 60)),
         high_confidence: true,
         ..Default::default()
     })

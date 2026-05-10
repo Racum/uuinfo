@@ -86,7 +86,7 @@ pub fn parse_mac(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!("{}{}", repeat_char('4', 24), repeat_char('6', 24),)),
+        color_map: Some(repeat_char('4', 24) + &repeat_char('6', 24)),
         high_confidence: true,
         ..Default::default()
     })
@@ -112,12 +112,7 @@ pub fn parse_imei(args: &Args) -> Option<IDInfo> {
         sequence: Some(no_dashes[8..14].parse::<u128>().unwrap()),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}",
-            repeat_char('4', 64),
-            repeat_char('6', 48),
-            repeat_char('5', 8),
-        )),
+        color_map: Some(repeat_char('4', 64) + &repeat_char('6', 48) + &repeat_char('5', 8)),
         high_confidence: true,
         ..Default::default()
     })

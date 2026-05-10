@@ -27,13 +27,7 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
         sequence: Some(sequence as u128),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}{}",
-            repeat_char('3', 64),
-            repeat_char('4', 48),
-            repeat_char('5', 32),
-            repeat_char('6', 48),
-        )),
+        color_map: Some(repeat_char('3', 64) + &repeat_char('4', 48) + &repeat_char('5', 32) + &repeat_char('6', 48)),
         high_confidence: true,
         ..Default::default()
     })
@@ -53,7 +47,7 @@ pub fn parse_shortpuid(args: &Args) -> Option<IDInfo> {
         let node_id: u64 = BASE36.decode_var_len(&args.id[12..14])?;
         version = Some("Short puid with node ID".to_string());
         node1 = Some(format!("{} (Node ID)", node_id));
-        color_map = Some(format!("{}{}", repeat_char('3', 96), repeat_char('4', 16),));
+        color_map = Some(repeat_char('3', 96) + &repeat_char('4', 16));
     } else {
         version = Some("Short puid without node ID".to_string());
         node1 = None;

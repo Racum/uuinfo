@@ -2,7 +2,7 @@ use std::fmt::Write;
 use tsid::TSID;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
     let parsed: Option<String>;
@@ -37,7 +37,7 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("3333333333333333333333333333333333333333332222222222222222222222".to_string()),
+        color_map: Some(repeat_char('3', 42) + &repeat_char('2', 22)),
         high_confidence: from_base32,
         ..Default::default()
     })

@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {
@@ -30,7 +30,7 @@ pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("333333333333333333333333333333332222222222222222222222222222222222222222666666666666666666666666".to_string()),
+        color_map: Some(repeat_char('3', 32) + &repeat_char('2', 40) + &repeat_char('6', 24)),
         high_confidence: true,
         ..Default::default()
     })

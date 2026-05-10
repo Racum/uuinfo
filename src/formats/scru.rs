@@ -4,7 +4,7 @@ use std::fmt::Write;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     let mut id_type = "SCRU128";
@@ -39,7 +39,7 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("33333333333333333333333333333333333333333333333322222222222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        color_map: Some(repeat_char('3', 48) + &repeat_char('2', 80)),
         high_confidence: from_base36,
         ..Default::default()
     })
@@ -64,7 +64,7 @@ pub fn parse_scru64(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("0033333333333333333333333333333333333333444444444444444444444444".to_string()),
+        color_map: Some(repeat_char('0', 2) + &repeat_char('3', 38) + &repeat_char('4', 24)),
         high_confidence: true,
         ..Default::default()
     })

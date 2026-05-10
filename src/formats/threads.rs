@@ -2,7 +2,7 @@ use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_threads(args: &Args) -> Option<IDInfo> {
     let id_int: u64;
@@ -38,7 +38,7 @@ pub fn parse_threads(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("3333333333333333333333333333333333333333344444444444446666666666".to_string()),
+        color_map: Some(repeat_char('3', 41) + &repeat_char('4', 13) + &repeat_char('6', 10)),
         high_confidence: args.id.chars().count() == 11 || args.id.chars().count() == 12,
         ..Default::default()
     })

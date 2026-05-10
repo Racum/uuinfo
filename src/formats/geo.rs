@@ -3,6 +3,7 @@ use std::fmt::Write;
 use std::str::FromStr;
 
 use crate::schema::{Args, IDInfo};
+use crate::utils::repeat_char;
 
 pub fn parse_h3(args: &Args) -> Option<IDInfo> {
     let cell = H3Cell::from_str(&args.id).ok()?;
@@ -29,7 +30,7 @@ pub fn parse_h3(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("0111100044444444444555555555555555555555555555555555555555555555".to_string()),
+        color_map: Some(repeat_char('0', 1) + &repeat_char('1', 4) + &repeat_char('0', 3) + &repeat_char('4', 11) + &repeat_char('5', 45)),
         high_confidence: true,
         ..Default::default()
     })

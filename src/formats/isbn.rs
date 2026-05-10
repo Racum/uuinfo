@@ -25,13 +25,7 @@ pub fn parse_isbn13(args: &Args) -> Option<IDInfo> {
         sequence: parts.get(3)?.parse::<u128>().ok(),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}{}",
-            (0..(node1_size * 8)).map(|_| "4").collect::<String>(),
-            (0..(node2_size * 8)).map(|_| "5").collect::<String>(),
-            (0..(sequence_size * 8)).map(|_| "6").collect::<String>(),
-            repeat_char('0', 8),
-        )),
+        color_map: Some(repeat_char('4', node1_size * 8) + &repeat_char('5', node2_size * 8) + &repeat_char('6', sequence_size * 8) + &repeat_char('0', 8)),
         high_confidence: true,
         ..Default::default()
     })
@@ -57,13 +51,7 @@ pub fn parse_isbn10(args: &Args) -> Option<IDInfo> {
         sequence: parts.get(2)?.parse::<u128>().ok(),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}{}",
-            (0..(node1_size * 8)).map(|_| "4").collect::<String>(),
-            (0..(node2_size * 8)).map(|_| "5").collect::<String>(),
-            (0..(sequence_size * 8)).map(|_| "6").collect::<String>(),
-            repeat_char('0', 8),
-        )),
+        color_map: Some(repeat_char('4', node1_size * 8) + &repeat_char('5', node2_size * 8) + &repeat_char('6', sequence_size * 8) + &repeat_char('0', 8)),
         high_confidence: true,
         ..Default::default()
     })

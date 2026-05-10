@@ -3,7 +3,7 @@ use base64::{Engine as _, alphabet, engine};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
 
 const ALPHABET: &str = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
@@ -40,7 +40,7 @@ pub fn parse_pushid(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("333333333333333333333333333333333333333333333333222222222222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        color_map: Some(repeat_char('3', 48) + &repeat_char('2', 72)),
         high_confidence: true,
         ..Default::default()
     })

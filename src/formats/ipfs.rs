@@ -27,7 +27,7 @@ pub fn parse_ipfs(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!("{}{}", repeat_char('1', version_map), repeat_char('2', entropy_map))),
+        color_map: Some(repeat_char('1', version_map) + &repeat_char('2', entropy_map)),
         high_confidence: true,
         ..Default::default()
     })

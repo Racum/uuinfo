@@ -29,7 +29,7 @@ pub fn parse_gdocs(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!("000000{}00", repeat_char('2', 256))),
+        color_map: Some(repeat_char('0', 6) + &repeat_char('2', 256) + &repeat_char('0', 2)),
         high_confidence: true,
         ..Default::default()
     })

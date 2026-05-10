@@ -2,7 +2,7 @@ use std::fmt::Write;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_datadog(args: &Args) -> Option<IDInfo> {
     let uuid = Uuid::try_parse(&args.id).ok()?;
@@ -31,7 +31,7 @@ pub fn parse_datadog(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("33333333333333333333333333333333000000000000000000000000000000002222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        color_map: Some(repeat_char('3', 32) + &repeat_char('0', 32) + &repeat_char('2', 64)),
         high_confidence: true,
         ..Default::default()
     })

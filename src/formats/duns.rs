@@ -2,6 +2,7 @@ use regex::Regex;
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
+use crate::utils::repeat_char;
 
 pub fn parse_duns(args: &Args) -> Option<IDInfo> {
     if !Regex::new(r"^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$").unwrap().is_match(&args.id) {
@@ -21,7 +22,7 @@ pub fn parse_duns(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("2222222222222222222222222222222222222222222222222222222222222222".to_string()),
+        color_map: Some(repeat_char('2', 64)),
         high_confidence: true,
         ..Default::default()
     })

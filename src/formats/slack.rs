@@ -45,11 +45,7 @@ pub fn parse_slack(args: &Args) -> Option<IDInfo> {
         node1: Some(format!("{} ({})", prefix, version)),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}",
-            repeat_char('4', offset * 8),
-            repeat_char('2', (id_len - offset) * 8),
-        )),
+        color_map: Some(repeat_char('4', offset * 8) + &repeat_char('2', (id_len - offset) * 8)),
         high_confidence: true,
         ..Default::default()
     })

@@ -26,14 +26,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
         node1: Some(format!("{} (Fingerprint)", fingerprint)),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}{}{}",
-            repeat_char('1', 8),
-            repeat_char('3', 64),
-            repeat_char('6', 32),
-            repeat_char('4', 32),
-            repeat_char('2', 64),
-        )),
+        color_map: Some(repeat_char('1', 8) + &repeat_char('3', 64) + &repeat_char('6', 32) + &repeat_char('4', 32) + &repeat_char('2', 64)),
         high_confidence: true,
         ..Default::default()
     })

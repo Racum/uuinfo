@@ -1,5 +1,5 @@
-use crate::utils::repeat_char;
 use crate::schema::{Args, IDInfo};
+use crate::utils::repeat_char;
 use std::fmt::Write;
 
 pub fn parse_swhid(args: &Args) -> Option<IDInfo> {

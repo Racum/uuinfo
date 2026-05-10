@@ -3,7 +3,7 @@ use upid::Upid;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_upid(args: &Args) -> Option<IDInfo> {
     let mut id_type = "UPID";
@@ -39,7 +39,7 @@ pub fn parse_upid(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("33333333333333333333333333333333333333332222222222222222222222222222222222222222222222222222222222222222444444444444444444441111".to_string()),
+        color_map: Some(repeat_char('3', 40) + &repeat_char('2', 64) + &repeat_char('4', 20) + &repeat_char('1', 4)),
         high_confidence: from_base32,
         ..Default::default()
     })

@@ -2,6 +2,7 @@ use basen::Base;
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
+use crate::utils::repeat_char;
 
 pub const UPPER_BASE36: Base<36> = Base::new(b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").unwrap();
 
@@ -24,7 +25,7 @@ pub fn parse_asin(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some("6666666666666666666666666666666666666666666666666666666666666666".to_string()),
+        color_map: Some(repeat_char('6', 64)),
         high_confidence: id_int >= 1117159523352576,
         ..Default::default()
     })

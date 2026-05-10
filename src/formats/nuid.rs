@@ -17,7 +17,7 @@ pub fn parse_nuid(args: &Args) -> Option<IDInfo> {
         node1: Some(args.id[12..22].to_string()),
         hex,
         bits,
-        color_map: Some(format!("{}{}", repeat_char('2', 96), repeat_char('4', 80))),
+        color_map: Some(repeat_char('2', 96) + &repeat_char('4', 80)),
         high_confidence: true,
         ..Default::default()
     })
