@@ -4,7 +4,8 @@ use crate::utils::factor_size_hex_bits_color_from_text;
 pub const NANOID_ALPHABET: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
 pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
-    if args.id.chars().count() < 2 || args.id.chars().count() > 36 {
+    let id_len = args.id.chars().count();
+    if id_len < 2 || id_len > 36 {
         return None;
     }
     let mut alphabet_info = "Default alphabet";
@@ -21,11 +22,11 @@ pub fn parse_nanoid(args: &Args) -> Option<IDInfo> {
         return None;
     }
     let mut default_len = false;
-    let version = if args.id.chars().count() == 21 {
+    let version = if id_len == 21 {
         default_len = true;
         Some(format!("{}, default length", alphabet_info))
     } else {
-        Some(format!("{}, custom length ({})", alphabet_info, args.id.chars().count()))
+        Some(format!("{}, custom length ({})", alphabet_info, id_len))
     };
     let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text(&args.id);
 

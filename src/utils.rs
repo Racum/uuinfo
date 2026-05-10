@@ -23,12 +23,15 @@ pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: Option<u64>) -> (Stri
 }
 
 pub fn nanoseconds_to_iso8601(ns: u64) -> (String, String) {
-    let timestamp: f64 = ns as f64 / 1_000_000_000.0;
-    let secs = timestamp.trunc() as i64;
-    let nanos: u32 = timestamp.fract().round() as u32;
+    let secs = (ns / 1_000_000_000) as i64;
+    let nanos = (ns % 1_000_000_000) as u32;
     let dt: DateTime<Utc> = DateTime::from_timestamp(secs, nanos).unwrap();
-    let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
-    (format!("{:.3}", timestamp), datetime.to_string())
+    let datetime = dt.to_rfc3339_opts(SecondsFormat::Nanos, true);
+    (format!("{}.{:09}", secs, nanos), datetime)
+}
+
+pub fn repeat_char(c: char, n: usize) -> String {
+    std::iter::repeat_n(c, n).collect()
 }
 
 pub fn factor_size_hex_bits_color_from_text(text: &str) -> (u16, Option<String>, Option<String>, Option<String>) {
@@ -39,7 +42,7 @@ pub fn factor_size_hex_bits_color_from_text(text: &str) -> (u16, Option<String>,
             let _ = write!(output, "{c:08b}");
             output
         })),
-        Some((0..(text.chars().count() * 8)).map(|_| "2").collect::<String>()),
+        Some(repeat_char('2', text.chars().count() * 8)),
     )
 }
 
@@ -112,8 +115,21 @@ mod bits64 {
     #[test]
     fn test_nanoseconds_to_iso8601() {
         let (ts, dt) = nanoseconds_to_iso8601(1734971723000000000);
-        assert_eq!(ts, "1734971723.000");
-        assert_eq!(dt, "2024-12-23T16:35:23.000Z");
+        assert_eq!(ts, "1734971723.000000000");
+        assert_eq!(dt, "2024-12-23T16:35:23.000000000Z");
+    }
+
+    #[test]
+    fn test_nanoseconds_to_iso8601_with_nanos() {
+        let (ts, dt) = nanoseconds_to_iso8601(1734971723123456789);
+        assert_eq!(ts, "1734971723.123456789");
+        assert_eq!(dt, "2024-12-23T16:35:23.123456789Z");
+    }
+
+    #[test]
+    fn test_repeat_char() {
+        assert_eq!(repeat_char('3', 5), "33333");
+        assert_eq!(repeat_char('0', 0), "");
     }
 
     #[test]

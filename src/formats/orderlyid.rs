@@ -1,5 +1,5 @@
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
 use std::fmt::Write;
 
 use base32::Alphabet;
@@ -69,13 +69,13 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
         })),
         color_map: Some(format!(
             "{}{}{}{}{}{}{}",
-            (0..48).map(|_| "3").collect::<String>(),
-            (0..3).map(|_| "1").collect::<String>(),
-            (0..5).map(|_| "0").collect::<String>(),
-            (0..16).map(|_| "4").collect::<String>(),
-            (0..12).map(|_| "6").collect::<String>(),
-            (0..16).map(|_| "5").collect::<String>(),
-            (0..60).map(|_| "2").collect::<String>(),
+            repeat_char('3', 48),
+            repeat_char('1', 3),
+            repeat_char('0', 5),
+            repeat_char('4', 16),
+            repeat_char('6', 12),
+            repeat_char('5', 16),
+            repeat_char('2', 60),
         )),
         high_confidence: true,
         ..Default::default()

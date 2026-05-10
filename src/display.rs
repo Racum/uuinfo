@@ -8,6 +8,29 @@ use timediff::TimeDiff;
 
 use crate::schema::{Args, IDInfo, Output};
 
+fn truncate_to_millis(ts: &str) -> &str {
+    match ts.find('.') {
+        Some(dot) => {
+            let end = (dot + 4).min(ts.len());
+            &ts[..end]
+        }
+        None => ts,
+    }
+}
+
+fn truncate_datetime_to_millis(dt: &str) -> String {
+    if let Some(dot) = dt.find('.') {
+        let after_dot = &dt[dot + 1..];
+        let non_digit_pos = after_dot.find(|c: char| !c.is_ascii_digit()).unwrap_or(after_dot.len());
+        let digits = &after_dot[..non_digit_pos];
+        let suffix = &after_dot[non_digit_pos..];
+        let millis: &str = if digits.len() >= 3 { &digits[..3] } else { digits };
+        format!("{}.{}{}", &dt[..dot], millis, suffix)
+    } else {
+        dt.to_string()
+    }
+}
+
 impl std::fmt::Display for Output {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.to_possible_value().expect("-").get_name().fmt(f)
@@ -18,7 +41,11 @@ impl IDInfo {
     #[allow(clippy::indexing_slicing)]
     pub fn print_card(&self, args: &Args) {
         let timestamp = match self.timestamp.as_deref() {
-            Some(value) => format!("{} ({})", value, self.datetime.as_deref().unwrap_or("-")),
+            Some(value) => {
+                let ts_display = truncate_to_millis(value);
+                let dt_display = truncate_datetime_to_millis(self.datetime.as_deref().unwrap_or("-"));
+                format!("{} ({})", ts_display, dt_display)
+            }
             None => "-".to_string(),
         };
 
@@ -94,32 +121,34 @@ impl IDInfo {
         let mut bin_lines: Vec<String> = vec![];
         let mut hex_lines: Vec<String> = vec![];
 
-        match self.bits.clone() {
-            Some(bits) => {
+        match (&self.bits, &self.color_map, &self.hex) {
+            (Some(bits), Some(color_map), Some(hex)) => {
                 let remaining_bits = (32 - (bits.chars().count() % 32)) % 32;
-                let bits = format!("{}{}", bits, (0..remaining_bits).map(|_| ".").collect::<String>());
-                let color_map = Some(format!("{}{}", self.color_map.clone().unwrap(), (0..remaining_bits).map(|_| "0").collect::<String>()));
-                let hex = format!("{}{}", self.hex.clone().unwrap(), (0..remaining_bits / 4).map(|_| ".").collect::<String>());
+                let padded_bits: String = format!("{}{}", bits, ".".repeat(remaining_bits));
+                let padded_color_map: String = format!("{}{}", color_map, "0".repeat(remaining_bits));
+                let padded_hex: String = format!("{}{}", hex, ".".repeat(remaining_bits / 4));
+                let hex_chars: Vec<char> = padded_hex.chars().collect();
+                let color_chars: Vec<char> = padded_color_map.chars().collect();
 
-                let mut bin_line: String = "".to_string();
-                let mut hex_line: String = "".to_string();
-                for (i, c) in bits.chars().enumerate() {
-                    let colored_bit = match color_map.clone() {
-                        Some(color_map) => match color_map.chars().nth(i).unwrap() {
-                            '1' => format!("{}", c.to_string().yellow()),
-                            '2' => format!("{}", c.to_string().green()),
-                            '3' => format!("{}", c.to_string().cyan()),
-                            '4' => format!("{}", c.to_string().purple()),
-                            '5' => format!("{}", c.to_string().red()),
-                            '6' => format!("{}", c.to_string().blue()),
-                            _ => format!("{}", c.to_string().normal()),
-                        },
-                        None => c.to_string(),
+                let mut bin_line = String::new();
+                let mut hex_line = String::new();
+                for (i, c) in padded_bits.chars().enumerate() {
+                    let cs = c.to_string();
+                    let colored_bit = match color_chars.get(i) {
+                        Some('1') => format!("{}", cs.yellow()),
+                        Some('2') => format!("{}", cs.green()),
+                        Some('3') => format!("{}", cs.cyan()),
+                        Some('4') => format!("{}", cs.purple()),
+                        Some('5') => format!("{}", cs.red()),
+                        Some('6') => format!("{}", cs.blue()),
+                        _ => format!("{}", cs.normal()),
                     };
                     bin_line.push_str(&colored_bit);
                     if ((i + 1) % 4) == 0 {
                         bin_line.push(' ');
-                        hex_line.push(hex.clone().chars().nth(i / 4).unwrap());
+                        if let Some(&hc) = hex_chars.get(i / 4) {
+                            hex_line.push(hc);
+                        }
                     }
                     if ((i + 1) % 8) == 0 {
                         bin_line.push(' ');
@@ -131,12 +160,12 @@ impl IDInfo {
                     if ((i + 1) % 32) == 0 {
                         bin_lines.push(bin_line.trim().to_string());
                         hex_lines.push(hex_line.trim().to_string());
-                        bin_line = "".to_string();
-                        hex_line = "".to_string();
+                        bin_line = String::new();
+                        hex_line = String::new();
                     }
                 }
             }
-            None => {
+            _ => {
                 bin_lines.push("No bits (non-numeric ID)".to_string());
                 hex_lines.push("No hex".to_string());
             }

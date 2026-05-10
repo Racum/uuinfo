@@ -139,7 +139,7 @@ mod tests {
             .unwrap();
             assert_eq!(result.id_type, "Unix timestamp".to_string());
             assert_eq!(result.version.unwrap(), version.to_string());
-            assert_eq!(result.timestamp.unwrap(), "1735395353.000".to_string());
+            assert_eq!(result.timestamp.unwrap(), "1735395353.000000000".to_string());
         }
 
         _assert("1735395353", "Assuming seconds");
@@ -156,7 +156,7 @@ mod tests {
         })
         .unwrap();
         assert_eq!(result.version.unwrap(), "As seconds".to_string());
-        assert_eq!(result.timestamp.unwrap(), "1735395353.000".to_string());
+        assert_eq!(result.timestamp.unwrap(), "1735395353.000000000".to_string());
     }
 
     #[test]
@@ -167,7 +167,7 @@ mod tests {
         })
         .unwrap();
         assert_eq!(result.version.unwrap(), "As milliseconds".to_string());
-        assert_eq!(result.timestamp.unwrap(), "1735395353.000".to_string());
+        assert_eq!(result.timestamp.unwrap(), "1735395353.000000000".to_string());
     }
 
     #[test]
@@ -178,7 +178,7 @@ mod tests {
         })
         .unwrap();
         assert_eq!(result.version.unwrap(), "As microseconds".to_string());
-        assert_eq!(result.timestamp.unwrap(), "1735395353.000".to_string());
+        assert_eq!(result.timestamp.unwrap(), "1735395353.000000000".to_string());
     }
 
     #[test]
@@ -189,7 +189,7 @@ mod tests {
         })
         .unwrap();
         assert_eq!(result.version.unwrap(), "As nanoseconds".to_string());
-        assert_eq!(result.timestamp.unwrap(), "1735395353.000".to_string());
+        assert_eq!(result.timestamp.unwrap(), "1735395353.000000000".to_string());
     }
 
     #[test]
@@ -200,7 +200,7 @@ mod tests {
         })
         .unwrap();
         assert_eq!(result.version.unwrap(), "Assuming seconds".to_string());
-        assert_eq!(result.timestamp.unwrap(), "1735395353.000".to_string());
+        assert_eq!(result.timestamp.unwrap(), "1735395353.000000000".to_string());
     }
 
     #[test]

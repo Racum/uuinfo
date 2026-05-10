@@ -4,7 +4,7 @@ use std::net::{Ipv4Addr, Ipv6Addr};
 use std::{fmt::Write, str::FromStr};
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::factor_size_hex_bits_color_from_text;
+use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
 pub fn parse_ipv4(args: &Args) -> Option<IDInfo> {
     let ip = Ipv4Addr::from_str(&args.id).ok()?;
@@ -28,7 +28,7 @@ pub fn parse_ipv4(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some((0..32).map(|_| "0").collect::<String>()),
+        color_map: Some(repeat_char('0', 32)),
         high_confidence: true,
         ..Default::default()
     })
@@ -53,7 +53,7 @@ pub fn parse_ipv6(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some((0..128).map(|_| "0").collect::<String>()),
+        color_map: Some(repeat_char('0', 128)),
         high_confidence: true,
         ..Default::default()
     })
@@ -86,7 +86,7 @@ pub fn parse_mac(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!("{}{}", (0..24).map(|_| "4").collect::<String>(), (0..24).map(|_| "6").collect::<String>(),)),
+        color_map: Some(format!("{}{}", repeat_char('4', 24), repeat_char('6', 24),)),
         high_confidence: true,
         ..Default::default()
     })
@@ -112,12 +112,7 @@ pub fn parse_imei(args: &Args) -> Option<IDInfo> {
         sequence: Some(no_dashes[8..14].parse::<u128>().unwrap()),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}",
-            (0..64).map(|_| "4").collect::<String>(),
-            (0..48).map(|_| "6").collect::<String>(),
-            (0..8).map(|_| "5").collect::<String>(),
-        )),
+        color_map: Some(format!("{}{}{}", repeat_char('4', 64), repeat_char('6', 48), repeat_char('5', 8),)),
         high_confidence: true,
         ..Default::default()
     })

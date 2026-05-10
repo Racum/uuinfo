@@ -1,3 +1,4 @@
+use crate::utils::repeat_char;
 use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use std::fmt::Write;
 
@@ -28,7 +29,7 @@ pub fn parse_gdocs(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!("000000{}00", (0..256).map(|_| "2").collect::<String>())),
+        color_map: Some(format!("000000{}00", repeat_char('2', 256))),
         high_confidence: true,
         ..Default::default()
     })

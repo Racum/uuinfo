@@ -1,7 +1,7 @@
 use sqids::Sqids;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::factor_size_hex_bits_color_from_text;
+use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
 pub fn parse_sqid(args: &Args) -> Option<IDInfo> {
     let mut version: Option<String> = Some("Default alphabet".to_string());
@@ -35,7 +35,7 @@ pub fn parse_sqid(args: &Args) -> Option<IDInfo> {
         node1: Some(numbers.iter().map(|x| x.to_string()).collect::<Vec<_>>().join(", ")),
         hex,
         bits,
-        color_map: Some((0..size).map(|_| "4").collect::<String>()),
+        color_map: Some(repeat_char('4', size as usize)),
         high_confidence: default_alpha && numbers.len() > 1 && !numbers.iter().skip(1).all(|x| *x == 0),
         ..Default::default()
     })

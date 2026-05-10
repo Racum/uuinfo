@@ -19,7 +19,7 @@ fn main() {
         compare_times(&args)
     }
 
-    if &args.id == "-" {
+    if args.id == "-" {
         let mut buffer = String::new();
         if io::stdin().read_line(&mut buffer).is_ok()
             && let Some(value) = buffer.split('\n').next()
@@ -38,21 +38,14 @@ fn main() {
             println!("Unknown ID type.");
         }
     } else {
-        match &args.force {
-            Some(_) => match force_format(&args) {
-                Some(mut value) => value.print(&args),
-                None => {
-                    println!("Invalid ID for this format.");
-                    std::process::exit(1);
-                }
-            },
-            None => match auto_detect(&args) {
-                Some(mut value) => value.print(&args),
-                None => {
-                    println!("Unknown ID type.");
-                    std::process::exit(1);
-                }
-            },
-        };
+        let result = if args.force.is_some() { force_format(&args) } else { auto_detect(&args) };
+        match result {
+            Some(mut value) => value.print(&args),
+            None => {
+                let msg = if args.force.is_some() { "Invalid ID for this format." } else { "Unknown ID type." };
+                println!("{}", msg);
+                std::process::exit(1);
+            }
+        }
     }
 }

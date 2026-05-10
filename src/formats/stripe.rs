@@ -1,10 +1,11 @@
 use crate::schema::{Args, IDInfo};
-use crate::utils::factor_size_hex_bits_color_from_text;
+use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
 const ALPHA_NUM: &str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
-    if args.id.chars().count() > 43 {
+    let id_len = args.id.chars().count();
+    if id_len > 43 {
         return None;
     }
     let parts: &Vec<&str> = &args.id.split('_').collect();
@@ -91,7 +92,7 @@ pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
     };
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
     let prefix_bits = prefix.chars().count() * 8;
-    let code_bits = ((args.id.chars().count() * 8) - prefix_bits - 8) as u16;
+    let code_bits = ((id_len * 8) - prefix_bits - 8) as u16;
 
     Some(IDInfo {
         id_type: "Stripe ID".to_string(),
@@ -103,12 +104,7 @@ pub fn parse_stripe(args: &Args) -> Option<IDInfo> {
         node1: Some(prefix),
         hex,
         bits,
-        color_map: Some(format!(
-            "{}{}{}",
-            (0..prefix_bits).map(|_| "4").collect::<String>(),
-            (0..8).map(|_| "0").collect::<String>(),
-            (0..code_bits).map(|_| "2").collect::<String>(),
-        )),
+        color_map: Some(format!("{}{}{}", repeat_char('4', prefix_bits), repeat_char('0', 8), repeat_char('2', code_bits as usize),)),
         high_confidence: true,
         ..Default::default()
     })

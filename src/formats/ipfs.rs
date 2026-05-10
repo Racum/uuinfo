@@ -3,6 +3,7 @@ use std::fmt::Write;
 use std::str::FromStr;
 
 use crate::schema::{Args, IDInfo};
+use crate::utils::repeat_char;
 
 pub fn parse_ipfs(args: &Args) -> Option<IDInfo> {
     let cid = Cid::from_str(&args.id).ok()?;
@@ -26,11 +27,7 @@ pub fn parse_ipfs(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some(format!(
-            "{}{}",
-            (0..(version_map)).map(|_| "1").collect::<String>(),
-            (0..(entropy_map)).map(|_| "2").collect::<String>()
-        )),
+        color_map: Some(format!("{}{}", repeat_char('1', version_map), repeat_char('2', entropy_map))),
         high_confidence: true,
         ..Default::default()
     })

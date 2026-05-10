@@ -74,7 +74,7 @@ pub fn compare_times(args: &Args) {
         println!("This ID is not valid in any time-aware format.");
     }
 
-    all_times.sort_by(|a, b| a.timestamp.partial_cmp(&b.timestamp).unwrap());
+    all_times.sort_by(|a, b| a.timestamp.total_cmp(&b.timestamp));
     for time in all_times {
         let line = format!("- {} {}", time.datetime, time.name);
         if time.name == *NOW_DISPLAY {

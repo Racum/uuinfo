@@ -1,3 +1,4 @@
+use crate::utils::repeat_char;
 use std::fmt::Write;
 use uuid::Uuid;
 
@@ -23,7 +24,7 @@ pub fn parse_spotify(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some((0..128).map(|_| "2").collect::<String>()),
+        color_map: Some(repeat_char('2', 128)),
         high_confidence: true,
         ..Default::default()
     })

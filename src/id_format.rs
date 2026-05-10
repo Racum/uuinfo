@@ -111,7 +111,7 @@ pub fn parse_all(args: &Args) -> Vec<IDInfo> {
     valid_ids
 }
 
-pub fn pick_first_valid(args: &Args, parsers: Vec<ParseFunction>) -> Option<IDInfo> {
+pub fn pick_first_valid(args: &Args, parsers: &[ParseFunction]) -> Option<IDInfo> {
     for parser in parsers {
         if let Some(value) = parser(args) {
             return Some(value);
@@ -124,36 +124,36 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
     if args.id.trim().parse::<u128>().is_ok() {
         // Numeric:
-        id_info = pick_first_valid(args, vec![parse_isbn, parse_imei, parse_unix_recent, parse_snowflake, parse_uuid_integer]);
+        id_info = pick_first_valid(args, &[parse_isbn, parse_imei, parse_unix_recent, parse_snowflake, parse_uuid_integer]);
     } else {
         // Fixed length:
         id_info = match args.id.chars().count() {
             56 | 64 | 96 | 128 => parse_hash(args),
             44 => parse_gdocs(args),
             40 => parse_ksuid(args),
-            32 | 36 => pick_first_valid(args, vec![parse_datadog, parse_uuid]),
-            27 => pick_first_valid(args, vec![parse_upid, parse_ksuid]),
+            32 | 36 => pick_first_valid(args, &[parse_datadog, parse_uuid]),
+            27 => pick_first_valid(args, &[parse_upid, parse_ksuid]),
             26 => parse_ulid_any(args),
-            25 => pick_first_valid(args, vec![parse_cuid1, parse_scru128]),
-            24 => pick_first_valid(args, vec![parse_objectid, parse_puid, parse_base64_uuid]),
-            22 => pick_first_valid(args, vec![parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid, parse_spotify]),
+            25 => pick_first_valid(args, &[parse_cuid1, parse_scru128]),
+            24 => pick_first_valid(args, &[parse_objectid, parse_puid, parse_base64_uuid]),
+            22 => pick_first_valid(args, &[parse_short_uuid, parse_timeflake_base62, parse_base64_uuid, parse_nuid, parse_spotify]),
             21 => parse_nanoid(args),
-            20 => pick_first_valid(args, vec![parse_xid, parse_stripe, parse_pushid]),
+            20 => pick_first_valid(args, &[parse_xid, parse_stripe, parse_pushid]),
             18 => parse_flake(args),
             17 | 16 => parse_nano64(args),
             15 => parse_h3(args),
             14 => parse_shortpuid(args),
-            13 => pick_first_valid(args, vec![parse_tid, parse_tsid]),
-            12 => pick_first_valid(args, vec![parse_scru64, parse_shortpuid]),
-            11 => pick_first_valid(args, vec![parse_slack, parse_youtube, parse_snowid]),
-            10 => pick_first_valid(args, vec![parse_asin, parse_snowid]),
+            13 => pick_first_valid(args, &[parse_tid, parse_tsid]),
+            12 => pick_first_valid(args, &[parse_scru64, parse_shortpuid]),
+            11 => pick_first_valid(args, &[parse_slack, parse_youtube, parse_snowid]),
+            10 => pick_first_valid(args, &[parse_asin, parse_snowid]),
             _ => None,
         };
         // Variable length:
         id_info = match id_info {
             Some(value) => Some(value),
             #[rustfmt::skip]
-            None => pick_first_valid(args, vec![
+            None => pick_first_valid(args, &[
                 parse_orderlyid,
                 parse_isbn,
                 parse_typeid,

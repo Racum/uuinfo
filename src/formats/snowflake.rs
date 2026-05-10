@@ -32,7 +32,9 @@ impl Default for SnowflakeAnnotation {
 }
 
 pub fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 1, 41);
     let worker_id = bits64(id_int, 42, 10);
     let sequence = bits64(id_int, 52, 12);
@@ -50,7 +52,9 @@ pub fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 0, 42);
     let worker_id = bits64(id_int, 42, 5);
     let process_id = bits64(id_int, 47, 5);
@@ -69,7 +73,9 @@ pub fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 0, 41);
     let shard_id = bits64(id_int, 41, 13);
     let sequence = bits64(id_int, 54, 10);
@@ -87,7 +93,9 @@ pub fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 1, 39);
     let sequence = bits64(id_int, 40, 8);
     let machine_id = bits64(id_int, 48, 16);
@@ -105,7 +113,9 @@ pub fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 1, 41);
     let node_id = bits64(id_int, 42, 5);
     let worker_id = bits64(id_int, 47, 5);
@@ -124,7 +134,9 @@ pub fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 1, 41);
     let worker_id = bits64(id_int, 42, 10);
     let sequence = bits64(id_int, 52, 12);
@@ -142,7 +154,9 @@ pub fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 0, 48);
     let sequence = bits64(id_int, 48, 16);
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
@@ -159,7 +173,9 @@ pub fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 0, 32);
     let sequence = bits64(id_int, 32, 21);
     let generator = bits64(id_int, 53, 11);
@@ -177,7 +193,9 @@ pub fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
 }
 
 pub fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
-    let id_int: u64 = args.id.trim().parse().unwrap();
+    let Some(id_int) = args.id.trim().parse::<u64>().ok() else {
+        return SnowflakeAnnotation::default();
+    };
     let timestamp_raw = bits64(id_int, 0, 42);
     let datacenter_id = bits64(id_int, 42, 5);
     let worker_id = bits64(id_int, 47, 5);

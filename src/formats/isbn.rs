@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use crate::id_format::pick_first_valid;
 use crate::schema::{Args, IDInfo};
-use crate::utils::factor_size_hex_bits_color_from_text;
+use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
 pub fn parse_isbn13(args: &Args) -> Option<IDInfo> {
     let id = Isbn13::from_str(&args.id).ok()?;
@@ -30,7 +30,7 @@ pub fn parse_isbn13(args: &Args) -> Option<IDInfo> {
             (0..(node1_size * 8)).map(|_| "4").collect::<String>(),
             (0..(node2_size * 8)).map(|_| "5").collect::<String>(),
             (0..(sequence_size * 8)).map(|_| "6").collect::<String>(),
-            (0..8).map(|_| "0").collect::<String>(),
+            repeat_char('0', 8),
         )),
         high_confidence: true,
         ..Default::default()
@@ -62,7 +62,7 @@ pub fn parse_isbn10(args: &Args) -> Option<IDInfo> {
             (0..(node1_size * 8)).map(|_| "4").collect::<String>(),
             (0..(node2_size * 8)).map(|_| "5").collect::<String>(),
             (0..(sequence_size * 8)).map(|_| "6").collect::<String>(),
-            (0..8).map(|_| "0").collect::<String>(),
+            repeat_char('0', 8),
         )),
         high_confidence: true,
         ..Default::default()
@@ -70,5 +70,5 @@ pub fn parse_isbn10(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_isbn(args: &Args) -> Option<IDInfo> {
-    pick_first_valid(args, vec![parse_isbn13, parse_isbn10])
+    pick_first_valid(args, &[parse_isbn13, parse_isbn10])
 }

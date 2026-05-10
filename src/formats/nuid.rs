@@ -1,5 +1,5 @@
 use crate::schema::{Args, IDInfo};
-use crate::utils::factor_size_hex_bits_color_from_text;
+use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
 const ALPHABET: &str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -17,7 +17,7 @@ pub fn parse_nuid(args: &Args) -> Option<IDInfo> {
         node1: Some(args.id[12..22].to_string()),
         hex,
         bits,
-        color_map: Some(format!("{}{}", (0..(12 * 8)).map(|_| "2").collect::<String>(), (0..(10 * 8)).map(|_| "4").collect::<String>())),
+        color_map: Some(format!("{}{}", repeat_char('2', 96), repeat_char('4', 80))),
         high_confidence: true,
         ..Default::default()
     })

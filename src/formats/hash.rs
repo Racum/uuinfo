@@ -1,3 +1,4 @@
+use crate::utils::repeat_char;
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
@@ -31,7 +32,7 @@ pub fn parse_hash(args: &Args) -> Option<IDInfo> {
             let _ = write!(output, "{c:08b}");
             output
         })),
-        color_map: Some((0..bits).map(|_| "2").collect::<String>()),
+        color_map: Some(repeat_char('2', bits)),
         high_confidence: false,
         ..Default::default()
     })

@@ -1,7 +1,7 @@
 use basen::BASE36;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601};
+use crate::utils::{factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 25 || &args.id[0..1] != "c" {
@@ -28,11 +28,11 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
         bits,
         color_map: Some(format!(
             "{}{}{}{}{}",
-            (0..8).map(|_| "1").collect::<String>(),
-            (0..64).map(|_| "3").collect::<String>(),
-            (0..32).map(|_| "6").collect::<String>(),
-            (0..32).map(|_| "4").collect::<String>(),
-            (0..64).map(|_| "2").collect::<String>(),
+            repeat_char('1', 8),
+            repeat_char('3', 64),
+            repeat_char('6', 32),
+            repeat_char('4', 32),
+            repeat_char('2', 64),
         )),
         high_confidence: true,
         ..Default::default()
@@ -40,7 +40,8 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
 }
 
 pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
-    if args.id.chars().count() < 2 || args.id.chars().count() > 32 || !cuid2::is_cuid2(&args.id) {
+    let id_len = args.id.chars().count();
+    if id_len < 2 || id_len > 32 || !cuid2::is_cuid2(&args.id) {
         return None;
     }
     let (size, hex, bits, color_map) = factor_size_hex_bits_color_from_text(&args.id);
@@ -55,7 +56,7 @@ pub fn parse_cuid2(args: &Args) -> Option<IDInfo> {
         hex,
         bits,
         color_map,
-        high_confidence: args.id.chars().count() == 24,
+        high_confidence: id_len == 24,
         ..Default::default()
     })
 }
