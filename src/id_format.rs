@@ -10,6 +10,7 @@ use crate::formats::gdocs::parse_gdocs;
 use crate::formats::geo::parse_h3;
 use crate::formats::hash::parse_hash;
 use crate::formats::hashid::parse_hashid;
+use crate::formats::iban::parse_iban;
 use crate::formats::ipfs::parse_ipfs;
 use crate::formats::isbn::parse_isbn;
 use crate::formats::ksuid::parse_ksuid;
@@ -96,6 +97,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_slack,
     parse_spotify,
     parse_swhid,
+    parse_iban,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -121,6 +123,9 @@ pub fn pick_first_valid(args: &Args, parsers: &[ParseFunction]) -> Option<IDInfo
 
 pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     let mut id_info: Option<IDInfo>;
+    if let Some(result) = parse_iban(args) {
+        return Some(result);
+    }
     if args.id.trim().parse::<u128>().is_ok() {
         // Numeric:
         id_info = pick_first_valid(args, &[parse_isbn, parse_imei, parse_unix_recent, parse_snowflake, parse_uuid_integer]);
@@ -241,6 +246,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Nano64 => parse_nano64(args),
         IdFormat::Orderlyid => parse_orderlyid(args),
         IdFormat::Swhid => parse_swhid(args),
+        IdFormat::Iban => parse_iban(args),
     }
 }
 

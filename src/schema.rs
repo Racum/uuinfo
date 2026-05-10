@@ -96,6 +96,8 @@ pub enum IdFormat {
     Orderlyid,
     /// SWHID (Software Hash ID)
     Swhid,
+    /// IBAN (International Bank Account Number)
+    Iban,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon

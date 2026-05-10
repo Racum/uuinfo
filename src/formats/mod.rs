@@ -8,6 +8,7 @@ pub mod gdocs;
 pub mod geo;
 pub mod hash;
 pub mod hashid;
+pub mod iban;
 pub mod ipfs;
 pub mod isbn;
 pub mod ksuid;
