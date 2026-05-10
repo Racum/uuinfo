@@ -49,6 +49,7 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [SWHID](https://www.swhid.org) (Software Hash ID)
 - [IBAN](https://www.iban.com/structure) (International Bank Account Number)
 - [Commerce Barcode](https://en.wikipedia.org/wiki/Global_Trade_Item_Number) (EAN-8, UPC-A, EAN-13 and GTIN-14; only auto-detected with dashes)
+- [VIN](https://en.wikipedia.org/wiki/Vehicle_identification_number) (Vehicle Identification Number)
 - [Bitcoin Address](https://rf5.github.io/2022/02/14/btc-address-intro.html)
 - [Ethereum Address](https://ethereum.org/developers/docs/accounts/)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128

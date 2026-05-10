@@ -102,6 +102,9 @@ impl IDInfo {
 
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 1".purple(), limit_r(self.node1.clone().unwrap_or("-".to_string())));
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 2".red(), limit_r(self.node2.clone().unwrap_or("-".to_string())));
+        if let Some(value) = self.node3.clone() {
+            println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Node 3".custom_color((208, 135, 112)), limit_r(value));
+        }
         println!("┃ {:<l_space$} │ {:<r_space$} ┃", "Sequence".blue(), sequence);
         println!("┠─{:─<l_space$}─┼─{:─<r_space$}─┨", "", "");
 
@@ -141,6 +144,7 @@ impl IDInfo {
                         Some('4') => format!("{}", cs.purple()),
                         Some('5') => format!("{}", cs.red()),
                         Some('6') => format!("{}", cs.blue()),
+                        Some('7') => format!("{}", cs.custom_color((208, 135, 112))),
                         _ => format!("{}", cs.normal()),
                     };
                     bin_line.push_str(&colored_bit);

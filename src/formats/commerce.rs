@@ -3,12 +3,17 @@ use crate::id_format::pick_first_valid;
 use crate::schema::{Args, IDInfo};
 use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
+#[allow(clippy::indexing_slicing)]
 fn gtin_check_digit(digits: &[u8]) -> u8 {
     let len = digits.len();
-    let sum: u32 = digits.iter().enumerate().map(|(i, &d)| {
-        let weight = if (len - i) % 2 == 0 { 1 } else { 3 };
-        d as u32 * weight
-    }).sum();
+    let sum: u32 = digits
+        .iter()
+        .enumerate()
+        .map(|(i, &d)| {
+            let weight = if (len - i).is_multiple_of(2) { 1 } else { 3 };
+            d as u32 * weight
+        })
+        .sum();
     ((10 - (sum % 10)) % 10) as u8
 }
 
@@ -17,11 +22,10 @@ fn strip_dashes(s: &str) -> String {
 }
 
 fn parse_digits(s: &str) -> Option<Vec<u8>> {
-    s.bytes().map(|b| {
-        if b.is_ascii_digit() { Some(b - b'0') } else { None }
-    }).collect()
+    s.bytes().map(|b| if b.is_ascii_digit() { Some(b - b'0') } else { None }).collect()
 }
 
+#[allow(clippy::indexing_slicing)]
 fn validate_check_digit(digits: &[u8]) -> bool {
     let len = digits.len();
     if len < 2 {
@@ -63,6 +67,7 @@ pub fn parse_ean8(args: &Args) -> Option<IDInfo> {
     })
 }
 
+#[allow(clippy::indexing_slicing)]
 pub fn parse_upca(args: &Args) -> Option<IDInfo> {
     let clean = strip_dashes(&args.id);
     if clean.len() != 12 {
@@ -262,6 +267,7 @@ pub fn parse_ean13(args: &Args) -> Option<IDInfo> {
     })
 }
 
+#[allow(clippy::indexing_slicing)]
 pub fn parse_gtin14(args: &Args) -> Option<IDInfo> {
     let clean = strip_dashes(&args.id);
     if clean.len() != 14 {

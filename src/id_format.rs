@@ -42,6 +42,7 @@ use crate::formats::ulid::{parse_julid, parse_ulid, parse_ulid_any};
 use crate::formats::unix::{parse_unix, parse_unix_ms, parse_unix_ns, parse_unix_recent, parse_unix_s, parse_unix_us};
 use crate::formats::upid::parse_upid;
 use crate::formats::uuid::{parse_base64_uuid, parse_short_uuid, parse_uuid, parse_uuid_integer, parse_uuid25};
+use crate::formats::vin::parse_vin;
 use crate::formats::xid::parse_xid;
 use crate::formats::youtube::parse_youtube;
 
@@ -104,6 +105,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_bitcoin,
     parse_ethereum,
     parse_commerce,
+    parse_vin,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -153,7 +155,8 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             21 => parse_nanoid(args),
             20 => pick_first_valid(args, &[parse_xid, parse_stripe, parse_pushid]),
             18 => parse_flake(args),
-            17 | 16 => parse_nano64(args),
+            17 => pick_first_valid(args, &[parse_vin, parse_nano64]),
+            16 => parse_nano64(args),
             15 => parse_h3(args),
             14 => parse_shortpuid(args),
             13 => pick_first_valid(args, &[parse_tid, parse_tsid]),
@@ -167,6 +170,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             Some(value) => Some(value),
             #[rustfmt::skip]
             None => pick_first_valid(args, &[
+                parse_vin,
                 parse_orderlyid,
                 parse_isbn,
                 parse_commerce,
@@ -260,6 +264,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Bitcoin => parse_bitcoin(args),
         IdFormat::Ethereum => parse_ethereum(args),
         IdFormat::Commerce => parse_commerce(args),
+        IdFormat::Vin => parse_vin(args),
     }
 }
 

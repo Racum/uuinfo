@@ -117,6 +117,8 @@ fn test_auto_detect() {
     _assert("0-42100-00526-4", "Commerce Barcode", "UPC-A (GTIN-12)");
     _assert("9638-5074", "Commerce Barcode", "EAN-8 (GTIN-8)");
     _assert("1-06-14141-000415", "Commerce Barcode", "GTIN-14, grouping/packaging level");
+    // VIN:
+    _assert("1HGCM82633A004352", "VIN (Vehicle Identification Number)", "Honda, United States");
 }
 
 #[test]
@@ -293,6 +295,8 @@ fn test_force_format() {
     _assert("042100005264", IdFormat::Commerce, "Commerce Barcode", "UPC-A (GTIN-12)");
     _assert("96385074", IdFormat::Commerce, "Commerce Barcode", "EAN-8 (GTIN-8)");
     _assert("10614141000415", IdFormat::Commerce, "Commerce Barcode", "GTIN-14, grouping/packaging level");
+    // VIN:
+    _assert("1HGCM82633A004352", IdFormat::Vin, "VIN (Vehicle Identification Number)", "Honda, United States");
 }
 
 #[test]

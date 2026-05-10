@@ -40,5 +40,6 @@ pub mod ulid;
 pub mod unix;
 pub mod upid;
 pub mod uuid;
+pub mod vin;
 pub mod xid;
 pub mod youtube;

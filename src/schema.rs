@@ -148,6 +148,8 @@ pub enum IdFormat {
     Ethereum,
     /// Commerce Barcode (EAN/UPC/GTIN)
     Commerce,
+    /// VIN (Vehicle Identification Number)
+    Vin,
 }
 
 /// Shows debug information about complex ID.
@@ -226,6 +228,7 @@ pub struct IDInfo {
     pub sequence: Option<u128>,
     pub node1: Option<String>,
     pub node2: Option<String>,
+    pub node3: Option<String>,
     pub hex: Option<String>,
     #[serde(skip_serializing)]
     pub bits: Option<String>,
@@ -244,4 +247,5 @@ IDInfo.color_map codes:
  - 4: purple (node 1)
  - 5: red (node 2)
  - 6: blue (sequence)
+ - 7: orange (node 3)
 */

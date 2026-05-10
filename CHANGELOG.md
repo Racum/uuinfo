@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - IBAN support.
 - Commerce Barcode support.
+- VIN support.
 - Bitcoin Address support.
 - Ethereum Address support.
 
@@ -17,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Update dependencies.
 - Show full precision of times on JSON output.
+- Node 3 on IDInfo.
 
 ## [0.6.10] - 2026-01-11
 
