@@ -113,6 +113,10 @@ fn test_auto_detect() {
     _assert("bc1p5cyxnuxmeuwuvkwfem96lqzszee2t0p688raqku9m3f8uafvhvqqhkz45z", "Bitcoin Address", "Taproot (P2TR)");
     // Ethereum:
     _assert("0xd8da6bf26964af9d7eed9e03e53415d37aa96045", "Ethereum Address", "No checksum");
+    // Commerce Barcode:
+    _assert("0-42100-00526-4", "Commerce Barcode", "UPC-A (GTIN-12)");
+    _assert("9638-5074", "Commerce Barcode", "EAN-8 (GTIN-8)");
+    _assert("1-06-14141-000415", "Commerce Barcode", "GTIN-14, grouping/packaging level");
 }
 
 #[test]
@@ -283,6 +287,12 @@ fn test_force_format() {
     _assert("bc1p5cyxnuxmeuwuvkwfem96lqzszee2t0p688raqku9m3f8uafvhvqqhkz45z", IdFormat::Bitcoin, "Bitcoin Address", "Taproot (P2TR)");
     // Ethereum:
     _assert("0xd8da6bf26964af9d7eed9e03e53415d37aa96045", IdFormat::Ethereum, "Ethereum Address", "No checksum");
+    // Commerce Barcode:
+    _assert("5901234123457", IdFormat::Commerce, "Commerce Barcode", "EAN-13 (GTIN-13)");
+    _assert("590-1234-123457", IdFormat::Commerce, "Commerce Barcode", "EAN-13 (GTIN-13)");
+    _assert("042100005264", IdFormat::Commerce, "Commerce Barcode", "UPC-A (GTIN-12)");
+    _assert("96385074", IdFormat::Commerce, "Commerce Barcode", "EAN-8 (GTIN-8)");
+    _assert("10614141000415", IdFormat::Commerce, "Commerce Barcode", "GTIN-14, grouping/packaging level");
 }
 
 #[test]

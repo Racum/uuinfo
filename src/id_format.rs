@@ -3,6 +3,7 @@ use crate::schema::{Args, IDInfo, IdFormat};
 use crate::formats::asin::parse_asin;
 use crate::formats::bitcoin::parse_bitcoin;
 use crate::formats::breezeid::parse_breezeid;
+use crate::formats::commerce::parse_commerce;
 use crate::formats::cuid::{parse_cuid1, parse_cuid2};
 use crate::formats::datadog::parse_datadog;
 use crate::formats::duns::parse_duns;
@@ -14,7 +15,7 @@ use crate::formats::hash::parse_hash;
 use crate::formats::hashid::parse_hashid;
 use crate::formats::iban::parse_iban;
 use crate::formats::ipfs::parse_ipfs;
-use crate::formats::isbn::parse_isbn;
+use crate::formats::isbn::{parse_isbn, parse_isbn10};
 use crate::formats::ksuid::parse_ksuid;
 use crate::formats::nano64::parse_nano64;
 use crate::formats::nanoid::parse_nanoid;
@@ -86,7 +87,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_ipv4,
     parse_ipv6,
     parse_mac,
-    parse_isbn,
+    parse_isbn10,
     parse_tid,
     parse_duns,
     parse_asin,
@@ -102,6 +103,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_iban,
     parse_bitcoin,
     parse_ethereum,
+    parse_commerce,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -167,6 +169,7 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
             None => pick_first_valid(args, &[
                 parse_orderlyid,
                 parse_isbn,
+                parse_commerce,
                 parse_typeid,
                 parse_ipfs,
                 parse_stripe,
@@ -256,6 +259,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Iban => parse_iban(args),
         IdFormat::Bitcoin => parse_bitcoin(args),
         IdFormat::Ethereum => parse_ethereum(args),
+        IdFormat::Commerce => parse_commerce(args),
     }
 }
 

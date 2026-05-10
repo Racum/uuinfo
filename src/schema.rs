@@ -146,6 +146,8 @@ pub enum IdFormat {
     Bitcoin,
     /// Ethereum Address
     Ethereum,
+    /// Commerce Barcode (EAN/UPC/GTIN)
+    Commerce,
 }
 
 /// Shows debug information about complex ID.

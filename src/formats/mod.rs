@@ -1,6 +1,7 @@
 pub mod asin;
 pub mod bitcoin;
 pub mod breezeid;
+pub mod commerce;
 pub mod cuid;
 pub mod datadog;
 pub mod duns;
