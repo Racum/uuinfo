@@ -1,5 +1,5 @@
 use scru64::Scru64Id;
-use scru128::Scru128Id;
+use scru128::Id as Scru128Id;
 use std::fmt::Write;
 use uuid::Uuid;
 
