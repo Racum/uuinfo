@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.7.0] - 2026-05-10
+
+### Added
+
+- IBAN support.
+- Commerce Barcode support.
+- Bitcoin Address support.
+- Ethereum Address support.
+
+### Changed
+
+- Update dependencies.
+- Show full precision of times on JSON output.
+
 ## [0.6.10] - 2026-01-11
 
 ### Added
@@ -13,7 +28,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-Update dependencies.
+- Update dependencies.
 
 ## [0.6.8] - 2025-12-27
 
