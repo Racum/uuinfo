@@ -48,6 +48,8 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 - [OrderlyID](https://github.com/orderlykit/orderlyid)
 - [SWHID](https://www.swhid.org) (Software Hash ID)
 - [IBAN](https://www.iban.com/structure) (International Bank Account Number)
+- [Bitcoin](https://rf5.github.io/2022/02/14/btc-address-intro.html)
+- [Ethereum](https://ethereum.org/developers/docs/accounts/)
 - 128-bit formats encoded as UUID: ULID, UPID, Flake, Timeflake and SCRU128
 - Snowflake variants:
   - [Twitter](https://developer.x.com/en/docs/x-ids)

@@ -1,8 +1,10 @@
 pub mod asin;
+pub mod bitcoin;
 pub mod breezeid;
 pub mod cuid;
 pub mod datadog;
 pub mod duns;
+pub mod ethereum;
 pub mod flake;
 pub mod gdocs;
 pub mod geo;

@@ -54,6 +54,8 @@ h3ron = "0.18.0"
 tsid = "0.3.4"
 timediff = "0.2.3"
 regex = "1.12.3"
+sha2 = "0.11.0"
+tiny-keccak = { version = "2.0.2", features = ["keccak", "sha3"] }
 
 [lints.clippy]
 indexing_slicing = "deny"

@@ -106,6 +106,13 @@ fn test_auto_detect() {
     _assert("9780553382570", "ISBN-13", "-");
     _assert("0-553-38257-8", "ISBN-10", "-");
     _assert("0553382578", "ISBN-10", "-");
+    // IBAN:
+    _assert("NO9386011117947", "IBAN", "NO (Norway)");
+    // Bitcoin:
+    _assert("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", "Bitcoin Address (from Satoshi Nakamoto)", "Legacy (P2PKH)");
+    _assert("bc1p5cyxnuxmeuwuvkwfem96lqzszee2t0p688raqku9m3f8uafvhvqqhkz45z", "Bitcoin Address", "Taproot (P2TR)");
+    // Ethereum:
+    _assert("0xd8da6bf26964af9d7eed9e03e53415d37aa96045", "Ethereum Address", "No checksum");
 }
 
 #[test]
@@ -269,6 +276,13 @@ fn test_force_format() {
     _assert("9780553382570", IdFormat::Isbn, "ISBN-13", "-");
     _assert("0-553-38257-8", IdFormat::Isbn, "ISBN-10", "-");
     _assert("0553382578", IdFormat::Isbn, "ISBN-10", "-");
+    // IBAN:
+    _assert("NO9386011117947", IdFormat::Iban, "IBAN", "NO (Norway)");
+    // Bitcoin:
+    _assert("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa", IdFormat::Bitcoin, "Bitcoin Address (from Satoshi Nakamoto)", "Legacy (P2PKH)");
+    _assert("bc1p5cyxnuxmeuwuvkwfem96lqzszee2t0p688raqku9m3f8uafvhvqqhkz45z", IdFormat::Bitcoin, "Bitcoin Address", "Taproot (P2TR)");
+    // Ethereum:
+    _assert("0xd8da6bf26964af9d7eed9e03e53415d37aa96045", IdFormat::Ethereum, "Ethereum Address", "No checksum");
 }
 
 #[test]

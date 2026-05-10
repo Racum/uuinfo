@@ -142,6 +142,10 @@ pub enum IdFormat {
     Isbn,
     /// Geo: H3 Grid System
     H3,
+    /// Bitcoin Address
+    Bitcoin,
+    /// Ethereum Address
+    Ethereum,
 }
 
 /// Shows debug information about complex ID.

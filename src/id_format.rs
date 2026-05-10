@@ -1,10 +1,12 @@
 use crate::schema::{Args, IDInfo, IdFormat};
 
 use crate::formats::asin::parse_asin;
+use crate::formats::bitcoin::parse_bitcoin;
 use crate::formats::breezeid::parse_breezeid;
 use crate::formats::cuid::{parse_cuid1, parse_cuid2};
 use crate::formats::datadog::parse_datadog;
 use crate::formats::duns::parse_duns;
+use crate::formats::ethereum::parse_ethereum;
 use crate::formats::flake::parse_flake;
 use crate::formats::gdocs::parse_gdocs;
 use crate::formats::geo::parse_h3;
@@ -98,6 +100,8 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_spotify,
     parse_swhid,
     parse_iban,
+    parse_bitcoin,
+    parse_ethereum,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -132,9 +136,12 @@ pub fn auto_detect(args: &Args) -> Option<IDInfo> {
     } else {
         // Fixed length:
         id_info = match args.id.chars().count() {
+            62 => parse_bitcoin(args),
             56 | 64 | 96 | 128 => parse_hash(args),
             44 => parse_gdocs(args),
+            42 => pick_first_valid(args, &[parse_ethereum, parse_bitcoin]),
             40 => parse_ksuid(args),
+            34 => parse_bitcoin(args),
             32 | 36 => pick_first_valid(args, &[parse_datadog, parse_uuid]),
             27 => pick_first_valid(args, &[parse_upid, parse_ksuid]),
             26 => parse_ulid_any(args),
@@ -247,6 +254,8 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Orderlyid => parse_orderlyid(args),
         IdFormat::Swhid => parse_swhid(args),
         IdFormat::Iban => parse_iban(args),
+        IdFormat::Bitcoin => parse_bitcoin(args),
+        IdFormat::Ethereum => parse_ethereum(args),
     }
 }
 
