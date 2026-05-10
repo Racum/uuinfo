@@ -40,6 +40,9 @@ pub fn parse_ean8(args: &Args) -> Option<IDInfo> {
     if !validate_check_digit(&digits) {
         return None;
     }
+    let prefix_str = &clean[..3];
+    let prefix_num: u16 = prefix_str.parse().ok()?;
+    let country = gs1_prefix_country(prefix_num);
     let (_, hex, bits, _) = factor_size_hex_bits_color_from_text(&clean);
     let size = (clean.len() * 8) as u16;
 
@@ -51,9 +54,10 @@ pub fn parse_ean8(args: &Args) -> Option<IDInfo> {
         parsed: Some("as ASCII".to_string()),
         size,
         entropy: 0,
+        node1: Some(format!("{} ({})", prefix_str, country)),
         hex,
         bits,
-        color_map: Some(repeat_char('2', 56) + &repeat_char('0', 8)),
+        color_map: Some(repeat_char('4', 24) + &repeat_char('2', 32) + &repeat_char('0', 8)),
         high_confidence: true,
         ..Default::default()
     })
