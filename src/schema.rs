@@ -98,6 +98,14 @@ pub enum IdFormat {
     Swhid,
     /// IBAN (International Bank Account Number)
     Iban,
+    /// Commerce Barcode (EAN/UPC/GTIN)
+    Commerce,
+    /// VIN (Vehicle Identification Number)
+    Vin,
+    /// Bitcoin Address
+    Bitcoin,
+    /// Ethereum Address
+    Ethereum,
     /// Snowflake: Twitter
     SfTwitter,
     /// Snowflake: Mastodon
@@ -142,14 +150,6 @@ pub enum IdFormat {
     Isbn,
     /// Geo: H3 Grid System
     H3,
-    /// Bitcoin Address
-    Bitcoin,
-    /// Ethereum Address
-    Ethereum,
-    /// Commerce Barcode (EAN/UPC/GTIN)
-    Commerce,
-    /// VIN (Vehicle Identification Number)
-    Vin,
 }
 
 /// Shows debug information about complex ID.
