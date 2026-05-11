@@ -124,6 +124,8 @@ pub enum IdFormat {
     SfFrostflake,
     /// Snowflake: Flake ID
     SfFlakeid,
+    /// Snowflake: Simpleflake
+    SfSimpleflake,
     /// Unix timestamp: Auto-detect
     Unix,
     /// Unix timestamp: Seconds

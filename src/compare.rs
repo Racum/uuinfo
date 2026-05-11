@@ -2,14 +2,15 @@ use colored::*;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::formats::snowflake::{
-    SnowflakeAnnotation, annotate_discord, annotate_flakeid, annotate_frostflake, annotate_instagram, annotate_linkedin, annotate_mastodon, annotate_sony, annotate_spaceflake, annotate_twitter,
+    SnowflakeAnnotation, annotate_discord, annotate_flakeid, annotate_frostflake, annotate_instagram, annotate_linkedin, annotate_mastodon, annotate_simpleflake, annotate_sony, annotate_spaceflake,
+    annotate_twitter,
 };
 use crate::id_format::ALL_PARSERS;
 use crate::schema::{Args, TimestampComparable};
-use crate::utils::nanoseconds_to_iso8601;
+use crate::utils::milliseconds_to_seconds_and_iso8601;
 
 const NOW_DISPLAY: &str = "--- Now ---";
-const SNOWFLAKE_ANNOTATE_FUNCTIONS: [fn(&Args) -> SnowflakeAnnotation; 9] = [
+const SNOWFLAKE_ANNOTATE_FUNCTIONS: [fn(&Args) -> SnowflakeAnnotation; 10] = [
     annotate_twitter,
     annotate_discord,
     annotate_instagram,
@@ -19,7 +20,12 @@ const SNOWFLAKE_ANNOTATE_FUNCTIONS: [fn(&Args) -> SnowflakeAnnotation; 9] = [
     annotate_mastodon,
     annotate_frostflake,
     annotate_flakeid,
+    annotate_simpleflake,
 ];
+
+fn truncate_to_millis(dt: String) -> String {
+    if dt.len() > 24 && dt.ends_with('Z') { format!("{}Z", &dt[..23]) } else { dt }
+}
 
 fn all_parsers_times(args: &Args) -> Vec<TimestampComparable> {
     let mut all_times: Vec<TimestampComparable> = vec![];
@@ -29,7 +35,7 @@ fn all_parsers_times(args: &Args) -> Vec<TimestampComparable> {
         {
             all_times.push(TimestampComparable {
                 timestamp: value.timestamp.clone().unwrap_or_default().parse::<f64>().unwrap_or_default(),
-                datetime: value.datetime.unwrap_or_default(),
+                datetime: truncate_to_millis(value.datetime.unwrap_or_default()),
                 name: match value.version {
                     Some(version) => format!("{}: {}", value.id_type, version),
                     None => value.id_type,
@@ -64,10 +70,10 @@ pub fn compare_times(args: &Args) {
 
     if !all_times.is_empty() {
         println!("Date/times of the valid IDs parsed as:");
-        let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos() as u64;
+        let now_ms = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as u64;
         all_times.push(TimestampComparable {
-            timestamp: now as f64 / 1_000_000_000.0,
-            datetime: nanoseconds_to_iso8601(now).1,
+            timestamp: now_ms as f64 / 1_000.0,
+            datetime: milliseconds_to_seconds_and_iso8601(now_ms, None).1,
             name: NOW_DISPLAY.to_string(),
         });
     } else {

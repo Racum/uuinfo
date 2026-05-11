@@ -175,6 +175,7 @@ fn test_force_format() {
     _assert("5828128208445124608", IdFormat::SfFlakeid, "Snowflake", "Flake ID");
     _assert("7423342004626526207", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
     _assert("JERHwh5PXjL", IdFormat::SfFrostflake, "Snowflake", "Frostflake");
+    _assert("3594162604452825250", IdFormat::SfSimpleflake, "Snowflake", "Simpleflake");
     // Unix timestamp
     _assert("1734971723", IdFormat::Unix, "Unix timestamp", "Assuming seconds");
     _assert("1734971723000", IdFormat::Unix, "Unix timestamp", "Assuming milliseconds");

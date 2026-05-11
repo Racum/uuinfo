@@ -225,6 +225,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::SfSpaceflake => parse_snowflake(args),
         IdFormat::SfFrostflake => parse_snowflake(args),
         IdFormat::SfFlakeid => parse_snowflake(args),
+        IdFormat::SfSimpleflake => parse_snowflake(args),
         IdFormat::Tsid => parse_tsid(args),
         IdFormat::Sqid => parse_sqid(args),
         IdFormat::Hashid => parse_hashid(args),
