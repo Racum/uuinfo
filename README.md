@@ -88,7 +88,7 @@ $ brew upgrade uuinfo  # Update.
 ### Linux (Debian/Ubuntu, APT)
 
 ```shell
-# Set up APT source (only needed once):
+$ # Set up APT source (only needed once):
 $ curl -fsSL https://racum.github.io/apt/key.gpg \
     | sudo gpg --dearmor -o /etc/apt/keyrings/racum.gpg \
   && echo "deb [signed-by=/etc/apt/keyrings/racum.gpg] https://racum.github.io/apt stable main" \
