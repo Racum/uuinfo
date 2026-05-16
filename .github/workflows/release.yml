@@ -92,7 +92,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ needs.check-version.outputs.version }}
         run: |
-          gh release upload "v${VERSION}" uuinfo-macos-v${VERSION}.tar.gz
+          gh release upload "v${VERSION}" uuinfo-macos-v${VERSION}.tar.gz --repo racum/uuinfo --clobber
 
   # ── Linux builds ──────────────────────────────────────────────────────────
 
@@ -119,15 +119,15 @@ jobs:
           DEB=$(find target -name "uuinfo_*_amd64.deb" | head -1)
           echo "Found deb at: $DEB"
           cp "$DEB" "uuinfo_${VERSION}_amd64.deb"
-          gh release upload "v${VERSION}" "uuinfo_${VERSION}_amd64.deb"
+          gh release upload "v${VERSION}" "uuinfo_${VERSION}_amd64.deb" --clobber
 
           tar czf uuinfo-linux-x86_64.tar.gz \
             -C target/x86_64-unknown-linux-musl/release uuinfo
-          gh release upload "v${VERSION}" uuinfo-linux-x86_64.tar.gz
+          gh release upload "v${VERSION}" uuinfo-linux-x86_64.tar.gz --clobber
       - uses: actions/upload-artifact@v5
         with:
           name: deb-amd64
-          path: target/**/uuinfo_*_amd64.deb
+          path: uuinfo_*_amd64.deb
 
   build-linux-arm64:
     needs: check-version
@@ -152,15 +152,15 @@ jobs:
           DEB=$(find target -name "uuinfo_*_arm64.deb" | head -1)
           echo "Found deb at: $DEB"
           cp "$DEB" "uuinfo_${VERSION}_arm64.deb"
-          gh release upload "v${VERSION}" "uuinfo_${VERSION}_arm64.deb"
+          gh release upload "v${VERSION}" "uuinfo_${VERSION}_arm64.deb" --clobber
 
           tar czf uuinfo-linux-aarch64.tar.gz \
             -C target/aarch64-unknown-linux-musl/release uuinfo
-          gh release upload "v${VERSION}" uuinfo-linux-aarch64.tar.gz
+          gh release upload "v${VERSION}" uuinfo-linux-aarch64.tar.gz --clobber
       - uses: actions/upload-artifact@v5
         with:
           name: deb-arm64
-          path: target/**/uuinfo_*_arm64.deb
+          path: uuinfo_*_arm64.deb
 
   # ── APT repo update ───────────────────────────────────────────────────────
 
