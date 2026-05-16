@@ -8,12 +8,12 @@ Just input some ID and **uuinfo** will try to infer as much information as possi
 
 ![Screenshot of a terminal window showing an uuinfo output](assets/uuinfo.png)
 
-If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by type; the key of the color doubles as the values from the left column in the rendered card. The colors on your system may differ, since those are ANSI colors instead of hardcoded ones.
+If the ID format allows for it, **uuinfo** also shows its bits, color-coded by type; the key of the color doubles as the values from the left column in the rendered card. The colors on your system may differ, since those are ANSI colors instead of hardcoded ones.
 
 ## Supported ID Formats
 
 - [UUID](https://www.rfc-editor.org/rfc/rfc9562.html): versions 1 to 8, Nil, Max, NCS and Microsoft GUID.
-- UUID wrappers: [ShortUUD](https://github.com/skorokithakis/shortuuid), [Base64](https://en.wikipedia.org/wiki/Base64), [Uuid25](https://github.com/uuid25/python) and integer
+- UUID wrappers: [ShortUUID](https://github.com/skorokithakis/shortuuid), [Base64](https://en.wikipedia.org/wiki/Base64), [Uuid25](https://github.com/uuid25/python) and integer
 - [ULID](https://github.com/ulid/spec)
 - [Julid](https://proclamations.nebcorp-hias.com/sundries/presenting-julids/)
 - [UPID](https://github.com/carderne/upid)
@@ -73,17 +73,50 @@ If the ID formats allows for it, **uuinfo** also shows its bits, color-coded by 
 
 ## Installation
 
+### macOS (Homebrew)
+
+Requires macOS 11 Big Sur or newer.
+
+```shell
+$ brew tap racum/tap  # Setup (only needed once).
+
+$ brew install uuinfo  # Install.
+
+$ brew upgrade uuinfo  # Update.
+```
+
+### Linux (Debian/Ubuntu, APT)
+
+```shell
+# Set up APT source (only needed once):
+$ curl -fsSL https://racum.github.io/apt/key.gpg \
+    | sudo gpg --dearmor -o /etc/apt/keyrings/racum.gpg \
+  && echo "deb [signed-by=/etc/apt/keyrings/racum.gpg] https://racum.github.io/apt stable main" \
+    | sudo tee /etc/apt/sources.list.d/racum.list
+
+$ sudo apt update && sudo apt install uuinfo  # Install or update.
+```
+
+### Linux (other distros)
+
+Static binary, zero runtime deps. Pick the right arch:
+
+```shell
+$ # x86_64:
+$ curl -L https://github.com/racum/uuinfo/releases/latest/download/uuinfo-linux-x86_64.tar.gz | tar xz
+$ sudo mv uuinfo /usr/local/bin/
+
+$ # arm64:
+$ curl -L https://github.com/racum/uuinfo/releases/latest/download/uuinfo-linux-aarch64.tar.gz | tar xz
+$ sudo mv uuinfo /usr/local/bin/
+```
+
+### Cargo (any platform)
+
 **Uuinfo** was developed in [Rust](https://www.rust-lang.org), thus it requires [its toolchain](https://www.rust-lang.org/tools/install); if you already have it available, you can install it with `cargo`:
 
-```
+```shell
 $ cargo install uuinfo
-```
-
-### Via Docker
-
-```
-$ docker run racum/uuinfo {ID}
-...
 ```
 
 ## Usage
@@ -94,14 +127,14 @@ For a complete list of options, just run the help: `uuinfo --help`.
 
 If you just input an ID without any options, **uuinfo** will try to detect its format using very basic heuristics on its length and popularity; and this may work for most cases.
 
-```
+```shell
 $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 ...
 ```
 
 ### Parse Everything
 
-If you are not sure about the ID format, you can see the cards for all formats that it got parsed successfully with `-e`/`—everything`; and with that, you can see what result makes more sense.
+If you are not sure about the ID format, you can see the cards for all formats that it got parsed successfully with `-e`/`--everything`; and with that, you can see what result makes more sense.
 
 **Note**: this argument disables the output options.
 
@@ -111,7 +144,7 @@ Sometimes an ID could be valid for more than one format, if this happens and the
 
 For example, the ID `12345678901234567890` is automatically detected as a **Snowflake**, but, it could also be a valid **Xid**. If you want to force **uuinfo** to parse it as Xid, call it like this:
 
-```
+```shell
 $ uuinfo -f xid 12345678901234567890
 ...
 ```
@@ -120,37 +153,39 @@ Check the `--help` for a complete list of values of `-f`/`--force`.
 
 #### Snowflake Variants
 
-Snowflake is **not** an “ID format”, but rather a **category** of formats; since it is just a number, **uuinfo** can’t detect what variation was used to generate it, thus, specifying the variant with `-f`/`—force` is required to be able to get anything useful from it.
+Snowflake is **not** an “ID format”, but rather a **category** of formats; since it is just a number, **uuinfo** can’t detect what variation was used to generate it, thus, specifying the variant with `-f`/`--force` is required to be able to get anything useful from it.
 
 Fortunately, **uuinfo** can compare time-aware IDs and sort them by date; for example:
 
-```
+```shell
 $ date
-Sun Mar 16 15:54:30 CET 2025
+Sat May 16 21:05:33 CEST 2026
 
-$ uuinfo --compare 1777150623882019211
+$ uuinfo --compare 2039815312720154892
 Date/times of the valid IDs parsed as:
-- 1983-02-11T01:32:03.000Z Snowflake: Frostflake
-- 1983-06-06T00:02:06.595Z Snowflake: LinkedIn
-- 1983-06-06T00:02:06.595Z Snowflake: Flake ID
-- 2018-05-11T21:08:05.018Z Thread ID (Meta Threads)
-- 2018-05-11T21:08:05.018Z Snowflake: Instagram
-- 2024-04-08T01:45:01.252Z Snowflake: Twitter
-- 2025-03-16T14:54:32.000Z --- Now ---
-- 2026-04-25T20:57:03.000Z Unix timestamp: Assuming nanoseconds
-- 2028-06-05T00:02:06.595Z Snowflake: Discord
-- 2028-06-05T00:02:06.595Z Snowflake: Spaceflake
-- 2033-06-05T00:02:06.595Z TSID
-- 2048-03-26T00:05:16.480Z Snowflake: Sony
-- 2829-04-23T02:15:02.106Z Snowflake: Mastodon
+- 1985-01-18T21:25:12.000Z Snowflake: Frostflake
+- 1985-05-30T19:37:48.488Z Snowflake: LinkedIn
+- 1985-05-30T19:37:48.488Z Snowflake: Flake ID
+- 2007-09-15T14:48:54.244Z Snowflake: Simpleflake
+- 2019-05-09T06:55:55.965Z Thread ID (Meta Threads)
+- 2019-05-09T06:55:55.965Z Snowflake: Instagram
+- 2026-04-02T21:20:43.145Z Snowflake: Twitter
+- 2026-05-16T19:07:22.371Z --- Now ---
+- 2030-05-30T19:37:48.488Z Snowflake: Discord
+- 2030-05-30T19:37:48.488Z Snowflake: Spaceflake
+- 2034-08-21T23:21:52.720Z Unix timestamp: Assuming nanoseconds
+- 2035-05-30T19:37:48.488Z TSID
+- 2039-05-30T19:37:48.488Z SnowID
+- 2053-03-12T01:04:31.220Z Snowflake: Sony
+- 2956-04-25T08:19:43.254Z Snowflake: Mastodon
 ```
 
-In this case, the ID `1777150623882019211` is probably from Twitter, since it is the most recent value from the list that is not in the future.
+In this case, the ID `2039815312720154892` is probably from Twitter, since it is the most recent value from the list that is not in the future.
 
 Once identified the variant, just run it again enforcing its type:
 
-```
-$ uuinfo -f sf-twitter 1777150623882019211
+```shell
+$ uuinfo -f sf-twitter 2039815312720154892
 ...
 ```
 
@@ -158,7 +193,7 @@ $ uuinfo -f sf-twitter 1777150623882019211
 
 Use a dash (`-`) instead of the ID to get the value from STDIN piped from another program:
 
-```
+```shell
 $ echo 8ff95663-c8ee-48b9-a236-a2f29a991001 | uuinfo -
 ...
 ```
@@ -169,7 +204,7 @@ $ echo 8ff95663-c8ee-48b9-a236-a2f29a991001 | uuinfo -
 
 This is the pretty-printed output, with all the extracted data, plus a hexadecimal and binary representation of the bits at the end:
 
-```
+```shell
 $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 ┏━━━━━━━━━━━┯━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ ID Type   │ UUID (RFC-9562)                             ┃
@@ -196,7 +231,7 @@ $ uuinfo 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 
 This is just the 2 first lines of the card in one, with the ID type and version:
 
-```
+```shell
 $ uuinfo -o short 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 ID Type: UUID (RFC-9562), version: 7 (sortable timestamp and random).
 ```
@@ -205,7 +240,7 @@ ID Type: UUID (RFC-9562), version: 7 (sortable timestamp and random).
 
 In case you need to integrate **uuinfo** with some other commands, there is a JSON output available:
 
-```
+```shell
 $ uuinfo -o json 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | jq
 {
   "id_type": "UUID (RFC-9562)",
@@ -213,13 +248,16 @@ $ uuinfo -o json 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | jq
   "standard": "01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa",
   "integer": 2098319972277167143349324748782480042,
   "uuid_wrap": null,
+  "parsed": "from hex",
   "size": 128,
   "entropy": 74,
   "datetime": "2025-01-01T00:00:00.000Z",
   "timestamp": "1735689600.000",
+  "relative_time": "a year ago",
   "sequence": null,
   "node1": null,
   "node2": null,
+  "node3": null,
   "hex": "01941f297c007aaaaaaaaaaaaaaaaaaa"
 }
 ```
@@ -228,21 +266,21 @@ $ uuinfo -o json 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | jq
 
 You can also return just the raw binary representation of the ID, but, be careful, this can mess up your terminal:
 
-```
+```shell
 $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa
 �)|z���������%
 ```
 
-I recommend to pipe into a command that can handle binary, like `xxd`:
+I recommend piping into a command that can handle binary, like `xxd`:
 
-```
+```shell
 $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | xxd
 00000000: 0194 1f29 7c00 7aaa aaaa aaaa aaaa aaaa  ...)|.z.........
 ```
 
 You can even see the same bits from the card with `xxd -b`:
 
-```
+```shell
 $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | xxd -b
 00000000: 00000001 10010100 00011111 00101001 01111100 00000000  ...)|.
 00000006: 01111010 10101010 10101010 10101010 10101010 10101010  z.....
@@ -256,14 +294,14 @@ $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | xxd -b
 
 Hunting for ID formats is a rabbit-hole! I published the first version of **uuinfo** with the formats I found on my research. If you want to add more formats, please create a [GitHub issue](https://github.com/racum/uuinfo/issues) containing the following:
 
-- Reference link
-- Size in bits and the map of bits
-- ID examples (more than one if possible) with its encoded data (timestamp, node, sequence, etc)
-- Alphabet (if applicable)
-- Epoch (if custom)
-- Source-code (if available)
+- Reference link,
+- Size in bits and the map of bits,
+- ID examples (more than one if possible) with its encoded data (timestamp, node, sequence, etc),
+- Alphabet (if applicable),
+- Epoch (if custom),
+- Source-code (if available).
 
-The more information I get, the easier will be for me to implement it!
+The more information I get, the easier it will be for me to implement it!
 
 ### Code Contribution
 
@@ -271,7 +309,7 @@ Just create a PR, but try to follow some basic guidelines:
 
 - Look at the current structure and try to emulate it.
 - One format per file, unless they are related.
-- Run `cargo fmt` and `Cargo clippy` before committing.
+- Run `cargo fmt` and `cargo clippy` before committing.
 
 
 ## License

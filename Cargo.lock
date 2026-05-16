@@ -552,9 +552,9 @@ checksum = "77ce24cb58228fbb8aa041425bb1050850ac19177686ea6e0f41a70416f56fdb"
 
 [[package]]
 name = "forkguard"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d9569776e00e305c071b0783305a86dc7a2533a8b9fccb15569d6e5488b8581"
+checksum = "723f03dfba28f1949cae68c6ac89a1e77f753c38c0acfceeefec77578a1c357a"
 
 [[package]]
 name = "fstr"
@@ -855,9 +855,9 @@ checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
 
 [[package]]
 name = "isbn"
-version = "0.8.20260511"
+version = "0.8.20260516"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4335aa771ff22174b92886fd6cf917f9a950f4ad9992b203f1065ce9d99fb574"
+checksum = "8f3ecbf36e09c36186f6adc4ef8761517b88c7443f54c67703618bf58c5bfc73"
 dependencies = [
  "arrayvec",
  "codegen",
@@ -1710,7 +1710,7 @@ dependencies = [
 
 [[package]]
 name = "uuinfo"
-version = "0.7.1"
+version = "0.7.2"
 dependencies = [
  "base32",
  "base58",

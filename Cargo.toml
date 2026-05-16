@@ -1,10 +1,10 @@
 [package]
 name = "uuinfo"
-version = "0.7.1"
+version = "0.7.2"
 edition = "2024"
-authors = ["Ronaldo Racum <ronaldo@racum.com>"]
+authors = ["Ronaldo Ferreira <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
-description = "A tool to debug unique identifiers (UUID, ULID, Snowflake, etc)."
+description = "Tool to debug unique identifiers (UUID, ULID, Snowflake, etc)"
 readme = "README.md"
 keywords = ["uuid", "unique", "identifier", "debug", "database"]
 categories = ["command-line-utilities", "development-tools::debugging", "encoding", "data-structures"]
@@ -12,7 +12,7 @@ homepage = "https://github.com/racum/uuinfo"
 repository = "https://github.com/racum/uuinfo"
 exclude = [
     "assets/*",
-    "docker/*",
+    "draft/*",
 ]
 
 [profile.release]
@@ -64,3 +64,16 @@ wildcard_enum_match_arm = "deny"
 unneeded_field_pattern = "deny"
 fn_params_excessive_bools = "deny"
 must_use_candidate = "deny"
+
+[package.metadata.deb]
+maintainer = "Ronaldo Ferreira <ronaldo@racum.com>"
+copyright = "2025, Ronaldo Ferreira"
+license-file = ["LICENSE.md", "0"]
+extended-description = "Tool to debug unique identifiers (UUID, ULID, Snowflake, etc)"
+depends = ""
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/uuinfo", "usr/bin/", "755"],
+    ["README.md", "usr/share/doc/uuinfo/README.md", "644"],
+]
