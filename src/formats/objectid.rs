@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits128, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {
@@ -13,7 +13,7 @@ pub fn parse_objectid(args: &Args) -> Option<IDInfo> {
     let oid_int: u128 = u128::from_be_bytes(oid_extra_bytes.try_into().unwrap());
     let timestamp_raw = bits128(oid_int, 32, 32);
     let sequence = bits128(oid_int, 104, 24);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64 * 1000, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64 * 1000, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "MongoDB ObjectId".to_string(),

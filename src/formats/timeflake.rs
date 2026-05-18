@@ -3,11 +3,11 @@ use timeflake_rs::Timeflake;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
-pub fn parse_timeflake_core(hex_id: &str, from_base62: bool) -> Option<IDInfo> {
+pub fn parse_timeflake_core(args: &Args, hex_id: &str, from_base62: bool) -> Option<IDInfo> {
     let timeflake = Timeflake::parse(hex_id).ok()?;
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timeflake.timestamp.as_millis() as u64, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timeflake.timestamp.as_millis() as u64, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "Timeflake".to_string(),
@@ -18,7 +18,7 @@ pub fn parse_timeflake_core(hex_id: &str, from_base62: bool) -> Option<IDInfo> {
         size: 128,
         entropy: 80,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         hex: Some(hex_id.to_string()),
         bits: Some(timeflake.as_u128().to_be_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");
@@ -31,12 +31,12 @@ pub fn parse_timeflake_core(hex_id: &str, from_base62: bool) -> Option<IDInfo> {
 }
 
 pub fn parse_timeflake_hex(args: &Args) -> Option<IDInfo> {
-    parse_timeflake_core(&args.id, false)
+    parse_timeflake_core(args, &args.id, false)
 }
 
 pub fn parse_timeflake_base62(args: &Args) -> Option<IDInfo> {
     match base62::decode(&args.id) {
-        Ok(value) => parse_timeflake_core(&hex::encode(value.to_be_bytes()), true),
+        Ok(value) => parse_timeflake_core(args, &hex::encode(value.to_be_bytes()), true),
         Err(_) => None,
     }
 }

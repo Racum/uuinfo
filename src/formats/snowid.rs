@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits64, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_snowid(args: &Args) -> Option<IDInfo> {
     let mut from_base62 = false;
@@ -18,7 +18,7 @@ pub fn parse_snowid(args: &Args) -> Option<IDInfo> {
     let timestamp_raw = bits64(id_int, 0, 42);
     let node_id = bits64(id_int, 42, 10);
     let sequence = bits64(id_int, 52, 12);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(1704067200000));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 1704067200000));
 
     Some(IDInfo {
         id_type: "SnowID".to_string(),

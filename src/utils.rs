@@ -1,6 +1,12 @@
 use chrono::{DateTime, SecondsFormat, Utc};
 use std::fmt::Write;
 
+use crate::schema::Args;
+
+pub fn epoch_ms(args: &Args, default: u64) -> u64 {
+    args.epoch.map_or(default, |s| s.saturating_mul(1000))
+}
+
 pub fn bits64(value: u64, offset: u8, length: u8) -> u64 {
     value << offset >> (64 - length)
 }
@@ -9,14 +15,14 @@ pub fn bits128(value: u128, offset: u8, length: u8) -> u128 {
     value << offset >> (128 - length)
 }
 
-pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: Option<u64>) -> (String, String) {
-    let timestamp: f64 = (ms + epoch.unwrap_or(0)) as f64 / 1_000.0;
+pub fn milliseconds_to_seconds_and_iso8601(ms: u64, epoch: u64) -> (String, String) {
+    let timestamp: f64 = ms.saturating_add(epoch) as f64 / 1_000.0;
     let secs = timestamp.trunc() as i64;
     let nanos = (timestamp.fract() * 1_000.0).round() as u32 * 1_000_000;
     match DateTime::from_timestamp(secs, nanos) {
         Some(dt) => {
             let datetime = dt.to_rfc3339_opts(SecondsFormat::Millis, true);
-            (format!("{:.3}", timestamp), datetime.to_string())
+            (format!("{:.3}", timestamp), datetime)
         }
         None => (format!("{:.3}", timestamp), "Invalid".to_string()),
     }
@@ -79,38 +85,48 @@ mod bits64 {
 
     #[test]
     fn test_time_formats_unix_epoch() {
-        let (ts, dt) = milliseconds_to_seconds_and_iso8601(1420070400000, None);
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(1420070400000, 0);
         assert_eq!(ts, "1420070400.000");
         assert_eq!(dt, "2015-01-01T00:00:00.000Z");
     }
 
     #[test]
+    fn test_epoch_ms_override_wins() {
+        let mut args = Args::default();
+        assert_eq!(epoch_ms(&args, 1288834974657), 1288834974657);
+        assert_eq!(epoch_ms(&args, 0), 0);
+        args.epoch = Some(1577836800);
+        assert_eq!(epoch_ms(&args, 1288834974657), 1577836800000);
+        assert_eq!(epoch_ms(&args, 0), 1577836800000);
+    }
+
+    #[test]
     fn test_time_formats_custom_epoch() {
-        let (ts, dt) = milliseconds_to_seconds_and_iso8601(0, Some(1420070400000));
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(0, 1420070400000);
         assert_eq!(ts, "1420070400.000");
         assert_eq!(dt, "2015-01-01T00:00:00.000Z");
     }
 
     #[test]
     fn test_time_formats_epochalypse() {
-        let (ts, dt) = milliseconds_to_seconds_and_iso8601(u64::pow(2, 31) * 1000, None);
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(u64::pow(2, 31) * 1000, 0);
         assert_eq!(ts, "2147483648.000");
         assert_eq!(dt, "2038-01-19T03:14:08.000Z");
     }
 
     #[test]
     fn test_time_formats_far_future() {
-        let (ts, dt) = milliseconds_to_seconds_and_iso8601(99999999999000, None);
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(99999999999000, 0);
         assert_eq!(ts, "99999999999.000");
         assert_eq!(dt, "5138-11-16T09:46:39.000Z");
-        let (ts, dt) = milliseconds_to_seconds_and_iso8601(281474976710655, None);
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(281474976710655, 0);
         assert_eq!(ts, "281474976710.655");
         assert_eq!(dt, "+10889-08-02T05:31:50.655Z");
     }
 
     #[test]
     fn test_invalid_timestamp() {
-        let (ts, dt) = milliseconds_to_seconds_and_iso8601(16477688742971526000, None);
+        let (ts, dt) = milliseconds_to_seconds_and_iso8601(16477688742971526000, 0);
         assert_eq!(ts, "16477688742971526.000");
         assert_eq!(dt, "Invalid");
     }

@@ -1,5 +1,5 @@
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 use std::fmt::Write;
 
 use base32::Alphabet;
@@ -30,7 +30,7 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
     buffer1.get_mut(..9)?.copy_from_slice(parsed_bytes.get(0..9)?);
     let ts_flags_tenant = u128::from_be_bytes(buffer1.try_into().ok()?);
     let timestamp_raw = ts_flags_tenant >> 80;
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, Some(1577836800000));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, epoch_ms(args, 1577836800000));
     let flags = ts_flags_tenant << 48 >> 120;
     let tenant = ts_flags_tenant << 56 >> 112;
     let version = match flags >> 6 {
@@ -58,7 +58,7 @@ pub fn parse_orderlyid(args: &Args) -> Option<IDInfo> {
         size: 160,
         entropy: 60,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         node1: Some(format!("{} (Tenant)", tenant)),
         node2: Some(format!("{} (Shard)", shard)),
         sequence: Some(sequence as u128),

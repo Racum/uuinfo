@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 #[allow(clippy::indexing_slicing)]
 mod custom_base62 {
@@ -155,7 +155,7 @@ pub fn parse_ksuid(args: &Args) -> Option<IDInfo> {
         },
     };
 
-    let formatted_time = milliseconds_to_seconds_and_iso8601(ksuid.millis(), None);
+    let formatted_time = milliseconds_to_seconds_and_iso8601(ksuid.millis(), epoch_ms(args, 0));
     let timestamp = Some(formatted_time.0);
     let datetime = Some(formatted_time.1);
 

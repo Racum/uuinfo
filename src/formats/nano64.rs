@@ -1,7 +1,7 @@
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits64, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_nano64(args: &Args) -> Option<IDInfo> {
     let hex_id = args.id.replace("-", "").to_uppercase();
@@ -10,7 +10,7 @@ pub fn parse_nano64(args: &Args) -> Option<IDInfo> {
     }
     let id_bytes = hex::decode(&hex_id).ok()?;
     let id_int: u64 = u64::from_be_bytes(id_bytes.clone().try_into().unwrap());
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(bits64(id_int, 0, 44), None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(bits64(id_int, 0, 44), epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "Nano64".to_string(),

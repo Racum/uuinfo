@@ -558,9 +558,9 @@ checksum = "723f03dfba28f1949cae68c6ac89a1e77f753c38c0acfceeefec77578a1c357a"
 
 [[package]]
 name = "fstr"
-version = "0.2.19"
+version = "0.2.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb0f55714ffc8915cc5ec55b46b7af7f40d6140fa4d1af550b846952f5628435"
+checksum = "53330ae61ec107fd3b0548503d0b1003d6ad5a9c534796a062aea966291c135f"
 
 [[package]]
 name = "futures-core"
@@ -855,9 +855,9 @@ checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
 
 [[package]]
 name = "isbn"
-version = "0.8.20260516"
+version = "0.8.20260518"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f3ecbf36e09c36186f6adc4ef8761517b88c7443f54c67703618bf58c5bfc73"
+checksum = "1fac4917a7bf7c1fd2a1fd2236c0dbe8cfeeb0fab8b9c3cd0a798e6ff240260c"
 dependencies = [
  "arrayvec",
  "codegen",
@@ -1304,6 +1304,7 @@ version = "0.10.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "35d8fa137e1f0bbc1139893fcf4fff5f099d76658e6da2b10fadd04f0cadc2d4"
 dependencies = [
+ "rand 0.10.1",
  "rand_core 0.10.1",
 ]
 
@@ -1365,13 +1366,12 @@ checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
 name = "scru128"
-version = "4.1.0"
+version = "4.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14fc795a0b20b3655959416b720c8a15659e5be7be350cbbfa178f47e4c91b49"
+checksum = "cbd4bd1810b2e4c75a0eaad9fc4b69688d91b7823b023c1d9b05bd9e27b9e436"
 dependencies = [
  "forkguard",
  "fstr",
- "rand 0.10.1",
  "reseeding_rng",
 ]
 
@@ -1710,7 +1710,7 @@ dependencies = [
 
 [[package]]
 name = "uuinfo"
-version = "0.7.2"
+version = "0.7.3"
 dependencies = [
  "base32",
  "base58",

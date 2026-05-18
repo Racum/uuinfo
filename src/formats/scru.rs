@@ -4,7 +4,7 @@ use std::fmt::Write;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     let mut id_type = "SCRU128";
@@ -22,7 +22,7 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
     };
 
     let uuid = Uuid::from_bytes(scru.as_bytes().to_owned());
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(scru.timestamp(), None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(scru.timestamp(), epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: id_type.to_string(),
@@ -48,7 +48,7 @@ pub fn parse_scru128(args: &Args) -> Option<IDInfo> {
 pub fn parse_scru64(args: &Args) -> Option<IDInfo> {
     let binding = args.id.parse::<Scru64Id>();
     let scru = &binding.ok()?;
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(scru.timestamp() * 256, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(scru.timestamp() * 256, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "SCRU64".to_string(),

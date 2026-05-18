@@ -103,7 +103,7 @@ pub fn parse_imei(args: &Args) -> Option<IDInfo> {
 
     Some(IDInfo {
         id_type: "IMEI".to_string(),
-        standard: standard.clone(),
+        standard,
         integer: Some(id_int),
         parsed: Some("as ASCII, no dashes".to_string()),
         size,

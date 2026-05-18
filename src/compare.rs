@@ -73,7 +73,7 @@ pub fn compare_times(args: &Args) {
         let now_ms = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis() as u64;
         all_times.push(TimestampComparable {
             timestamp: now_ms as f64 / 1_000.0,
-            datetime: milliseconds_to_seconds_and_iso8601(now_ms, None).1,
+            datetime: milliseconds_to_seconds_and_iso8601(now_ms, 0).1,
             name: NOW_DISPLAY.to_string(),
         });
     } else {

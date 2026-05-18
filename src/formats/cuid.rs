@@ -1,7 +1,7 @@
 use basen::BASE36;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 25 || &args.id[0..1] != "c" {
@@ -10,7 +10,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
     let timestamp_raw: u64 = BASE36.decode_var_len(&args.id[1..9])?;
     let sequence: u64 = BASE36.decode_var_len(&args.id[9..13])?;
     let fingerprint: u64 = BASE36.decode_var_len(&args.id[13..17])?;
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 0));
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
 
     Some(IDInfo {
@@ -21,7 +21,7 @@ pub fn parse_cuid1(args: &Args) -> Option<IDInfo> {
         size,
         entropy: 64,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         sequence: Some(sequence as u128),
         node1: Some(format!("{} (Fingerprint)", fingerprint)),
         hex,

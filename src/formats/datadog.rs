@@ -2,7 +2,7 @@ use std::fmt::Write;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits128, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_datadog(args: &Args) -> Option<IDInfo> {
     let uuid = Uuid::try_parse(&args.id).ok()?;
@@ -15,7 +15,7 @@ pub fn parse_datadog(args: &Args) -> Option<IDInfo> {
         return None;
     }
 
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601((raw_ts * 1_000) as u64, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601((raw_ts * 1_000) as u64, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "Datadog Trace ID".to_string(),

@@ -287,6 +287,22 @@ $ uuinfo -o binary 01941f29-7c00-7aaa-aaaa-aaaaaaaaaaaa | xxd -b
 0000000c: 10101010 10101010 10101010 10101010                    ....
 ```
 
+### Custom Epoch
+
+Time-based IDs store a timestamp as an offset from an epoch defined in their format. Use `--epoch` (seconds since `1970-01-01T00:00:00Z`) to override that epoch.
+
+For example: Simpleflake uses **2000-01-01** as its default epoch, but forcing **2020-01-01** (`1577836800`) shows a 20-year difference:
+
+```shell
+$ uuinfo -f sf-simpleflake 4242587201037260245 -o json | jq -r .datetime
+2016-01-10T20:43:26.092Z
+
+$ uuinfo -f sf-simpleflake 4242587201037260245 -o json --epoch 1577836800 | jq -r .datetime
+2036-01-10T15:43:26.092Z
+```
+
+Unix timestamp formats are unaffected (their value is already absolute).
+
 ## Contributing
 
 ### New ID Format Support

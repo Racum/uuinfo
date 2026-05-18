@@ -1,7 +1,7 @@
 use basen::BASE36;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, factor_size_hex_bits_color_from_text, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_puid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 24 {
@@ -13,7 +13,7 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
     let sequence: u64 = BASE36.decode_var_len(&args.id[18..24])?;
     let machine_id = &args.id[8..14];
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "Puid".to_string(),
@@ -21,7 +21,7 @@ pub fn parse_puid(args: &Args) -> Option<IDInfo> {
         parsed: Some("as ASCII, with base36 parts".to_string()),
         size,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         node1: Some(format!("{} (Machine ID)", machine_id)),
         node2: Some(format!("{} (Process ID)", process_id)),
         sequence: Some(sequence as u128),
@@ -54,7 +54,7 @@ pub fn parse_shortpuid(args: &Args) -> Option<IDInfo> {
         color_map = Some(repeat_char('3', 96));
     }
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw / 1_000_000, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw / 1_000_000, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "Puid".to_string(),
@@ -63,7 +63,7 @@ pub fn parse_shortpuid(args: &Args) -> Option<IDInfo> {
         parsed: Some("as ASCII, with base36 parts".to_string()),
         size,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         node1,
         hex,
         bits,

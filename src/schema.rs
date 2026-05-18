@@ -189,6 +189,10 @@ pub struct Args {
     /// Custom salt for Hashids
     #[arg(long)]
     pub salt: Option<String>,
+
+    /// Override epoch (seconds since 1970-01-01 UTC) for time-based IDs
+    #[arg(long)]
+    pub epoch: Option<u64>,
 }
 
 impl Default for Args {
@@ -202,6 +206,7 @@ impl Default for Args {
             alphabet: None,
             relative: false,
             salt: None,
+            epoch: None,
         }
     }
 }

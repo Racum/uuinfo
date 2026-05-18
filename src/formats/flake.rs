@@ -2,7 +2,7 @@ use std::fmt::Write;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits128, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_flake(args: &Args) -> Option<IDInfo> {
     let uuid: Uuid;
@@ -32,20 +32,20 @@ pub fn parse_flake(args: &Args) -> Option<IDInfo> {
     let timestamp_raw = bits128(id_int, 0, 64);
     let worker_id = bits128(id_int, 64, 48);
     let sequence = bits128(id_int, 112, 16);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64, epoch_ms(args, 0));
     if datetime.starts_with("Invalid") {
         return None;
     }
 
     Some(IDInfo {
         id_type: id_type.to_string(),
-        standard: base62::encode(id_int).to_string(),
+        standard: base62::encode(id_int),
         integer: Some(id_int),
         uuid_wrap: Some(uuid.to_string()),
         parsed: Some(parsed.to_string()),
         size: 128,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         sequence: Some(sequence),
         node1: Some(worker_id.to_string()),
         hex: Some(hex::encode(id_int.to_be_bytes())),

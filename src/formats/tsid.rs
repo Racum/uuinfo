@@ -2,7 +2,7 @@ use std::fmt::Write;
 use tsid::TSID;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits64, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
     let parsed: Option<String>;
@@ -20,8 +20,8 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
         }
     };
     let id_int: u64 = tsid_id.number();
-    let raw_timestamp = tsid_id.timestamp().timestamp_millis() as u64;
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(raw_timestamp, None);
+    let raw_timestamp = bits64(id_int, 0, 42);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(raw_timestamp, epoch_ms(args, 1577836800000));
 
     Some(IDInfo {
         id_type: "TSID".to_string(),
@@ -31,7 +31,7 @@ pub fn parse_tsid(args: &Args) -> Option<IDInfo> {
         size: 64,
         entropy: 22,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         hex: Some(hex::encode(id_int.to_be_bytes())),
         bits: Some(id_int.to_be_bytes().iter().fold(String::new(), |mut output, c| {
             let _ = write!(output, "{c:08b}");

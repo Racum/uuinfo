@@ -5,7 +5,7 @@ use uuid::{Uuid, Variant};
 use uuid25::Uuid25;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::milliseconds_to_seconds_and_iso8601;
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601};
 
 pub const SHORT_UUID_ALPHABET: &str = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 pub const COLOR_MAP_UUID_GENERIC: &str = "22222222222222222222222222222222222222222222222211112222222222220022222222222222222222222222222222222222222222222222222222222222";
@@ -77,7 +77,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
         let secs: i64 = ts.to_unix().0.try_into().unwrap();
         let nanos: u32 = ts.to_unix().1;
         let ms = (secs * 1000) as u64 + (nanos / 1_000_000) as u64;
-        let formatted_time = milliseconds_to_seconds_and_iso8601(ms, None);
+        let formatted_time = milliseconds_to_seconds_and_iso8601(ms, epoch_ms(args, 0));
         timestamp = Some(formatted_time.0);
         datetime = Some(formatted_time.1);
     }
@@ -133,7 +133,7 @@ pub fn parse_uuid(args: &Args) -> Option<IDInfo> {
 pub fn parse_short_uuid(args: &Args) -> Option<IDInfo> {
     let translator = CustomTranslator::new(SHORT_UUID_ALPHABET).unwrap();
     let suuid = ShortUuidCustom::parse_str(&args.id, &translator).ok()?;
-    let uuid_str = suuid.clone().to_uuid(&translator).ok()?.to_string();
+    let uuid_str = suuid.to_uuid(&translator).ok()?.to_string();
     let mut new_args: Args = args.clone();
     new_args.id = uuid_str.clone();
     let mut id_info = parse_uuid(&new_args)?;
@@ -194,7 +194,7 @@ pub fn parse_uuid_integer(args: &Args) -> Option<IDInfo> {
     new_args.id = uuid_str.clone();
     let mut id_info = parse_uuid(&new_args)?;
     id_info.id_type = format!("Integer of {}", id_info.id_type);
-    id_info.standard = uuid_str.clone();
+    id_info.standard = uuid_str;
     id_info.parsed = Some("as integer".to_string());
     Some(id_info)
 }

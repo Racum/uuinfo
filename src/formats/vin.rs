@@ -237,6 +237,7 @@ mod tests {
             alphabet: None,
             relative: false,
             salt: None,
+            epoch: None,
         }
     }
 

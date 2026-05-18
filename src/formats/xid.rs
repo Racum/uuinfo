@@ -2,7 +2,7 @@ use base32::Alphabet;
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits128, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_xid(args: &Args) -> Option<IDInfo> {
     if args.id.chars().count() != 20 {
@@ -16,7 +16,7 @@ pub fn parse_xid(args: &Args) -> Option<IDInfo> {
     let machine_id = bits128(xid_int, 64, 24);
     let process_id = bits128(xid_int, 88, 16);
     let sequence = bits128(xid_int, 104, 24);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64 * 1000, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw as u64 * 1000, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "Xid".to_string(),

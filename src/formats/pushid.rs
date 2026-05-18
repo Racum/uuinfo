@@ -3,7 +3,7 @@ use base64::{Engine as _, alphabet, engine};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 const ALPHABET: &str = "-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz";
 
@@ -25,7 +25,7 @@ pub fn parse_pushid(args: &Args) -> Option<IDInfo> {
     ts_buffer.extend(id_bytes.get(0..6)?);
     let ts_bytes: [u8; 8] = ts_buffer.try_into().ok()?;
     let timestamp_raw = u64::from_be_bytes(ts_bytes);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "PushID (Firebase)".to_string(),

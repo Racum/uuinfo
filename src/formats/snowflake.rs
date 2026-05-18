@@ -2,7 +2,7 @@ use base58::{FromBase58, ToBase58};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo, IdFormat};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits64, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 #[derive(Debug)]
 pub struct SnowflakeAnnotation {
@@ -40,7 +40,7 @@ pub fn annotate_twitter(args: &Args) -> SnowflakeAnnotation {
     let timestamp_raw = bits64(id_int, 1, 41);
     let worker_id = bits64(id_int, 42, 10);
     let sequence = bits64(id_int, 52, 12);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(1288834974657));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 1288834974657));
     SnowflakeAnnotation {
         version: Some("Twitter".to_string()),
         custom_string: None,
@@ -62,7 +62,7 @@ pub fn annotate_discord(args: &Args) -> SnowflakeAnnotation {
     let worker_id = bits64(id_int, 42, 5);
     let process_id = bits64(id_int, 47, 5);
     let sequence = bits64(id_int, 52, 12);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(1420070400000));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 1420070400000));
     SnowflakeAnnotation {
         version: Some("Discord".to_string()),
         custom_string: None,
@@ -83,7 +83,7 @@ pub fn annotate_instagram(args: &Args) -> SnowflakeAnnotation {
     let timestamp_raw = bits64(id_int, 0, 41);
     let shard_id = bits64(id_int, 41, 13);
     let sequence = bits64(id_int, 54, 10);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(1314220021721));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 1314220021721));
     SnowflakeAnnotation {
         version: Some("Instagram".to_string()),
         custom_string: None,
@@ -104,7 +104,7 @@ pub fn annotate_sony(args: &Args) -> SnowflakeAnnotation {
     let timestamp_raw = bits64(id_int, 1, 39);
     let sequence = bits64(id_int, 40, 8);
     let machine_id = bits64(id_int, 48, 16);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw * 10, Some(1409529600000));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw * 10, epoch_ms(args, 1409529600000));
     SnowflakeAnnotation {
         version: Some("Sony".to_string()),
         custom_string: None,
@@ -126,7 +126,7 @@ pub fn annotate_spaceflake(args: &Args) -> SnowflakeAnnotation {
     let node_id = bits64(id_int, 42, 5);
     let worker_id = bits64(id_int, 47, 5);
     let sequence = bits64(id_int, 52, 12);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(1420070400000));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 1420070400000));
     SnowflakeAnnotation {
         version: Some("Spaceflake".to_string()),
         custom_string: None,
@@ -147,7 +147,7 @@ pub fn annotate_linkedin(args: &Args) -> SnowflakeAnnotation {
     let timestamp_raw = bits64(id_int, 1, 41);
     let worker_id = bits64(id_int, 42, 10);
     let sequence = bits64(id_int, 52, 12);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 0));
     SnowflakeAnnotation {
         version: Some("LinkedIn".to_string()),
         custom_string: None,
@@ -167,7 +167,7 @@ pub fn annotate_mastodon(args: &Args) -> SnowflakeAnnotation {
     };
     let timestamp_raw = bits64(id_int, 0, 48);
     let sequence = bits64(id_int, 48, 16);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 0));
     SnowflakeAnnotation {
         version: Some("Mastodon".to_string()),
         custom_string: None,
@@ -188,7 +188,7 @@ pub fn annotate_frostflake(args: &Args) -> SnowflakeAnnotation {
     let timestamp_raw = bits64(id_int, 0, 32);
     let sequence = bits64(id_int, 32, 21);
     let generator = bits64(id_int, 53, 11);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw * 1000, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw * 1000, epoch_ms(args, 0));
     SnowflakeAnnotation {
         version: Some("Frostflake".to_string()),
         entropy: 0,
@@ -210,7 +210,7 @@ pub fn annotate_flakeid(args: &Args) -> SnowflakeAnnotation {
     let datacenter_id = bits64(id_int, 42, 5);
     let worker_id = bits64(id_int, 47, 5);
     let sequence = bits64(id_int, 52, 12);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 0));
     SnowflakeAnnotation {
         version: Some("Flake ID".to_string()),
         entropy: 0,
@@ -229,7 +229,7 @@ pub fn annotate_simpleflake(args: &Args) -> SnowflakeAnnotation {
         return SnowflakeAnnotation::default();
     };
     let timestamp_raw = bits64(id_int, 0, 41);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(946702800000));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 946702800000));
     SnowflakeAnnotation {
         version: Some("Simpleflake".to_string()),
         custom_string: None,

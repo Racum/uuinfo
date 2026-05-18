@@ -3,7 +3,7 @@ use ulid::Ulid;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 const PREFIX_ALPHABET: &str = "abcdefghijklmnopqrstuvwxyz_";
 
@@ -23,7 +23,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
     }
     let ulid = Ulid::from_string(value).ok()?;
     let uuid: Uuid = Uuid::from_bytes(ulid.to_bytes());
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(ulid.timestamp_ms(), None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(ulid.timestamp_ms(), epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: "TypeID".to_string(),
@@ -34,7 +34,7 @@ pub fn parse_typeid(args: &Args) -> Option<IDInfo> {
         size: 128,
         entropy: 74,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         node1: Some(prefix),
         hex: Some(hex::encode(uuid.as_bytes())),
         bits: Some(uuid.as_bytes().iter().fold(String::new(), |mut output, c| {

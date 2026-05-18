@@ -2,7 +2,7 @@ use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use std::fmt::Write;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{bits64, milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{bits64, epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_threads(args: &Args) -> Option<IDInfo> {
     let id_int: u64;
@@ -21,7 +21,7 @@ pub fn parse_threads(args: &Args) -> Option<IDInfo> {
     let timestamp_raw = bits64(id_int, 0, 41);
     let shard_id = bits64(id_int, 41, 13);
     let sequence = bits64(id_int, 54, 10);
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, Some(1314220021721));
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, epoch_ms(args, 1314220021721));
 
     Some(IDInfo {
         id_type: "Thread ID (Meta Threads)".to_string(),

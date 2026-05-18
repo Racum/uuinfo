@@ -3,7 +3,7 @@ use upid::Upid;
 use uuid::Uuid;
 
 use crate::schema::{Args, IDInfo};
-use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
+use crate::utils::{epoch_ms, milliseconds_to_seconds_and_iso8601, repeat_char};
 
 pub fn parse_upid(args: &Args) -> Option<IDInfo> {
     let mut id_type = "UPID";
@@ -20,7 +20,7 @@ pub fn parse_upid(args: &Args) -> Option<IDInfo> {
     };
 
     let uuid = Uuid::from_bytes(upid.to_bytes());
-    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(upid.milliseconds(), None);
+    let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(upid.milliseconds(), epoch_ms(args, 0));
 
     Some(IDInfo {
         id_type: id_type.to_string(),
@@ -32,7 +32,7 @@ pub fn parse_upid(args: &Args) -> Option<IDInfo> {
         size: 128,
         entropy: 64,
         datetime: Some(datetime),
-        timestamp: Some(timestamp.to_string()),
+        timestamp: Some(timestamp),
         node1: Some(upid.prefix()),
         hex: Some(hex::encode(upid.to_bytes())),
         bits: Some(upid.to_bytes().iter().fold(String::new(), |mut output, c| {
