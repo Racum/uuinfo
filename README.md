@@ -111,6 +111,20 @@ $ curl -L https://github.com/racum/uuinfo/releases/latest/download/uuinfo-linux-
 $ sudo mv uuinfo /usr/local/bin/
 ```
 
+### Windows (Scoop)
+
+Requires Windows 10 or newer.
+
+```shell
+> scoop bucket add racum https://github.com/racum/scoop-bucket  # Setup (only needed once).
+
+> scoop install uuinfo  # Install.
+
+> scoop update uuinfo  # Update.
+```
+
+The zipped `.exe` (x86_64 and arm64) can also be downloaded directly from the [GitHub releases page](https://github.com/racum/uuinfo/releases/latest).
+
 ### Cargo (any platform)
 
 **Uuinfo** was developed in [Rust](https://www.rust-lang.org), thus it requires [its toolchain](https://www.rust-lang.org/tools/install); if you already have it available, you can install it with `cargo`:
