@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.7.3"
+version = "0.7.4"
 edition = "2024"
 authors = ["Ronaldo Ferreira <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -56,6 +56,9 @@ timediff = "0.2.3"
 regex = "1.12.3"
 sha2 = "0.11.0"
 tiny-keccak = { version = "2.0.2", features = ["keccak", "sha3"] }
+
+[build-dependencies]
+winres = "0.1"
 
 [lints.clippy]
 indexing_slicing = "deny"

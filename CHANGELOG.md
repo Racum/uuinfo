@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.4] - 2026-05-22
+
+### Added
+
+- Distribution for Windows via Scoop.
+
 ## [0.7.3] - 2026-05-18
 
 ### Added

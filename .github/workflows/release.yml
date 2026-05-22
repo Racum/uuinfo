@@ -162,6 +162,46 @@ jobs:
           name: deb-arm64
           path: uuinfo_*_arm64.deb
 
+  # ── Windows builds ────────────────────────────────────────────────────────
+
+  build-windows-x86_64:
+    needs: check-version
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - run: cargo build --release --target x86_64-pc-windows-msvc
+      - name: Zip exe
+        shell: pwsh
+        run: Compress-Archive -Path target/x86_64-pc-windows-msvc/release/uuinfo.exe -DestinationPath uuinfo-windows-x86_64.zip
+      - name: Upload to GitHub Release
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: gh release upload "v$env:VERSION" uuinfo-windows-x86_64.zip --clobber
+
+  build-windows-arm64:
+    needs: check-version
+    runs-on: windows-11-arm
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-pc-windows-msvc
+      - run: cargo build --release --target aarch64-pc-windows-msvc
+      - name: Zip exe
+        shell: pwsh
+        run: Compress-Archive -Path target/aarch64-pc-windows-msvc/release/uuinfo.exe -DestinationPath uuinfo-windows-aarch64.zip
+      - name: Upload to GitHub Release
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: gh release upload "v$env:VERSION" uuinfo-windows-aarch64.zip --clobber
+
   # ── APT repo update ───────────────────────────────────────────────────────
 
   update-apt-repo:
@@ -242,10 +282,55 @@ jobs:
           git commit -m "uuinfo v${VERSION}"
           git push
 
+  # ── Scoop manifest update ─────────────────────────────────────────────────
+
+  update-scoop:
+    needs: [check-version, build-windows-x86_64, build-windows-arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows zips and compute hashes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          gh release download "v${VERSION}" --repo racum/uuinfo \
+            --pattern "uuinfo-windows-x86_64.zip" \
+            --pattern "uuinfo-windows-aarch64.zip"
+          echo "SHA_X64=$(sha256sum uuinfo-windows-x86_64.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "SHA_ARM=$(sha256sum uuinfo-windows-aarch64.zip | cut -d' ' -f1)" >> $GITHUB_ENV
+      - name: Checkout scoop-bucket
+        uses: actions/checkout@v5
+        with:
+          repository: racum/scoop-bucket
+          token: ${{ secrets.SCOOP_BUCKET_TOKEN }}
+          path: scoop-bucket
+      - name: Update manifest
+        env:
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          cd scoop-bucket
+          jq --arg v "$VERSION" --arg x "$SHA_X64" --arg a "$SHA_ARM" \
+            '.version=$v
+            | .architecture."64bit".url="https://github.com/racum/uuinfo/releases/download/v\($v)/uuinfo-windows-x86_64.zip"
+            | .architecture."64bit".hash=$x
+            | .architecture.arm64.url="https://github.com/racum/uuinfo/releases/download/v\($v)/uuinfo-windows-aarch64.zip"
+            | .architecture.arm64.hash=$a' \
+            bucket/uuinfo.json > tmp && mv tmp bucket/uuinfo.json
+      - name: Commit and push
+        env:
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          cd scoop-bucket
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add bucket/uuinfo.json
+          git commit -m "uuinfo v${VERSION}"
+          git push
+
   # ── Publish draft release ─────────────────────────────────────────────────
 
   publish-release:
-    needs: [check-version, update-apt-repo, update-homebrew]
+    needs: [check-version, update-apt-repo, update-homebrew, update-scoop]
     runs-on: ubuntu-latest
     steps:
       - name: Promote draft to published
