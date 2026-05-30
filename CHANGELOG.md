@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.7.5] - 2026-05-30
+
+### Added
+
+- Mist (薄雾) support.
+
 ## [0.7.4] - 2026-05-22
 
 ### Added

@@ -15,6 +15,7 @@ pub mod iban;
 pub mod ipfs;
 pub mod isbn;
 pub mod ksuid;
+pub mod mist;
 pub mod nano64;
 pub mod nanoid;
 pub mod network;

@@ -152,6 +152,8 @@ pub enum IdFormat {
     Isbn,
     /// Geo: H3 Grid System
     H3,
+    /// Mist, by Wei Shidong
+    Mist,
 }
 
 /// Shows debug information about complex ID.

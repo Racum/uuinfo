@@ -298,6 +298,8 @@ fn test_force_format() {
     _assert("10614141000415", IdFormat::Commerce, "Commerce Barcode", "GTIN-14, grouping/packaging level");
     // VIN:
     _assert("1HGCM82633A004352", IdFormat::Vin, "VIN (Vehicle Identification Number)", "Honda, United States");
+    // Mist:
+    _assert("171671", IdFormat::Mist, "Mist", "-");
 }
 
 #[test]

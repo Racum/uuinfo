@@ -17,6 +17,7 @@ use crate::formats::iban::parse_iban;
 use crate::formats::ipfs::parse_ipfs;
 use crate::formats::isbn::{parse_isbn, parse_isbn10};
 use crate::formats::ksuid::parse_ksuid;
+use crate::formats::mist::parse_mist;
 use crate::formats::nano64::parse_nano64;
 use crate::formats::nanoid::parse_nanoid;
 use crate::formats::network::{parse_imei, parse_ipv4, parse_ipv6, parse_mac};
@@ -106,6 +107,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_ethereum,
     parse_commerce,
     parse_vin,
+    parse_mist,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -266,6 +268,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ethereum => parse_ethereum(args),
         IdFormat::Commerce => parse_commerce(args),
         IdFormat::Vin => parse_vin(args),
+        IdFormat::Mist => parse_mist(args),
     }
 }
 

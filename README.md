@@ -46,6 +46,7 @@ If the ID format allows for it, **uuinfo** also shows its bits, color-coded by t
 - [Spotify ID](https://developer.spotify.com/documentation/web-api/concepts/spotify-uris-ids)
 - [Nano64](https://github.com/only-cliches/nano64)
 - [OrderlyID](https://github.com/orderlykit/orderlyid)
+- [Mist (薄雾)](https://github.com/asyncins/mist)
 - [SWHID](https://www.swhid.org) (Software Hash ID)
 - [IBAN](https://www.iban.com/structure) (International Bank Account Number)
 - [Commerce Barcode](https://en.wikipedia.org/wiki/Global_Trade_Item_Number) (EAN-8, UPC-A, EAN-13 and GTIN-14; only auto-detected with dashes)
