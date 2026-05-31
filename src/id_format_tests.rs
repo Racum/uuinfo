@@ -153,6 +153,9 @@ fn test_force_format() {
     _assert("00000134-d423-5a10-109a-dd5e0e8f0005", IdFormat::Flake, "Flake (Boundary) wrapped in UUID", "-");
     _assert("016fb420-9023-b444-fd07-590f81b7b0eb", IdFormat::Timeflake, "Timeflake wrapped in UUID", "-");
     _assert("01936600-0a18-12a4-811f-c295c399b412", IdFormat::Scru128, "SCRU128 wrapped in UUID", "-");
+    _assert("67728007-0000-0000-d97a-8af26532e259", IdFormat::Datadog, "Datadog Trace ID", "-");
+    _assert("019e793c-efb1-4848-9b57-4534777cb348", IdFormat::Comb, "COMB", "PostgreSQL");
+    _assert("015c4733-dc14-3e63-2d0a-7fffffd26fb6", IdFormat::Sandflake, "Sandflake wrapped in UUID", "-");
     // UUID wrappers:
     _assert("32CQvwbvpbnkmkhhguznVH", IdFormat::Shortuuid, "ShortUUID of UUID (RFC-4122)", "4 (random)");
     _assert("UHKjBazX_UG8dEAJaikK1g==", IdFormat::UuidB64, "Padded Base64 of UUID (RFC-4122)", "4 (random)");
@@ -193,6 +196,7 @@ fn test_force_format() {
     // force a Julid to be treated as a ULID
     _assert("01K3EWBQW7000EJNJW8G8WNXKA", IdFormat::Ulid, "ULID", "-");
     _assert("abcd_2adnrb7b6jkyos6xusvmaa", IdFormat::Upid, "UPID", "A (default)");
+    _assert("05E4ECYW2GZ66B8AFZZZZMKFPR", IdFormat::Sandflake, "Sandflake", "-");
     _assert("6592008029c8c3e4dc76256c", IdFormat::Mongodb, "MongoDB ObjectId", "-");
     _assert("1HCpXwx2EK9oYluWbacgeCnFcLf", IdFormat::Ksuid, "KSUID", "Base62-encoded");
     _assert("13c7f72eff938c3cba49cfb88fa840868effca9c", IdFormat::Ksuid, "KSUID", "Hex-encoded");

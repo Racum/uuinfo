@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Mist (薄雾) support.
+- COMB (TR.Comb) support.
+- Sandflake support.
 
 ## [0.7.4] - 2026-05-22
 

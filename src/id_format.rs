@@ -3,6 +3,7 @@ use crate::schema::{Args, IDInfo, IdFormat};
 use crate::formats::asin::parse_asin;
 use crate::formats::bitcoin::parse_bitcoin;
 use crate::formats::breezeid::parse_breezeid;
+use crate::formats::comb::parse_comb;
 use crate::formats::commerce::parse_commerce;
 use crate::formats::cuid::{parse_cuid1, parse_cuid2};
 use crate::formats::datadog::parse_datadog;
@@ -26,6 +27,7 @@ use crate::formats::objectid::parse_objectid;
 use crate::formats::orderlyid::parse_orderlyid;
 use crate::formats::puid::{parse_puid, parse_puid_any, parse_shortpuid};
 use crate::formats::pushid::parse_pushid;
+use crate::formats::sandflake::parse_sandflake;
 use crate::formats::scru::{parse_scru64, parse_scru128};
 use crate::formats::slack::parse_slack;
 use crate::formats::snowflake::parse_snowflake;
@@ -58,6 +60,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_uuid_integer,
     parse_ulid,
     parse_julid,
+    parse_sandflake,
     parse_upid,
     parse_objectid,
     parse_ksuid,
@@ -108,6 +111,7 @@ pub static ALL_PARSERS: &[ParseFunction] = &[
     parse_commerce,
     parse_vin,
     parse_mist,
+    parse_comb,
 ];
 
 pub fn parse_all(args: &Args) -> Vec<IDInfo> {
@@ -208,6 +212,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Ulid => parse_ulid(args),
         IdFormat::Julid => parse_julid(args),
         IdFormat::Upid => parse_upid(args),
+        IdFormat::Sandflake => parse_sandflake(args),
         IdFormat::Timeflake => parse_timeflake_any(args),
         IdFormat::Flake => parse_flake(args),
         IdFormat::Scru128 => parse_scru128(args),
@@ -269,6 +274,7 @@ pub fn force_format(args: &Args) -> Option<IDInfo> {
         IdFormat::Commerce => parse_commerce(args),
         IdFormat::Vin => parse_vin(args),
         IdFormat::Mist => parse_mist(args),
+        IdFormat::Comb => parse_comb(args),
     }
 }
 

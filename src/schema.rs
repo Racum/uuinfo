@@ -28,10 +28,14 @@ pub enum IdFormat {
     Uuid25,
     /// ULID
     Ulid,
+    /// Sandflake
+    Sandflake,
     /// Julid
     Julid,
     /// UPID
     Upid,
+    /// COMB (RT.Comb GUID)
+    Comb,
     /// Timeflake
     Timeflake,
     /// Flake (Boundary)
@@ -126,6 +130,8 @@ pub enum IdFormat {
     SfFlakeid,
     /// Snowflake: Simpleflake
     SfSimpleflake,
+    /// Mist, by Wei Shidong
+    Mist,
     /// Unix timestamp: Auto-detect
     Unix,
     /// Unix timestamp: Seconds
@@ -152,8 +158,6 @@ pub enum IdFormat {
     Isbn,
     /// Geo: H3 Grid System
     H3,
-    /// Mist, by Wei Shidong
-    Mist,
 }
 
 /// Shows debug information about complex ID.

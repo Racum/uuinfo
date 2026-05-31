@@ -17,6 +17,8 @@ If the ID format allows for it, **uuinfo** also shows its bits, color-coded by t
 - [ULID](https://github.com/ulid/spec)
 - [Julid](https://proclamations.nebcorp-hias.com/sundries/presenting-julids/)
 - [UPID](https://github.com/carderne/upid)
+- [COMB](https://github.com/richardtallent/RT.Comb) (TR.Comb)
+- [Sandflake](https://github.com/celrenheit/sandflake)
 - [MongoDB ObjectId](https://www.mongodb.com/docs/manual/reference/method/ObjectId/)
 - [KSUID](https://github.com/segmentio/ksuid)
 - [Xid](https://github.com/rs/xid)
