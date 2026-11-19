@@ -54,27 +54,18 @@ fn parse_unix_core(args: &Args, assumption: TimestampUnitAssumption) -> Option<I
                 }
             }
         }
-        TimestampUnitAssumption::Seconds => match id_int.checked_mul(1_000_000_000) {
-            Some(value) => {
-                (timestamp, datetime) = nanoseconds_to_iso8601(value);
-                version = "As seconds".to_string();
-            }
-            None => return None,
-        },
-        TimestampUnitAssumption::Milliseconds => match id_int.checked_mul(1_000_000) {
-            Some(value) => {
-                (timestamp, datetime) = nanoseconds_to_iso8601(value);
-                version = "As milliseconds".to_string();
-            }
-            None => return None,
-        },
-        TimestampUnitAssumption::Microseconds => match id_int.checked_mul(1_000) {
-            Some(value) => {
-                (timestamp, datetime) = nanoseconds_to_iso8601(value);
-                version = "As microseconds".to_string();
-            }
-            None => return None,
-        },
+        TimestampUnitAssumption::Seconds => {
+            (timestamp, datetime) = nanoseconds_to_iso8601(id_int.checked_mul(1_000_000_000)?);
+            version = "As seconds".to_string();
+        }
+        TimestampUnitAssumption::Milliseconds => {
+            (timestamp, datetime) = nanoseconds_to_iso8601(id_int.checked_mul(1_000_000)?);
+            version = "As milliseconds".to_string();
+        }
+        TimestampUnitAssumption::Microseconds => {
+            (timestamp, datetime) = nanoseconds_to_iso8601(id_int.checked_mul(1_000)?);
+            version = "As microseconds".to_string();
+        }
         TimestampUnitAssumption::Nanoseconds => {
             version = "As nanoseconds".to_string();
             (timestamp, datetime) = nanoseconds_to_iso8601(id_int);

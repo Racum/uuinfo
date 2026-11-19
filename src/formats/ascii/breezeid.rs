@@ -29,10 +29,10 @@ pub fn parse_breezeid(args: &Args) -> Option<IDInfo> {
     }
     let (color_map, dashes, version, high_confidence) = match try_parse_color_dashes(&args.id, ALPHABET) {
         Some(value) => (value.0, value.1, Some("Default alphabet".to_string()), true),
-        None => match try_parse_color_dashes(&args.id, &ALPHABET.to_lowercase()) {
-            Some(value) => (value.0, value.1, Some("Lowercase alphabet".to_string()), false),
-            None => return None,
-        },
+        None => {
+            let value = try_parse_color_dashes(&args.id, &ALPHABET.to_lowercase())?;
+            (value.0, value.1, Some("Lowercase alphabet".to_string()), false)
+        }
     };
 
     let (size, hex, bits, _) = factor_size_hex_bits_color_from_text(&args.id);

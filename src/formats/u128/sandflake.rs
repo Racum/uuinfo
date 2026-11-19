@@ -1,6 +1,6 @@
 use crate::schema::{Args, IDInfo};
+use crate::time::{MS_PER_DAY, now_ms};
 use crate::utils::{bits128, milliseconds_to_seconds_and_iso8601, repeat_char};
-use chrono::{Duration, Utc};
 use std::fmt::Write;
 use uuid::Uuid;
 
@@ -63,7 +63,7 @@ pub fn parse_sandflake(args: &Args) -> Option<IDInfo> {
     let worker = bits128(id_int, 48, 32);
     let sequence = bits128(id_int, 80, 24);
     let (timestamp, datetime) = milliseconds_to_seconds_and_iso8601(timestamp_raw, 0);
-    let max_ms = (Utc::now() + Duration::days(10 * 365)).timestamp_millis();
+    let max_ms = now_ms() + 10 * 365 * MS_PER_DAY;
     let high_confidence = (MIN_MS..=max_ms).contains(&(timestamp_raw as i64));
 
     Some(IDInfo {

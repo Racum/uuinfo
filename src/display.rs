@@ -1,12 +1,12 @@
 use std::cmp;
 use std::io::{Write, stdout};
 
-use chrono::Utc;
 use clap::ValueEnum;
 use colored::*;
-use timediff::TimeDiff;
 
 use crate::schema::{Args, IDInfo, Output};
+use crate::time::now_secs;
+use crate::utils::relative_time;
 
 fn truncate_to_millis(ts: &str) -> &str {
     match ts.find('.') {
@@ -216,8 +216,8 @@ impl IDInfo {
     pub fn print(&mut self, args: &Args) {
         if self.timestamp.is_some() {
             let timestamp_sec = self.timestamp.clone().unwrap().parse::<f64>().unwrap_or_default() as i64;
-            let diff = timestamp_sec - Utc::now().timestamp();
-            self.relative_time = Some(TimeDiff::to_diff((diff).to_string() + "s").parse().unwrap_or('-'.to_string()));
+            let diff = timestamp_sec - now_secs();
+            self.relative_time = Some(relative_time(diff));
         }
         if args.everything {
             self.print_card(args);

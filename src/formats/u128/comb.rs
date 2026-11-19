@@ -1,6 +1,6 @@
 use crate::schema::{Args, IDInfo};
+use crate::time::{MS_PER_DAY, now_ms};
 use crate::utils::{milliseconds_to_seconds_and_iso8601, repeat_char};
-use chrono::{DateTime, Duration, NaiveDate, Utc};
 use std::fmt::Write;
 use uuid::Uuid;
 
@@ -13,6 +13,7 @@ const WINDOW_FUTURE_DAYS: i64 = 10 * 365;
 // - 2001-12-12: Book "NET Enterprise Design with Visual Basic .NET and SQL Server 2000" published.
 // - 2002-03-08: Informit article "The Cost of GUIDs as Primary Keys" published (cites book).
 const MIN_VALID_TS: i64 = 946_684_800_000; // 2000-01-01T00:00:00Z, in ms
+const EPOCH_1900_MS: i64 = -2_208_988_800_000; // 1900-01-01T00:00:00Z, in ms
 
 fn read_u48_be(bytes: &[u8]) -> i64 {
     bytes.iter().fold(0i64, |acc, &b| (acc << 8) | b as i64)
@@ -21,12 +22,10 @@ fn read_u48_be(bytes: &[u8]) -> i64 {
 /// Legacy SqlDateTimeStrategy: last 6 bytes hold 2 bytes of days since
 /// 1900-01-01 (BE) and 4 bytes of 1/300s ticks since midnight (BE).
 /// Returns a timestamp in milliseconds since the Unix epoch.
-fn legacy_ts(bytes: &[u8; 16]) -> Option<i64> {
+fn legacy_ts(bytes: &[u8; 16]) -> i64 {
     let days = u16::from_be_bytes([bytes[10], bytes[11]]) as i64;
     let ticks = u32::from_be_bytes([bytes[12], bytes[13], bytes[14], bytes[15]]) as i64;
-    let base = NaiveDate::from_ymd_opt(1900, 1, 1)?.and_hms_opt(0, 0, 0)?;
-    let naive = base + Duration::days(days) + Duration::milliseconds(ticks * 1000 / 300);
-    Some(DateTime::<Utc>::from_naive_utc_and_offset(naive, Utc).timestamp_millis())
+    EPOCH_1900_MS + days * MS_PER_DAY + ticks * 1000 / 300
 }
 
 pub fn parse_comb(args: &Args) -> Option<IDInfo> {
@@ -36,14 +35,10 @@ pub fn parse_comb(args: &Args) -> Option<IDInfo> {
     if bytes[6] & 0xF0 != 0x40 || bytes[8] & 0xC0 != 0x80 {
         return None;
     }
-    let candidates: [(&str, i64); 3] = [
-        ("PostgreSQL", read_u48_be(bytes.get(0..6)?)),
-        ("MS-SQL", read_u48_be(bytes.get(10..16)?)),
-        ("Legacy", legacy_ts(bytes)?),
-    ];
-    let now = Utc::now().timestamp_millis();
-    let low = now - Duration::days(WINDOW_PAST_DAYS).num_milliseconds();
-    let high = now + Duration::days(WINDOW_FUTURE_DAYS).num_milliseconds();
+    let candidates: [(&str, i64); 3] = [("PostgreSQL", read_u48_be(bytes.get(0..6)?)), ("MS-SQL", read_u48_be(bytes.get(10..16)?)), ("Legacy", legacy_ts(bytes))];
+    let now = now_ms();
+    let low = now - WINDOW_PAST_DAYS * MS_PER_DAY;
+    let high = now + WINDOW_FUTURE_DAYS * MS_PER_DAY;
     let in_window: Vec<&(&str, i64)> = candidates.iter().filter(|(_, ts)| (low..=high).contains(ts)).collect();
 
     let (version, ts, high_confidence) = match in_window.first() {

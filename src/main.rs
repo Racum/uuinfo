@@ -5,6 +5,7 @@ mod compare;
 mod formats;
 mod id_format;
 mod schema;
+mod time;
 mod utils;
 
 use crate::compare::compare_times;

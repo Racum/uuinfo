@@ -1,6 +1,6 @@
 [package]
 name = "uuinfo"
-version = "0.7.5"
+version = "0.8.0"
 edition = "2024"
 authors = ["Ronaldo Ferreira <ronaldo@racum.com>"]
 license = "BSD-3-Clause"
@@ -8,7 +8,6 @@ description = "Tool to debug unique identifiers (UUID, ULID, Snowflake, etc)"
 readme = "README.md"
 keywords = ["uuid", "unique", "identifier", "debug", "database"]
 categories = ["command-line-utilities", "development-tools::debugging", "encoding", "data-structures"]
-homepage = "https://github.com/racum/uuinfo"
 repository = "https://github.com/racum/uuinfo"
 exclude = [
     "assets/*",
@@ -23,12 +22,11 @@ codegen-units = 1
 panic = "abort"
 
 [dependencies]
-base64 = "0.22.1"
-chrono = "0.4.44"
+base64 = "0.23.1"
 clap = { version = "4.6.1", features = ["derive"] }
 hex = "0.4.3"
 short-uuid = "0.2.0"
-ulid = { version = "1.2.1", features = ["uuid"] }
+ulid = { version = "3.0.0", features = ["uuid"] }
 uuid = "1.23.1"
 upid = "0.3.1"
 timeflake-rs = "0.3.0"
@@ -50,9 +48,8 @@ cid = "0.11.3"
 mac_address = "1.1.8"
 isbn = "0.8.20260511"
 imei = "=1.1.1"
-h3ron = "0.18.0"
-tsid = "0.3.4"
-timediff = "0.2.3"
+h3o = { version = "0.11.1", default-features = false, features = ["std"] }
+tsid = { version = "0.3.4", default-features = false, features = ["debug"] }
 regex = "1.12.3"
 sha2 = "0.11.0"
 tiny-keccak = { version = "2.0.2", features = ["keccak", "sha3"] }

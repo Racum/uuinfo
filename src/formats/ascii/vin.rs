@@ -1,6 +1,5 @@
-use chrono::Datelike;
-
 use crate::schema::{Args, IDInfo};
+use crate::time::current_year;
 use crate::utils::{factor_size_hex_bits_color_from_text, repeat_char};
 
 #[rustfmt::skip]
@@ -164,7 +163,7 @@ fn model_year(c: u8) -> Option<(u16, u16)> {
 }
 
 fn format_model_year(c: u8) -> String {
-    let current_year = chrono::Utc::now().year() as u16;
+    let current_year = current_year() as u16;
     match model_year(c) {
         Some((new, old)) => {
             if new <= current_year {
